@@ -148,7 +148,7 @@ type
    *   SDL_GetWindowDisplayMode()
    *}
 
-  PSDLDisplayMode = ^TSDLDisplayMode
+  PSDLDisplayMode = ^TSDLDisplayMode;
   TSDLDisplayMode = record
     format: Uint32;              {**< pixel format *}
     w: SInt32;                      {**< width *}
@@ -837,35 +837,37 @@ type
    *  SDL_SetWindowGrab()
    *}
 
-  extern DECLSPEC SDL_bool SDLCALL SDL_GetWindowGrab(SDL_Window * window);
+  function SDL_GetWindowGrab(window: PSDLWindow): TSDLBool cdecl external {$IFDEF GPC} name 'SDL_GetWindowGrab' {$ELSE} SDL_LibName {$ENDIF};
 
-  /**
-   *  \brief Set the brightness (gamma correction) for a window.
+  {**
+   *  Set the brightness (gamma correction) for a window.
+   *
+   *  0 on success, or -1 if setting the brightness isn't supported.
    *  
-   *  \return 0 on success, or -1 if setting the brightness isn't supported.
-   *  
-   *  \sa SDL_GetWindowBrightness()
-   *  \sa SDL_SetWindowGammaRamp()
-   */
-  extern DECLSPEC int SDLCALL SDL_SetWindowBrightness(SDL_Window * window, float brightness);
+   *  SDL_GetWindowBrightness()
+   *  SDL_SetWindowGammaRamp()
+   *}
 
-  /**
-   *  \brief Get the brightness (gamma correction) for a window.
-   *  
-   *  \return The last brightness value passed to SDL_SetWindowBrightness()
-   *  
-   *  \sa SDL_SetWindowBrightness()
-   */
-  extern DECLSPEC float SDLCALL SDL_GetWindowBrightness(SDL_Window * window);
+  function SDL_SetWindowBrightness(window: PSDLWindow; brightness: Float): SInt32 cdecl external {$IFDEF GPC} name 'SDL_SetWindowBrightness' {$ELSE} SDL_LibName {$ENDIF};
 
-  /**
-   *  \brief Set the gamma ramp for a window.
+  {**
+   *  Get the brightness (gamma correction) for a window.
    *  
-   *  \param red The translation table for the red channel, or NULL.
-   *  \param green The translation table for the green channel, or NULL.
-   *  \param blue The translation table for the blue channel, or NULL.
+   *  The last brightness value passed to SDL_SetWindowBrightness()
    *  
-   *  \return 0 on success, or -1 if gamma ramps are unsupported.
+   *  SDL_SetWindowBrightness()
+   *}
+
+  function SDL_GetWindowBrightness(window: PSDLWindow): Float cdecl external {$IFDEF GPC} name 'SDL_GetWindowBrightness' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Set the gamma ramp for a window.
+   *  
+   *  red The translation table for the red channel, or NULL.
+   *  green The translation table for the green channel, or NULL.
+   *  blue The translation table for the blue channel, or NULL.
+   *
+   *  0 on success, or -1 if gamma ramps are unsupported.
    *  
    *  Set the gamma translation table for the red, green, and blue channels
    *  of the video hardware.  Each table is an array of 256 16-bit quantities,
@@ -873,53 +875,51 @@ type
    *  The input is the index into the array, and the output is the 16-bit
    *  gamma value at that index, scaled to the output color precision.
    *
-   *  \sa SDL_GetWindowGammaRamp()
-   */
-  extern DECLSPEC int SDLCALL SDL_SetWindowGammaRamp(SDL_Window * window,
-                                                     const Uint16 * red,
-                                                     const Uint16 * green,
-                                                     const Uint16 * blue);
+   *  SDL_GetWindowGammaRamp()
+   *}
 
-  /**
-   *  \brief Get the gamma ramp for a window.
+  function SDL_SetWindowGammaRamp(window: PSDLWindow; const red: PUInt16; const green: PUInt16; const blue: PUInt16): SInt32 cdecl external {$IFDEF GPC} name 'SDL_SetWindowGammaRamp' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Get the gamma ramp for a window.
    *  
-   *  \param red   A pointer to a 256 element array of 16-bit quantities to hold 
-   *               the translation table for the red channel, or NULL.
-   *  \param green A pointer to a 256 element array of 16-bit quantities to hold 
-   *               the translation table for the green channel, or NULL.
-   *  \param blue  A pointer to a 256 element array of 16-bit quantities to hold 
-   *               the translation table for the blue channel, or NULL.
+   *  red   A pointer to a 256 element array of 16-bit quantities to hold
+   *        the translation table for the red channel, or NULL.
+   *  green A pointer to a 256 element array of 16-bit quantities to hold
+   *        the translation table for the green channel, or NULL.
+   *  blue  A pointer to a 256 element array of 16-bit quantities to hold
+   *        the translation table for the blue channel, or NULL.
    *   
-   *  \return 0 on success, or -1 if gamma ramps are unsupported.
+   *  0 on success, or -1 if gamma ramps are unsupported.
    *  
-   *  \sa SDL_SetWindowGammaRamp()
-   */
-  extern DECLSPEC int SDLCALL SDL_GetWindowGammaRamp(SDL_Window * window,
-                                                     Uint16 * red,
-                                                     Uint16 * green,
-                                                     Uint16 * blue);
+   *  SDL_SetWindowGammaRamp()
+   *}
 
-  /**
-   *  \brief Destroy a window.
-   */
-  procedure SDL_DestroyWindow(SDL_Window * window);
+  function SDL_GetWindowGammaRamp(window: PSDLWindow; red: PUInt16; green: PUInt16; blue: PUInt16): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GetWindowGammaRamp' {$ELSE} SDL_LibName {$ENDIF};
 
+  {**
+   *  Destroy a window.
+   *}
 
-  /**
-   *  \brief Returns whether the screensaver is currently enabled (default on).
+  procedure SDL_DestroyWindow(window: PSDLWindow) cdecl external {$IFDEF GPC} name 'SDL_DestroyWindow' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Returns whether the screensaver is currently enabled (default on).
    *  
-   *  \sa SDL_EnableScreenSaver()
-   *  \sa SDL_DisableScreenSaver()
-   */
-  extern DECLSPEC SDL_bool SDLCALL SDL_IsScreenSaverEnabled(void);
+   *  SDL_EnableScreenSaver()
+   *  SDL_DisableScreenSaver()
+   *}
 
-  /**
-   *  \brief Allow the screen to be blanked by a screensaver
+  function SDL_IsScreenSaverEnabled: TSDLBool cdecl external {$IFDEF GPC} name 'SDL_IsScreenSaverEnabled' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Allow the screen to be blanked by a screensaver
    *  
-   *  \sa SDL_IsScreenSaverEnabled()
-   *  \sa SDL_DisableScreenSaver()
-   */
-  procedure SDL_EnableScreenSaver(void);
+   *  SDL_IsScreenSaverEnabled()
+   *  SDL_DisableScreenSaver()
+   *}
+
+  procedure SDL_EnableScreenSaver cdecl external {$IFDEF GPC} name 'SDL_EnableScreenSaver' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Prevent the screen from being blanked by a screensaver
@@ -928,11 +928,10 @@ type
    *  SDL_EnableScreenSaver()
    *}
 
-  procedure SDL_DisableScreenSaver(void);
-
+  procedure SDL_DisableScreenSaver cdecl external {$IFDEF GPC} name 'SDL_DisableScreenSaver' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
-   *  \name OpenGL support functions
+   *  OpenGL support functions
    *}
 
   {**
@@ -954,39 +953,40 @@ type
    *  SDL_GL_UnloadLibrary()
    *}
 
-  extern DECLSPEC int SDLCALL SDL_GL_LoadLibrary(const char *path);
+  function SDL_GL_LoadLibrary(const path: PChar): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GL_LoadLibrary' {$ELSE} SDL_LibName {$ENDIF};
 
-  /**
-   *  \brief Get the address of an OpenGL function.
-   */
-  extern DECLSPEC void *SDLCALL SDL_GL_GetProcAddress(const char *proc);
+  {**
+   *  Get the address of an OpenGL function.
+   *}
 
-  /**
-   *  \brief Unload the OpenGL library previously loaded by SDL_GL_LoadLibrary().
+  function SDL_GL_GetProcAddress(const proc: PChar): Pointer cdecl external {$IFDEF GPC} name 'SDL_GL_GetProcAddress' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Unload the OpenGL library previously loaded by SDL_GL_LoadLibrary().
    *  
-   *  \sa SDL_GL_LoadLibrary()
-   */
-  procedure SDL_GL_UnloadLibrary(void);
+   *  SDL_GL_LoadLibrary()
+   *}
+
+  procedure SDL_GL_UnloadLibrary cdecl external {$IFDEF GPC} name 'SDL_GL_UnloadLibrary' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Return true if an OpenGL extension is supported for the current
    *  context.
    *}
 
-  extern DECLSPEC SDL_bool SDLCALL SDL_GL_ExtensionSupported(const char
-                                                             *extension);
+  function SDL_GL_ExtensionSupported(const extension: PChar): TSDLBool cdecl external {$IFDEF GPC} name 'SDL_GL_ExtensionSupported' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set an OpenGL window attribute before window creation.
    *}
 
-  extern DECLSPEC int SDLCALL SDL_GL_SetAttribute(SDL_GLattr attr, int value);
+  function SDL_GL_SetAttribute(SDL_GLattr attr, int value): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GL_SetAttribute' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the actual value for an attribute from the current context.
    *}
 
-  extern DECLSPEC int SDLCALL SDL_GL_GetAttribute(SDL_GLattr attr, int *value);
+  function SDL_GL_GetAttribute(SDL_GLattr attr, int *value): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GL_GetAttribute' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create an OpenGL context for use with an OpenGL window, and make it
@@ -995,8 +995,7 @@ type
    *  SDL_GL_DeleteContext()
    *}
 
-  extern DECLSPEC SDL_GLContext SDLCALL SDL_GL_CreateContext(SDL_Window *
-                                                             window);
+  function SDL_GL_CreateContext(window: PSDLWindow): TSDLGLContext cdecl external {$IFDEF GPC} name 'SDL_GL_CreateContext' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set up an OpenGL context for rendering into an OpenGL window.
@@ -1004,7 +1003,7 @@ type
    *  The context must have been created with a compatible window.
    *}
 
-  function SDL_GL_MakeCurrent(window: PSDLWindow; context: TSDLGLContext): SInt32;
+  function SDL_GL_MakeCurrent(window: PSDLWindow; context: TSDLGLContext): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GL_MakeCurrent' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the swap interval for the current OpenGL context.
@@ -1019,7 +1018,7 @@ type
    *  SDL_GL_GetSwapInterval()
    *}
 
-  function SDL_GL_SetSwapInterval(interval: SInt32): SInt32;
+  function SDL_GL_SetSwapInterval(interval: SInt32): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GL_SetSwapInterval' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the swap interval for the current OpenGL context.
@@ -1033,14 +1032,14 @@ type
    *  SDL_GL_SetSwapInterval()
    *}
 
-  function SDL_GL_GetSwapInterval: SInt32;
+  function SDL_GL_GetSwapInterval: SInt32 cdecl external {$IFDEF GPC} name 'SDL_GL_GetSwapInterval' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Swap the OpenGL buffers for a window, if double-buffering is
    *  supported.
    *}
 
-  procedure SDL_GL_SwapWindow(SDL_Window * window);
+  procedure SDL_GL_SwapWindow(window: PSDLWindow) cdecl external {$IFDEF GPC} name 'SDL_GL_SwapWindow' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Delete an OpenGL context.
@@ -1048,7 +1047,7 @@ type
    *  SDL_GL_CreateContext()
    *}
 
-  procedure SDL_GL_DeleteContext(SDL_GLContext context);
+  procedure SDL_GL_DeleteContext(context: TSDLGLContext) cdecl external {$IFDEF GPC} name 'SDL_GL_DeleteContext' {$ELSE} SDL_LibName {$ENDIF};
 
   {*OpenGL support functions*}
 
