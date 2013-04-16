@@ -347,6 +347,7 @@ function SDL_DEFINE_PIXELFOURCC(A,B,C,D: Variant): Variant;
         }
 
 type
+  PSDLColor = ^TSDLColor;
   TSDLColor = record
     r: UInt8;
     g: UInt8;
@@ -354,19 +355,22 @@ type
     unused: UInt8;
   end;
 
-  TSDL_Colour = TSDL_Color;
+  TSDLColour = TSDLColor;
+  PSDLColour = ^TSDLColour;
 
+  PSDLPalette = ^TSDLPalette;
   TSDLPalette = record
     ncolors: SInt32;
     colors: PSDLColor;
     version: UInt32;
     refcount: SInt32;
-  end
+  end;
 
   {**
    *  Everything in the pixel format structure is read-only.
    *}
 
+  PSDLPixelFormat = ^TSDLPixelFormat;
   TSDLPixelFormat = record
     format: UInt32;
     palette: PSDLPalette;
@@ -420,7 +424,7 @@ function SDL_MasksToPixelFormatEnum(bpp: SInt32; Rmask: UInt32; Gmask: UInt32; B
    *  Create an SDL_PixelFormat structure from a pixel format enum.
    *}
 
-function SDL_AllocFormat(Uint32 pixel_format): PSDLPixelFormat cdecl external {$IFDEF GPC} name 'SDL_AllocFormat' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_AllocFormat(pixel_format: UInt32): PSDLPixelFormat cdecl external {$IFDEF GPC} name 'SDL_AllocFormat' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Free an SDL_PixelFormat structure.
@@ -458,7 +462,7 @@ function SDL_SetPixelFormatPalette(format: PSDLPixelFormat; palette: PSDLPalette
    *  0 on success, or -1 if not all of the colors could be set.
    *}
 
-function SDL_SetPaletteColors(palette: PSDLPalette; const colors: PSDLColor; int firstcolor; int ncolors): SInt32 cdecl external {$IFDEF GPC} name 'SDL_SetPaletteColors' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetPaletteColors(palette: PSDLPalette; const colors: PSDLColor; firstcolor: SInt32; ncolors: SInt32): SInt32 cdecl external {$IFDEF GPC} name 'SDL_SetPaletteColors' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Free a palette created with SDL_AllocPalette().
@@ -515,6 +519,7 @@ type
    *  SDL_EnclosePoints
    *}
 
+  PSDLPoint = ^TSDLPoint;
   TSDLPoint = record
     x: SInt32;
     y: SInt32;
@@ -531,73 +536,518 @@ type
    *  SDL_EnclosePoints
    *}
 
+  PSDLRect = ^TSDLRect;
   TSDLRect = record
     x,y: SInt32;
     w,h: SInt32;
   end;
 
-/**
- *  \brief Returns true if the rectangle has no area.
- */
-#define SDL_RectEmpty(X)    ((!(X)) || ((X)->w <= 0) || ((X)->h <= 0))
+  {**
+   *  Returns true if the rectangle has no area.
+   *}
 
-/**
- *  \brief Returns true if the two rectangles are equal.
- */
-#define SDL_RectEquals(A, B)   (((A)) && ((B)) && \
-                                ((A)->x == (B)->x) && ((A)->y == (B)->y) && \
-                                ((A)->w == (B)->w) && ((A)->h == (B)->h))
+//changed from variant(b‰‰‰‰‰h!) to TSDLRect
+//maybe PSDLRect?
+function SDL_RectEmpty(X: TSDLRect): Boolean;
 
-/**
- *  \brief Determine whether two rectangles intersect.
+  {**
+   *  Returns true if the two rectangles are equal.
+   *}
+
+function SDL_RectEquals(A: TSDLRect; B: TSDLRect): Boolean;
+
+{**
+ *  Determine whether two rectangles intersect.
  *  
- *  \return SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
- */
-extern DECLSPEC SDL_bool SDLCALL SDL_HasIntersection(const SDL_Rect * A,
-                                                     const SDL_Rect * B);
+ *  SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
+ *}
 
-/**
- *  \brief Calculate the intersection of two rectangles.
+function SDL_HasIntersection(const A: PSDLRect; const B: PSDLRect): TSDLBool cdecl external {$IFDEF GPC} name 'SDL_HasIntersection' {$ELSE} SDL_LibName {$ENDIF};
+
+{**
+ *  Calculate the intersection of two rectangles.
  *  
- *  \return SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
- */
-extern DECLSPEC SDL_bool SDLCALL SDL_IntersectRect(const SDL_Rect * A,
-                                                   const SDL_Rect * B,
-                                                   SDL_Rect * result);
+ *  SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
+ *}
 
-/**
- *  \brief Calculate the union of two rectangles.
- */
-procedure SDL_UnionRect(const SDL_Rect * A,
-                                           const SDL_Rect * B,
-                                           SDL_Rect * result);
+function SDL_IntersectRect(const A: PSDLRect; const B: PSDLRect; result: PSDLRect): TSDLBool cdecl external {$IFDEF GPC} name 'SDL_IntersectRect' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Calculate a minimal rectangle enclosing a set of points
+{**
+ *  Calculate the union of two rectangles.
+ *}
+
+procedure SDL_UnionRect(const A: PSDLRect; const B: PSDLRect; result: PSDLRect) cdecl external {$IFDEF GPC} name 'SDL_UnionRect' {$ELSE} SDL_LibName {$ENDIF};
+
+{**
+ *  Calculate a minimal rectangle enclosing a set of points
  *
- *  \return SDL_TRUE if any points were within the clipping rect
- */
-extern DECLSPEC SDL_bool SDLCALL SDL_EnclosePoints(const SDL_Point * points,
-                                                   int count,
-                                                   const SDL_Rect * clip,
-                                                   SDL_Rect * result);
+ *  SDL_TRUE if any points were within the clipping rect
+ *}
+
+function SDL_EnclosePoints(const points: PSDLPoint; count: SInt32; const clip: PSDLRect; result: PSDLRect): TSDLBool cdecl external {$IFDEF GPC} name 'SDL_EnclosePoints' {$ELSE} SDL_LibName {$ENDIF};
+
+{**
+ *  Calculate the intersection of a rectangle and line segment.
+ *
+ *  SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
+ *}
+
+function SDL_IntersectRectAndLine(const rect: PSDLRect; X1: PInt; Y1: PInt; X2: PInt; Y2: PInt): TSDLBool cdecl external {$IFDEF GPC} name 'SDL_IntersectRectAndLine' {$ELSE} SDL_LibName {$ENDIF};
+
+const
+  {**
+   *  Surface flags
+   *
+   *  These are the currently supported flags for the ::SDL_surface.
+   *
+   *  Used internally (read-only).
+   *}
+
+  SDL_SWSURFACE = 0;         {**< Just here for compatibility *}
+  SDL_PREALLOC  = $00000001  {**< Surface uses preallocated memory *}
+  SDL_RLEACCEL  = $00000002  {**< Surface is RLE encoded *}
+  SDL_DONTFREE  = $00000004  {**< Surface is referenced internally *}
+
+  {*Surface flags*}
+
+  {**
+   *  Evaluates to true if the surface needs to be locked before access.
+   *}
+  SDL_MUSTLOCK(S)	(((S)->flags & SDL_RLEACCEL) != 0)
+
+type
+  {**
+   *  A collection of pixels used in software blitting.
+   *
+   *  This structure should be treated as read-only, except for \c pixels,
+   *  which, if not NULL, contains the raw pixel data for the surface.
+   *}
+
+  TSDLSurface = record
+    flags: UInt32;              {**< Read-only *}
+    format: PSDLPixelFormat;    {**< Read-only *}
+    w, h: SInt32;               {**< Read-only *}
+    pitch: SInt32;              {**< Read-only *}
+    pixels: Pointer;            {**< Read-write *}
+
+    {** Application data associated with the surface *}
+    userdata: Pointer;          {**< Read-write *}
+
+    {** information needed for surfaces requiring locks *}
+    locked: SInt32;             {**< Read-only *}
+    lock_data: Pointer;         {**< Read-only *}
+
+    {** clipping information *}
+    clip_rect: PSDLRect;        {**< Read-only *}
+
+    {** info for fast blit mapping to other surfaces *}
+    map: PSDLBlitMap;           {**< Private *}
+
+    {** Reference count -- used when freeing surface *}
+    refcount: SInt32;           {**< Read-mostly *}
+  end;
+
+  {**
+   *  The type of function used for surface blitting functions.
+   *}
+
+   SDLBlit = function(src: PSDLSurface; srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32;
+
+  {**
+   *  Allocate and free an RGB surface.
+   *
+   *  If the depth is 4 or 8 bits, an empty palette is allocated for the surface.
+   *  If the depth is greater than 8 bits, the pixel format is set using the
+   *  flags '[RGB]mask'.
+   *
+   *  If the function runs out of memory, it will return NULL.
+   *
+   *  flags The flags are obsolete and should be set to 0.
+   *}
+
+  function SDL_CreateRGBSurface(flags: UInt32; width: SInt32; height: SInt32; depth: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): PSDLSurface cdecl external {$IFDEF GPC} name 'SDL_CreateRGBSurface' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_CreateRGBSurfaceFrom(pixels: Pointer; width: SInt32; height: SInt32; depth: SInt32; pitch: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): PSDLSurface cdecl external {$IFDEF GPC} name 'SDL_CreateRGBSurfaceFrom' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_FreeSurface(surface: PSDLSurface) cdecl external {$IFDEF GPC} name 'SDL_FreeSurface' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Set the palette used by a surface.
+   *
+   *  0, or -1 if the surface format doesn't use a palette.
+   *
+   *  A single palette can be shared with many surfaces.
+   *}
+
+  function SDL_SetSurfacePalette(surface: PSDLSurface; palette: PSDLPalette): SInt32 cdecl external {$IFDEF GPC} name 'SDL_SetSurfacePalette' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Sets up a surface for directly accessing the pixels.
+   *
+   *  Between calls to SDL_LockSurface() / SDL_UnlockSurface(), you can write
+   *  to and read from surface.pixels, using the pixel format stored in
+   *  surface.format. Once you are done accessing the surface, you should
+   *  use SDL_UnlockSurface() to release it.
+   *
+   *  Not all surfaces require locking.  If SDL_MUSTLOCK(surface) evaluates
+   *  to 0, then you can read and write to the surface at any time, and the
+   *  pixel format of the surface will not change.
+   *
+   *  No operating system or library calls should be made between lock/unlock
+   *  pairs, as critical system locks may be held during this time.
+   *
+   *  SDL_LockSurface() returns 0, or -1 if the surface couldn't be locked.
+   *
+   *  SDL_UnlockSurface()
+   *}
+
+  function SDL_LockSurface(surface: PSDLSurface) cdecl external {$IFDEF GPC} name 'SDL_LockSurface' {$ELSE} SDL_LibName {$ENDIF};
+
+  {** SDL_LockSurface() *}
+
+  procedure SDL_UnlockSurface(surface: PSDLSurface) cdecl external {$IFDEF GPC} name 'SDL_UnlockSurface' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Load a surface from a seekable SDL data stream (memory or file).
+   *
+   *  If freesrc is non-zero, the stream will be closed after being read.
+   *
+   *  The new surface should be freed with SDL_FreeSurface().
+   *
+   *  the new surface, or NULL if there was an error.
+   *}
+
+  function SDL_LoadBMP_RW(src: PSDLRWops; freesrc: SInt32): PSDLSurface cdecl external {$IFDEF GPC} name 'SDL_LoadBMP_RW' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Load a surface from a file.
+   *
+   *  Convenience macro.
+   *}
+
+  function SDL_LoadBMP(file: AnsiString): PSDLSurface;
+
+#define SDL_LoadBMP(file)	SDL_LoadBMP_RW(SDL_RWFromFile(file, "rb"), 1)
+
+  {**
+   *  Save a surface to a seekable SDL data stream (memory or file).
+   *
+   *  If freedst is non-zero, the stream will be closed after being written.
+   *
+   *  0 if successful or -1 if there was an error.
+   *}
+
+extern DECLSPEC int SDLCALL SDL_SaveBMP_RW
+    (SDL_Surface * surface, SDL_RWops * dst, int freedst);
+
+  {**
+   *  Save a surface to a file.
+   *
+   *  Convenience macro.
+   *}
+
+#define SDL_SaveBMP(surface, file) \
+		SDL_SaveBMP_RW(surface, SDL_RWFromFile(file, "wb"), 1)
 
 /**
- *  \brief Calculate the intersection of a rectangle and line segment.
+ *  \brief Sets the RLE acceleration hint for a surface.
  *  
- *  \return SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
+ *  \return 0 on success, or -1 if the surface is not valid
+ *  
+ *  \note If RLE is enabled, colorkey and alpha blending blits are much faster,
+ *        but the surface must be locked before directly accessing the pixels.
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_IntersectRectAndLine(const SDL_Rect *
-                                                          rect, int *X1,
-                                                          int *Y1, int *X2,
-                                                          int *Y2);
+extern DECLSPEC int SDLCALL SDL_SetSurfaceRLE(SDL_Surface * surface,
+                                              int flag);
+
+/**
+ *  \brief Sets the color key (transparent pixel) in a blittable surface.
+ *  
+ *  \param surface The surface to update
+ *  \param flag Non-zero to enable colorkey and 0 to disable colorkey
+ *  \param key The transparent pixel in the native surface format
+ *  
+ *  \return 0 on success, or -1 if the surface is not valid
+ *
+ *  You can pass SDL_RLEACCEL to enable RLE accelerated blits.
+ */
+extern DECLSPEC int SDLCALL SDL_SetColorKey(SDL_Surface * surface,
+                                            int flag, Uint32 key);
+
+/**
+ *  \brief Gets the color key (transparent pixel) in a blittable surface.
+ *  
+ *  \param surface The surface to update
+ *  \param key A pointer filled in with the transparent pixel in the native 
+ *             surface format
+ *  
+ *  \return 0 on success, or -1 if the surface is not valid or colorkey is not 
+ *          enabled.
+ */
+extern DECLSPEC int SDLCALL SDL_GetColorKey(SDL_Surface * surface,
+                                            Uint32 * key);
+
+/**
+ *  \brief Set an additional color value used in blit operations.
+ *  
+ *  \param surface The surface to update.
+ *  \param r The red color value multiplied into blit operations.
+ *  \param g The green color value multiplied into blit operations.
+ *  \param b The blue color value multiplied into blit operations.
+ *  
+ *  \return 0 on success, or -1 if the surface is not valid.
+ *  
+ *  \sa SDL_GetSurfaceColorMod()
+ */
+extern DECLSPEC int SDLCALL SDL_SetSurfaceColorMod(SDL_Surface * surface,
+                                                   Uint8 r, Uint8 g, Uint8 b);
 
 
-  //from "sdl_video.h"
-type  
+/**
+ *  \brief Get the additional color value used in blit operations.
+ *  
+ *  \param surface The surface to query.
+ *  \param r A pointer filled in with the current red color value.
+ *  \param g A pointer filled in with the current green color value.
+ *  \param b A pointer filled in with the current blue color value.
+ *  
+ *  \return 0 on success, or -1 if the surface is not valid.
+ *  
+ *  \sa SDL_SetSurfaceColorMod()
+ */
+extern DECLSPEC int SDLCALL SDL_GetSurfaceColorMod(SDL_Surface * surface,
+                                                   Uint8 * r, Uint8 * g,
+                                                   Uint8 * b);
+
+/**
+ *  \brief Set an additional alpha value used in blit operations.
+ *  
+ *  \param surface The surface to update.
+ *  \param alpha The alpha value multiplied into blit operations.
+ *  
+ *  \return 0 on success, or -1 if the surface is not valid.
+ *  
+ *  \sa SDL_GetSurfaceAlphaMod()
+ */
+extern DECLSPEC int SDLCALL SDL_SetSurfaceAlphaMod(SDL_Surface * surface,
+                                                   Uint8 alpha);
+
+/**
+ *  \brief Get the additional alpha value used in blit operations.
+ *  
+ *  \param surface The surface to query.
+ *  \param alpha A pointer filled in with the current alpha value.
+ *  
+ *  \return 0 on success, or -1 if the surface is not valid.
+ *  
+ *  \sa SDL_SetSurfaceAlphaMod()
+ */
+extern DECLSPEC int SDLCALL SDL_GetSurfaceAlphaMod(SDL_Surface * surface,
+                                                   Uint8 * alpha);
+
+/**
+ *  \brief Set the blend mode used for blit operations.
+ *  
+ *  \param surface The surface to update.
+ *  \param blendMode ::SDL_BlendMode to use for blit blending.
+ *  
+ *  \return 0 on success, or -1 if the parameters are not valid.
+ *  
+ *  \sa SDL_GetSurfaceBlendMode()
+ */
+extern DECLSPEC int SDLCALL SDL_SetSurfaceBlendMode(SDL_Surface * surface,
+                                                    SDL_BlendMode blendMode);
+
+/**
+ *  \brief Get the blend mode used for blit operations.
+ *  
+ *  \param surface   The surface to query.
+ *  \param blendMode A pointer filled in with the current blend mode.
+ *  
+ *  \return 0 on success, or -1 if the surface is not valid.
+ *  
+ *  \sa SDL_SetSurfaceBlendMode()
+ */
+extern DECLSPEC int SDLCALL SDL_GetSurfaceBlendMode(SDL_Surface * surface,
+                                                    SDL_BlendMode *blendMode);
+
+/**
+ *  Sets the clipping rectangle for the destination surface in a blit.
+ *  
+ *  If the clip rectangle is NULL, clipping will be disabled.
+ *  
+ *  If the clip rectangle doesn't intersect the surface, the function will
+ *  return SDL_FALSE and blits will be completely clipped.  Otherwise the
+ *  function returns SDL_TRUE and blits to the surface will be clipped to
+ *  the intersection of the surface area and the clipping rectangle.
+ *  
+ *  Note that blits are automatically clipped to the edges of the source
+ *  and destination surfaces.
+ */
+extern DECLSPEC SDL_bool SDLCALL SDL_SetClipRect(SDL_Surface * surface,
+                                                 const SDL_Rect * rect);
+
+/**
+ *  Gets the clipping rectangle for the destination surface in a blit.
+ *  
+ *  \c rect must be a pointer to a valid rectangle which will be filled
+ *  with the correct values.
+ */
+procedure SDL_GetClipRect(SDL_Surface * surface,
+                                             SDL_Rect * rect);
+
+/**
+ *  Creates a new surface of the specified format, and then copies and maps 
+ *  the given surface to it so the blit of the converted surface will be as 
+ *  fast as possible.  If this function fails, it returns NULL.
+ *  
+ *  The \c flags parameter is passed to SDL_CreateRGBSurface() and has those 
+ *  semantics.  You can also pass ::SDL_RLEACCEL in the flags parameter and
+ *  SDL will try to RLE accelerate colorkey and alpha blits in the resulting
+ *  surface.
+ */
+extern DECLSPEC SDL_Surface *SDLCALL SDL_ConvertSurface
+    (SDL_Surface * src, SDL_PixelFormat * fmt, Uint32 flags);
+extern DECLSPEC SDL_Surface *SDLCALL SDL_ConvertSurfaceFormat
+    (SDL_Surface * src, Uint32 pixel_format, Uint32 flags);
+
+/**
+ * \brief Copy a block of pixels of one format to another format
+ *  
+ *  \return 0 on success, or -1 if there was an error
+ */
+extern DECLSPEC int SDLCALL SDL_ConvertPixels(int width, int height,
+                                              Uint32 src_format,
+                                              const void * src, int src_pitch,
+                                              Uint32 dst_format,
+                                              void * dst, int dst_pitch);
+
+/**
+ *  Performs a fast fill of the given rectangle with \c color.
+ *  
+ *  If \c rect is NULL, the whole surface will be filled with \c color.
+ *  
+ *  The color should be a pixel of the format used by the surface, and 
+ *  can be generated by the SDL_MapRGB() function.
+ *  
+ *  \return 0 on success, or -1 on error.
+ */
+extern DECLSPEC int SDLCALL SDL_FillRect
+    (SDL_Surface * dst, const SDL_Rect * rect, Uint32 color);
+extern DECLSPEC int SDLCALL SDL_FillRects
+    (SDL_Surface * dst, const SDL_Rect * rects, int count, Uint32 color);
+
+{**
+ *  Performs a fast blit from the source surface to the destination surface.
+ *  
+ *  This assumes that the source and destination rectangles are
+ *  the same size.  If either \c srcrect or \c dstrect are NULL, the entire
+ *  surface (\c src or \c dst) is copied.  The final blit rectangles are saved
+ *  in \c srcrect and \c dstrect after all clipping is performed.
+ *  
+ *  \return If the blit is successful, it returns 0, otherwise it returns -1.
+ *
+ *  The blit function should not be called on a locked surface.
+ *
+ *  The blit semantics for surfaces with and without alpha and colorkey
+ *  are defined as follows:
+ *  \verbatim
+    RGBA->RGB:
+      SDL_SRCALPHA set:
+        alpha-blend (using alpha-channel).
+        SDL_SRCCOLORKEY ignored.
+      SDL_SRCALPHA not set:
+        copy RGB.
+        if SDL_SRCCOLORKEY set, only copy the pixels matching the
+        RGB values of the source colour key, ignoring alpha in the
+        comparison.
+   
+    RGB->RGBA:
+      SDL_SRCALPHA set:
+        alpha-blend (using the source per-surface alpha value);
+        set destination alpha to opaque.
+      SDL_SRCALPHA not set:
+        copy RGB, set destination alpha to source per-surface alpha value.
+      both:
+        if SDL_SRCCOLORKEY set, only copy the pixels matching the
+        source colour key.
+   
+    RGBA->RGBA:
+      SDL_SRCALPHA set:
+        alpha-blend (using the source alpha channel) the RGB values;
+        leave destination alpha untouched. [Note: is this correct?]
+        SDL_SRCCOLORKEY ignored.
+      SDL_SRCALPHA not set:
+        copy all of RGBA to the destination.
+        if SDL_SRCCOLORKEY set, only copy the pixels matching the
+        RGB values of the source colour key, ignoring alpha in the
+       comparison.
+   
+    RGB->RGB: 
+      SDL_SRCALPHA set:
+        alpha-blend (using the source per-surface alpha value).
+      SDL_SRCALPHA not set:
+        copy RGB.
+      both:
+        if SDL_SRCCOLORKEY set, only copy the pixels matching the
+        source colour key.
+    \endverbatim
+ *  
+ *  You should call SDL_BlitSurface() unless you know exactly how SDL
+ *  blitting works internally and how to use the other blit functions.
+ *}
+
+#define SDL_BlitSurface SDL_UpperBlit
+
+/**
+ *  This is the public blit function, SDL_BlitSurface(), and it performs
+ *  rectangle validation and clipping before passing it to SDL_LowerBlit()
+ */
+extern DECLSPEC int SDLCALL SDL_UpperBlit
+    (SDL_Surface * src, const SDL_Rect * srcrect,
+     SDL_Surface * dst, SDL_Rect * dstrect);
+
+/**
+ *  This is a semi-private blit function and it performs low-level surface
+ *  blitting only.
+ */
+extern DECLSPEC int SDLCALL SDL_LowerBlit
+    (SDL_Surface * src, SDL_Rect * srcrect,
+     SDL_Surface * dst, SDL_Rect * dstrect);
+
+/**
+ *  \brief Perform a fast, low quality, stretch blit between two surfaces of the
+ *         same pixel format.
+ *  
+ *  \note This function uses a static buffer, and is not thread-safe.
+ */
+extern DECLSPEC int SDLCALL SDL_SoftStretch(SDL_Surface * src,
+                                            const SDL_Rect * srcrect,
+                                            SDL_Surface * dst,
+                                            const SDL_Rect * dstrect);
+
+#define SDL_BlitScaled SDL_UpperBlitScaled
+
+/**
+ *  This is the public scaled blit function, SDL_BlitScaled(), and it performs
+ *  rectangle validation and clipping before passing it to SDL_LowerBlitScaled()
+ */
+extern DECLSPEC int SDLCALL SDL_UpperBlitScaled
+    (SDL_Surface * src, const SDL_Rect * srcrect,
+    SDL_Surface * dst, SDL_Rect * dstrect);
+
+{**
+ *  This is a semi-private blit function and it performs low-level surface
+ *  scaled blitting only.
+ *}
+
+extern DECLSPEC int SDLCALL SDL_LowerBlitScaled
+    (SDL_Surface * src, SDL_Rect * srcrect,
+    SDL_Surface * dst, SDL_Rect * dstrect);
+
+//from "sdl_video.h"
+type
   {**
    *  The structure that defines a display mode
-   *  
+   *
    *   SDL_GetNumDisplayModes()
    *   SDL_GetDisplayMode()
    *   SDL_GetDesktopDisplayMode()
@@ -610,10 +1060,10 @@ type
   PSDLDisplayMode = ^TSDLDisplayMode;
   TSDLDisplayMode = record
     format: Uint32;              {**< pixel format *}
-    w: SInt32;                      {**< width *}
-    h: SInt32;                      {**< height *}
-    refresh_rate: SInt32;           {**< refresh rate (or zero for unspecified) *}
-    driverdata: Pointer;           {**< driver-specific data, initialize to 0 *}
+    w: SInt32;                   {**< width *}
+    h: SInt32;                   {**< height *}
+    refresh_rate: SInt32;        {**< refresh rate (or zero for unspecified) *}
+    driverdata: Pointer;         {**< driver-specific data, initialize to 0 *}
   end;
 
   {**
@@ -665,7 +1115,7 @@ const
   SDL_WINDOW_INPUT_FOCUS = $00000200;        {**< window has input focus *}
   SDL_WINDOW_MOUSE_FOCUS = $00000400;        {**< window has mouse focus *}
   SDL_WINDOW_FULLSCREEN_DESKTOP = SDL_WINDOW_FULLSCREEN or $00001000;
-  SDL_WINDOW_FOREIGN = $00000800;             {**< window not created by SDL *}
+  SDL_WINDOW_FOREIGN = $00000800;            {**< window not created by SDL *}
 
 type
   TSDL_WindowFlags = DWord;
@@ -853,7 +1303,7 @@ type
    *  SDL_GetNumVideoDisplays()
    *}
 
-  function SDL_GetDisplayBounds(displayIndex: SInt32; rect: PSDL_Rect): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GetDisplayBounds' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetDisplayBounds(displayIndex: SInt32; rect: PSDLRect): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GetDisplayBounds' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Returns the number of available display modes.
@@ -887,7 +1337,7 @@ type
    *  Fill in information about the current display mode.
    *}
 
-  function SDL_GetCurrentDisplayMode(displayIndex: SInt32; mode: PSDL_DisplayMode): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GetCurrentDisplayIndex' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetCurrentDisplayMode(displayIndex: SInt32; mode: PSDLDisplayMode): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GetCurrentDisplayIndex' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the closest match to the requested display mode.
@@ -3325,6 +3775,19 @@ function SDL_WasInit(flags: UInt32): UInt32 cdecl external {$IFDEF GPC} name 'SD
 procedure SDL_Quit cdecl external {$IFDEF GPC} name 'SDL_Quit' {$ELSE} SDL_LibName {$ENDIF};
 
 implementation
+
+//from "sdl_rect.h"
+function SDL_RectEmpty(X: TSDLRect): Boolean;
+begin
+  Result := (X.w <= 0) or (X.h <= 0);
+end;
+
+function SDL_RectEquals(A: TSDLRect; B: TSDLRect);
+begin
+  Result := (A.x = B.x) and (A.y = B.y) and (A.w = B.w) and (A.h = B.h);
+end;
+
+//from "sdl_"
 
 //from "sdl_video.h"
 function SDL_WindowPos_IsUndefined(X: Variant): Variant;
