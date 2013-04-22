@@ -241,76 +241,169 @@ function SDL_DEFINE_PIXELFOURCC(A,B,C,D: Variant): Variant;
       ((format) && (SDL_PIXELFLAG(format) != 1))
 
   {* Note: If you modify this list, update SDL_GetPixelFormatName() *}
-           {
+           
     SDL_PIXELFORMAT_UNKNOWN = 0;
-    SDL_PIXELFORMAT_INDEX1LSB =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX1, SDL_BITMAPORDER_4321, 0,
-                               1, 0),
-    SDL_PIXELFORMAT_INDEX1MSB =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX1, SDL_BITMAPORDER_1234, 0,
-                               1, 0),
-    SDL_PIXELFORMAT_INDEX4LSB =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX4, SDL_BITMAPORDER_4321, 0,
-                               4, 0),
-    SDL_PIXELFORMAT_INDEX4MSB =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX4, SDL_BITMAPORDER_1234, 0,
-                               4, 0),
-    SDL_PIXELFORMAT_INDEX8 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX8, 0, 0, 8, 1),
-    SDL_PIXELFORMAT_RGB332 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED8, SDL_PACKEDORDER_XRGB,
-                               SDL_PACKEDLAYOUT_332, 8, 1),
-    SDL_PIXELFORMAT_RGB444 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XRGB,
-                               SDL_PACKEDLAYOUT_4444, 12, 2),
-    SDL_PIXELFORMAT_RGB555 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XRGB,
-                               SDL_PACKEDLAYOUT_1555, 15, 2),
-    SDL_PIXELFORMAT_BGR555 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XBGR,
-                               SDL_PACKEDLAYOUT_1555, 15, 2),
-    SDL_PIXELFORMAT_ARGB4444 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ARGB,
-                               SDL_PACKEDLAYOUT_4444, 16, 2),
-    SDL_PIXELFORMAT_RGBA4444 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_RGBA,
-                               SDL_PACKEDLAYOUT_4444, 16, 2),
-    SDL_PIXELFORMAT_ABGR4444 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ABGR,
-                               SDL_PACKEDLAYOUT_4444, 16, 2),
-    SDL_PIXELFORMAT_BGRA4444 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_BGRA,
-                               SDL_PACKEDLAYOUT_4444, 16, 2),
-    SDL_PIXELFORMAT_ARGB1555 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ARGB,
-                               SDL_PACKEDLAYOUT_1555, 16, 2),
-    SDL_PIXELFORMAT_RGBA5551 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_RGBA,
-                               SDL_PACKEDLAYOUT_5551, 16, 2),
-    SDL_PIXELFORMAT_ABGR1555 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ABGR,
-                               SDL_PACKEDLAYOUT_1555, 16, 2),
-    SDL_PIXELFORMAT_BGRA5551 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_BGRA,
-                               SDL_PACKEDLAYOUT_5551, 16, 2),
-    SDL_PIXELFORMAT_RGB565 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XRGB,
-                               SDL_PACKEDLAYOUT_565, 16, 2),
-    SDL_PIXELFORMAT_BGR565 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XBGR,
-                               SDL_PACKEDLAYOUT_565, 16, 2),
-    SDL_PIXELFORMAT_RGB24 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU8, SDL_ARRAYORDER_RGB, 0,
-                               24, 3),
-    SDL_PIXELFORMAT_BGR24 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU8, SDL_ARRAYORDER_BGR, 0,
-                               24, 3),
-    SDL_PIXELFORMAT_RGB888 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_XRGB,
-                               SDL_PACKEDLAYOUT_8888, 24, 4),
-    SDL_PIXELFORMAT_RGBX8888 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_RGBX,
-                               SDL_PACKEDLAYOUT_8888, 24, 4),
+    SDL_PIXELFORMAT_INDEX1LSB = (1 shl 28)                    or
+                                (SDL_PIXELTYPE_INDEX1 shl 24) or
+                                (SDL_BITMAPORDER_4321 shl 20) or
+                                (0 shl 16)                    or
+                                (1 shl 8)                     or
+                                (0 shl 0);
+
+    SDL_PIXELFORMAT_INDEX1MSB = (1 shl 28)                    or
+                                (SDL_PIXELTYPE_INDEX1 shl 24) or
+                                (SDL_BITMAPORDER_1234 shl 20) or
+                                (0 shl 16)                    or
+                                (1 shl 8)                     or
+                                (0 shl 0);
+
+    SDL_PIXELFORMAT_INDEX4LSB = (1 shl 28)                    or
+                                (SDL_PIXELTYPE_INDEX4 shl 24) or
+                                (SDL_BITMAPORDER_4321 shl 20) or
+                                (0 shl 16)                    or
+                                (4 shl 8)                     or
+                                (0 shl 0);
+
+    SDL_PIXELFORMAT_INDEX4MSB = (1 shl 28)                    or
+                                (SDL_PIXELTYPE_INDEX4 shl 24) or
+                                (SDL_BITMAPORDER_1234 shl 20) or
+                                (0 shl 16)                    or
+                                (4 shl 8)                     or
+                                (0 shl 0);
+
+    SDL_PIXELFORMAT_INDEX8 =    (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED8 shl 24)  or
+                                (0 shl 20)                      or
+                                (0 shl 16)                      or
+                                (8 shl 8)                       or
+                                (1 shl 0);
+                                
+    SDL_PIXELFORMAT_RGB332 =    (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED8 shl 24)  or
+                                (SDL_PACKEDORDER_XRGB shl 20)   or
+                                (SDL_PACKEDLAYOUT_332 shl 16)   or
+                                (8 shl 8)                       or
+                                (1 shl 0);
+
+    SDL_PIXELFORMAT_RGB444 =    (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_XRGB shl 20)   or
+                                (SDL_PACKEDLAYOUT_4444 shl 16)  or
+                                (12 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_RGB555 =    (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_XRGB shl 20)   or
+                                (SDL_PACKEDLAYOUT_1555 shl 16)  or
+                                (15 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_BGR555 =    (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_XBGR shl 20)   or
+                                (SDL_PACKEDLAYOUT_1555 shl 16)  or
+                                (15 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_ARGB4444 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_ARGB shl 20)   or
+                                (SDL_PACKEDLAYOUT_4444 shl 16)  or
+                                (16 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_RGBA4444 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_RGBA shl 20)   or
+                                (SDL_PACKEDLAYOUT_4444 shl 16)  or
+                                (16 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_ABGR4444 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_ABGR shl 20)   or
+                                (SDL_PACKEDLAYOUT_4444 shl 16)  or
+                                (16 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_BGRA4444 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_BGRA shl 20)   or
+                                (SDL_PACKEDLAYOUT_4444 shl 16)  or
+                                (16 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_ARGB1555 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_ARGB shl 20)   or
+                                (SDL_PACKEDLAYOUT_1555 shl 16)  or
+                                (16 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_RGBA5551 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_RGBA shl 20)   or
+                                (SDL_PACKEDLAYOUT_5551 shl 16)  or
+                                (16 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_ABGR1555 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_ABGR shl 20)   or
+                                (SDL_PACKEDLAYOUT_1555 shl 16)  or
+                                (16 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_BGRA5551 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_BGRA shl 20)   or
+                                (SDL_PACKEDLAYOUT_5551 shl 16)  or
+                                (16 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_RGB565 =    (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_XRGB shl 20)   or
+                                (SDL_PACKEDLAYOUT_565 shl 16)   or
+                                (16 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_BGR565 =    (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED16 shl 24) or
+                                (SDL_PACKEDORDER_XBGR shl 20)   or
+                                (SDL_PACKEDLAYOUT_1555 shl 16)  or
+                                (16 shl 8)                      or
+                                (2 shl 0);
+
+    SDL_PIXELFORMAT_RGB24 =     (1 shl 28)                      or
+                                (SDL_PIXELTYPE_ARRAYU8 shl 24)  or
+                                (SDL_ARRAYORDER_RGB shl 20)    or
+                                (0 shl 16)                      or
+                                (24 shl 8)                      or
+                                (3 shl 0);
+
+    SDL_PIXELFORMAT_BGR24 =     (1 shl 28)                      or
+                                (SDL_PIXELTYPE_ARRAYU8 shl 24)  or
+                                (SDL_ARRAYORDER_BGR shl 20)    or
+                                (0 shl 16)                      or
+                                (24 shl 8)                      or
+                                (3 shl 0);
+
+    SDL_PIXELFORMAT_RGB888 =    (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED32 shl 24) or
+                                (SDL_PACKEDORDER_XRGB shl 20)   or
+                                (SDL_PACKEDLAYOUT_8888 shl 16)  or
+                                (24 shl 8)                      or
+                                (4 shl 0);
+
+    SDL_PIXELFORMAT_RGBX8888 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED32 shl 24) or
+                                (SDL_PACKEDORDER_RGBX shl 20)   or
+                                (SDL_PACKEDLAYOUT_8888 shl 16)  or
+                                (24 shl 8)                      or
+                                (4 shl 0);
+                          {
     SDL_PIXELFORMAT_BGR888 =
         SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_XBGR,
                                SDL_PACKEDLAYOUT_8888, 24, 4),
@@ -603,17 +696,18 @@ const
    *  Used internally (read-only).
    *}
 
-  SDL_SWSURFACE = 0;         {**< Just here for compatibility *}
-  SDL_PREALLOC  = $00000001  {**< Surface uses preallocated memory *}
-  SDL_RLEACCEL  = $00000002  {**< Surface is RLE encoded *}
-  SDL_DONTFREE  = $00000004  {**< Surface is referenced internally *}
+  SDL_SWSURFACE = 0;          {**< Just here for compatibility *}
+  SDL_PREALLOC  = $00000001;  {**< Surface uses preallocated memory *}
+  SDL_RLEACCEL  = $00000002;  {**< Surface is RLE encoded *}
+  SDL_DONTFREE  = $00000004;  {**< Surface is referenced internally *}
 
   {*Surface flags*}
 
   {**
    *  Evaluates to true if the surface needs to be locked before access.
    *}
-  SDL_MUSTLOCK(S)	(((S)->flags & SDL_RLEACCEL) != 0)
+
+  //SDL_MUSTLOCK(S)	(((S)->flags & SDL_RLEACCEL) != 0)
 
 type
   {**
@@ -725,8 +819,6 @@ type
 
   function SDL_LoadBMP(file: AnsiString): PSDLSurface;
 
-#define SDL_LoadBMP(file)	SDL_LoadBMP_RW(SDL_RWFromFile(file, "rb"), 1)
-
   {**
    *  Save a surface to a seekable SDL data stream (memory or file).
    *
@@ -735,8 +827,7 @@ type
    *  0 if successful or -1 if there was an error.
    *}
 
-extern DECLSPEC int SDLCALL SDL_SaveBMP_RW
-    (SDL_Surface * surface, SDL_RWops * dst, int freedst);
+function SDL_SaveBMP_RW(surface: PSDLSurface; dst: PSDLRWops; freedst: SInt32): SInt32 cdecl external {$IFDEF GPC} name 'SDL_LoadBMP_RW' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Save a surface to a file.
@@ -747,129 +838,128 @@ extern DECLSPEC int SDLCALL SDL_SaveBMP_RW
 #define SDL_SaveBMP(surface, file) \
 		SDL_SaveBMP_RW(surface, SDL_RWFromFile(file, "wb"), 1)
 
-/**
- *  \brief Sets the RLE acceleration hint for a surface.
+{**
+ *  Sets the RLE acceleration hint for a surface.
  *  
- *  \return 0 on success, or -1 if the surface is not valid
+ *  0 on success, or -1 if the surface is not valid
  *  
- *  \note If RLE is enabled, colorkey and alpha blending blits are much faster,
- *        but the surface must be locked before directly accessing the pixels.
- */
-extern DECLSPEC int SDLCALL SDL_SetSurfaceRLE(SDL_Surface * surface,
-                                              int flag);
+ *  If RLE is enabled, colorkey and alpha blending blits are much faster,
+ *  but the surface must be locked before directly accessing the pixels.
+ *}
 
-/**
- *  \brief Sets the color key (transparent pixel) in a blittable surface.
+function SDL_SetSurfaceRLE(surface: PSDLSurface; flag: SInt32): SInt32 cdecl external {$IFDEF GPC} name 'SDL_SetSurfaceRLE' {$ELSE} SDL_LibName {$ENDIF};
+
+{**
+ *  Sets the color key (transparent pixel) in a blittable surface.
+ *
+ *  surface The surface to update
+ *  flag Non-zero to enable colorkey and 0 to disable colorkey
+ *  key The transparent pixel in the native surface format
  *  
- *  \param surface The surface to update
- *  \param flag Non-zero to enable colorkey and 0 to disable colorkey
- *  \param key The transparent pixel in the native surface format
- *  
- *  \return 0 on success, or -1 if the surface is not valid
+ *  0 on success, or -1 if the surface is not valid
  *
  *  You can pass SDL_RLEACCEL to enable RLE accelerated blits.
- */
-extern DECLSPEC int SDLCALL SDL_SetColorKey(SDL_Surface * surface,
-                                            int flag, Uint32 key);
+ *}
 
-/**
- *  \brief Gets the color key (transparent pixel) in a blittable surface.
- *  
- *  \param surface The surface to update
- *  \param key A pointer filled in with the transparent pixel in the native 
- *             surface format
- *  
- *  \return 0 on success, or -1 if the surface is not valid or colorkey is not 
- *          enabled.
- */
-extern DECLSPEC int SDLCALL SDL_GetColorKey(SDL_Surface * surface,
-                                            Uint32 * key);
+function SDL_SetColorKey(surface: PSDLSurface; flag: SInt32; key: UInt32): SInt32 cdecl external {$IFDEF GPC} name 'SDL_SetColorKey' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Set an additional color value used in blit operations.
+{**
+ *  Gets the color key (transparent pixel) in a blittable surface.
  *  
- *  \param surface The surface to update.
- *  \param r The red color value multiplied into blit operations.
- *  \param g The green color value multiplied into blit operations.
- *  \param b The blue color value multiplied into blit operations.
+ *  surface The surface to update
+ *  key A pointer filled in with the transparent pixel in the native
+ *      surface format
  *  
- *  \return 0 on success, or -1 if the surface is not valid.
+ *  0 on success, or -1 if the surface is not valid or colorkey is not
+ *  enabled.
+ *}
+
+function SDL_GetColorKey(surface: PSDLSurface; key: PUInt32): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GetColorKey' {$ELSE} SDL_LibName {$ENDIF};
+
+{**
+ *  Set an additional color value used in blit operations.
  *  
- *  \sa SDL_GetSurfaceColorMod()
- */
-extern DECLSPEC int SDLCALL SDL_SetSurfaceColorMod(SDL_Surface * surface,
-                                                   Uint8 r, Uint8 g, Uint8 b);
+ *  surface The surface to update.
+ *  r The red color value multiplied into blit operations.
+ *  g The green color value multiplied into blit operations.
+ *  b The blue color value multiplied into blit operations.
+ *
+ *  0 on success, or -1 if the surface is not valid.
+ *
+ *  SDL_GetSurfaceColorMod()
+ *}
+
+function SDL_SetSurfaceColorMod(surface: PSDLSurface; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl external {$IFDEF GPC} name 'SDL_SetSurfaceColorMod' {$ELSE} SDL_LibName {$ENDIF};
 
 
-/**
- *  \brief Get the additional color value used in blit operations.
+{**
+ *  Get the additional color value used in blit operations.
  *  
- *  \param surface The surface to query.
- *  \param r A pointer filled in with the current red color value.
- *  \param g A pointer filled in with the current green color value.
- *  \param b A pointer filled in with the current blue color value.
+ *  surface The surface to query.
+ *  r A pointer filled in with the current red color value.
+ *  g A pointer filled in with the current green color value.
+ *  b A pointer filled in with the current blue color value.
  *  
- *  \return 0 on success, or -1 if the surface is not valid.
+ *  0 on success, or -1 if the surface is not valid.
  *  
- *  \sa SDL_SetSurfaceColorMod()
- */
-extern DECLSPEC int SDLCALL SDL_GetSurfaceColorMod(SDL_Surface * surface,
-                                                   Uint8 * r, Uint8 * g,
-                                                   Uint8 * b);
+ *  SDL_SetSurfaceColorMod()
+ *}
 
-/**
- *  \brief Set an additional alpha value used in blit operations.
- *  
- *  \param surface The surface to update.
- *  \param alpha The alpha value multiplied into blit operations.
- *  
- *  \return 0 on success, or -1 if the surface is not valid.
- *  
- *  \sa SDL_GetSurfaceAlphaMod()
- */
-extern DECLSPEC int SDLCALL SDL_SetSurfaceAlphaMod(SDL_Surface * surface,
-                                                   Uint8 alpha);
+function SDL_GetSurfaceColorMod(surface: PSDLSurface; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GetSurfaceColorMod' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Get the additional alpha value used in blit operations.
+{**
+ *  Set an additional alpha value used in blit operations.
  *  
- *  \param surface The surface to query.
- *  \param alpha A pointer filled in with the current alpha value.
+ *  surface The surface to update.
+ *  alpha The alpha value multiplied into blit operations.
  *  
- *  \return 0 on success, or -1 if the surface is not valid.
- *  
- *  \sa SDL_SetSurfaceAlphaMod()
- */
-extern DECLSPEC int SDLCALL SDL_GetSurfaceAlphaMod(SDL_Surface * surface,
-                                                   Uint8 * alpha);
+ *  0 on success, or -1 if the surface is not valid.
+ *
+ *  SDL_GetSurfaceAlphaMod()
+ *}
 
-/**
- *  \brief Set the blend mode used for blit operations.
- *  
- *  \param surface The surface to update.
- *  \param blendMode ::SDL_BlendMode to use for blit blending.
- *  
- *  \return 0 on success, or -1 if the parameters are not valid.
- *  
- *  \sa SDL_GetSurfaceBlendMode()
- */
-extern DECLSPEC int SDLCALL SDL_SetSurfaceBlendMode(SDL_Surface * surface,
-                                                    SDL_BlendMode blendMode);
+function SDL_SetSurfaceAlphaMod(surface: PSDLSurface; alpha: UInt8): SInt32 cdecl external {$IFDEF GPC} name 'SDL_SetSurfaceAlphaMod' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Get the blend mode used for blit operations.
+{**
+ *  Get the additional alpha value used in blit operations.
  *  
- *  \param surface   The surface to query.
- *  \param blendMode A pointer filled in with the current blend mode.
+ *  surface The surface to query.
+ *  alpha A pointer filled in with the current alpha value.
  *  
- *  \return 0 on success, or -1 if the surface is not valid.
+ *  0 on success, or -1 if the surface is not valid.
  *  
- *  \sa SDL_SetSurfaceBlendMode()
- */
-extern DECLSPEC int SDLCALL SDL_GetSurfaceBlendMode(SDL_Surface * surface,
-                                                    SDL_BlendMode *blendMode);
+ *  SDL_SetSurfaceAlphaMod()
+ *}
 
-/**
+function SDL_GetSurfaceAlphaMod(surface: PSDLSurface; alpha: PUInt8): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GetSurfaceAlphaMod' {$ELSE} SDL_LibName {$ENDIF};
+
+{**
+ *  Set the blend mode used for blit operations.
+ *  
+ *  surface The surface to update.
+ *  blendMode ::SDL_BlendMode to use for blit blending.
+ *  
+ *  0 on success, or -1 if the parameters are not valid.
+ *  
+ *  SDL_GetSurfaceBlendMode()
+ *}
+
+function SDL_SetSurfaceBlendMode(surface: PSDLSurface; blendMode: TSDLBlendMode): SInt32;
+
+{**
+ *  Get the blend mode used for blit operations.
+ *  
+ *  surface   The surface to query.
+ *  blendMode A pointer filled in with the current blend mode.
+ *  
+ *  0 on success, or -1 if the surface is not valid.
+ *  
+ *  SDL_SetSurfaceBlendMode()
+ *}
+
+function SDL_GetSurfaceBlendMode(surface: PSDLSurface; blendMode: PSDLBlendMode): SInt32;
+
+{**
  *  Sets the clipping rectangle for the destination surface in a blit.
  *  
  *  If the clip rectangle is NULL, clipping will be disabled.
@@ -878,58 +968,55 @@ extern DECLSPEC int SDLCALL SDL_GetSurfaceBlendMode(SDL_Surface * surface,
  *  return SDL_FALSE and blits will be completely clipped.  Otherwise the
  *  function returns SDL_TRUE and blits to the surface will be clipped to
  *  the intersection of the surface area and the clipping rectangle.
- *  
+ *
  *  Note that blits are automatically clipped to the edges of the source
  *  and destination surfaces.
- */
-extern DECLSPEC SDL_bool SDLCALL SDL_SetClipRect(SDL_Surface * surface,
-                                                 const SDL_Rect * rect);
+ *}
 
-/**
+function SDL_SetClipRect(surface: PSDLSurface; const rect: PSDLRect): TSDLBool;
+
+{**
  *  Gets the clipping rectangle for the destination surface in a blit.
- *  
- *  \c rect must be a pointer to a valid rectangle which will be filled
+ *
+ *  rect must be a pointer to a valid rectangle which will be filled
  *  with the correct values.
- */
-procedure SDL_GetClipRect(SDL_Surface * surface,
-                                             SDL_Rect * rect);
+ *}
 
-/**
- *  Creates a new surface of the specified format, and then copies and maps 
- *  the given surface to it so the blit of the converted surface will be as 
+procedure SDL_GetClipRect(surface: PSDLSurface; rect: PSDLRect);
+
+{**
+ *  Creates a new surface of the specified format, and then copies and maps
+ *  the given surface to it so the blit of the converted surface will be as
  *  fast as possible.  If this function fails, it returns NULL.
- *  
- *  The \c flags parameter is passed to SDL_CreateRGBSurface() and has those 
- *  semantics.  You can also pass ::SDL_RLEACCEL in the flags parameter and
+ *
+ *  The flags parameter is passed to SDL_CreateRGBSurface() and has those
+ *  semantics.  You can also pass SDL_RLEACCEL in the flags parameter and
  *  SDL will try to RLE accelerate colorkey and alpha blits in the resulting
  *  surface.
- */
-extern DECLSPEC SDL_Surface *SDLCALL SDL_ConvertSurface
-    (SDL_Surface * src, SDL_PixelFormat * fmt, Uint32 flags);
-extern DECLSPEC SDL_Surface *SDLCALL SDL_ConvertSurfaceFormat
-    (SDL_Surface * src, Uint32 pixel_format, Uint32 flags);
+ *}
 
-/**
- * \brief Copy a block of pixels of one format to another format
- *  
- *  \return 0 on success, or -1 if there was an error
- */
-extern DECLSPEC int SDLCALL SDL_ConvertPixels(int width, int height,
-                                              Uint32 src_format,
-                                              const void * src, int src_pitch,
-                                              Uint32 dst_format,
-                                              void * dst, int dst_pitch);
+function SDL_ConvertSurface(SDL_Surface * src, SDL_PixelFormat * fmt, Uint32 flags): PSDLSurface;
+function SDL_ConvertSurfaceFormat(SDL_Surface * src, Uint32 pixel_format, Uint32 flags): PSDLSurface;
 
-/**
- *  Performs a fast fill of the given rectangle with \c color.
+{**
+ *  Copy a block of pixels of one format to another format
+ *
+ *  0 on success, or -1 if there was an error
+ *}
+
+function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; const src: Pointer; src_pitch: SInt32; Uint32 dst_format; dst: Pointer; dst_pitch: SInt32): SInt32;;
+
+{**
+ *  Performs a fast fill of the given rectangle with color.
  *  
- *  If \c rect is NULL, the whole surface will be filled with \c color.
+ *  If rect is NULL, the whole surface will be filled with color.
  *  
  *  The color should be a pixel of the format used by the surface, and 
  *  can be generated by the SDL_MapRGB() function.
  *  
- *  \return 0 on success, or -1 on error.
- */
+ *  0 on success, or -1 on error.
+ *}
+
 extern DECLSPEC int SDLCALL SDL_FillRect
     (SDL_Surface * dst, const SDL_Rect * rect, Uint32 color);
 extern DECLSPEC int SDLCALL SDL_FillRects
@@ -995,41 +1082,38 @@ extern DECLSPEC int SDLCALL SDL_FillRects
  *  blitting works internally and how to use the other blit functions.
  *}
 
-#define SDL_BlitSurface SDL_UpperBlit
+SDL_BlitSurface = SDL_UpperBlit;
 
-/**
+{**
  *  This is the public blit function, SDL_BlitSurface(), and it performs
  *  rectangle validation and clipping before passing it to SDL_LowerBlit()
- */
-extern DECLSPEC int SDLCALL SDL_UpperBlit
-    (SDL_Surface * src, const SDL_Rect * srcrect,
-     SDL_Surface * dst, SDL_Rect * dstrect);
+ *}
 
-/**
+function SDL_UpperBlit(src: PSDLSurface; const srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32;
+
+{**
  *  This is a semi-private blit function and it performs low-level surface
  *  blitting only.
- */
-extern DECLSPEC int SDLCALL SDL_LowerBlit
-    (SDL_Surface * src, SDL_Rect * srcrect,
-     SDL_Surface * dst, SDL_Rect * dstrect);
+ *}
 
-/**
- *  \brief Perform a fast, low quality, stretch blit between two surfaces of the
- *         same pixel format.
+function SDL_LowerBlit(src: PSDLSurface; srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32;
+
+{**
+ *  Perform a fast, low quality, stretch blit between two surfaces of the
+ *  same pixel format.
  *  
- *  \note This function uses a static buffer, and is not thread-safe.
- */
-extern DECLSPEC int SDLCALL SDL_SoftStretch(SDL_Surface * src,
-                                            const SDL_Rect * srcrect,
-                                            SDL_Surface * dst,
-                                            const SDL_Rect * dstrect);
+ *  This function uses a static buffer, and is not thread-safe.
+ *}
 
-#define SDL_BlitScaled SDL_UpperBlitScaled
+function SDL_SoftStretch(src: PSDLSurface; const srcrect: PSDLRect; dst: PSDLSurface; const dstrect: PSDLSurface);
 
-/**
+SDL_BlitScaled = SDL_UpperBlitScaled;
+
+{**
  *  This is the public scaled blit function, SDL_BlitScaled(), and it performs
  *  rectangle validation and clipping before passing it to SDL_LowerBlitScaled()
- */
+ *}
+
 extern DECLSPEC int SDLCALL SDL_UpperBlitScaled
     (SDL_Surface * src, const SDL_Rect * srcrect,
     SDL_Surface * dst, SDL_Rect * dstrect);
@@ -3787,7 +3871,11 @@ begin
   Result := (A.x = B.x) and (A.y = B.y) and (A.w = B.w) and (A.h = B.h);
 end;
 
-//from "sdl_"
+//from "sdl_surface.h"
+function SDL_LoadBMP(file_: PChar);
+begin
+  SDL_LoadBMP_RW(SDL_RWFromFile(file_, "rb"), 1);
+end;
 
 //from "sdl_video.h"
 function SDL_WindowPos_IsUndefined(X: Variant): Variant;
