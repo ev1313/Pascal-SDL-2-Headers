@@ -18,7 +18,9 @@ unit SDL;
     "sdl_scancode.h",
     "sdl_mouse.h",
     "sdl_video.h",
-    "sdl_pixels.h"
+    "sdl_pixels.h",
+    "sdl_surface.h",
+    "sdl_rwops.h"
 
   Parts of the SDL.pas are from the SDL-1.2-Headerconversion from the JEDI-Team,
   written by Domenique Louis and others.
@@ -236,9 +238,7 @@ function SDL_DEFINE_PIXELFOURCC(A,B,C,D: Variant): Variant;
       (SDL_PIXELORDER(format) == SDL_PACKEDORDER_ABGR) || \
       (SDL_PIXELORDER(format) == SDL_PACKEDORDER_BGRA)))
 
-  {* The flag is set to 1 because 0x1? is not in the printable ASCII range *}{
-  #define SDL_ISPIXELFORMAT_FOURCC(format)    \
-      ((format) && (SDL_PIXELFLAG(format) != 1))
+  function SDL_IsPixelFormat_FOURCC(format: Variant);
 
   {* Note: If you modify this list, update SDL_GetPixelFormatName() *}
            
@@ -378,14 +378,14 @@ function SDL_DEFINE_PIXELFOURCC(A,B,C,D: Variant): Variant;
 
     SDL_PIXELFORMAT_RGB24 =     (1 shl 28)                      or
                                 (SDL_PIXELTYPE_ARRAYU8 shl 24)  or
-                                (SDL_ARRAYORDER_RGB shl 20)    or
+                                (SDL_ARRAYORDER_RGB shl 20)     or
                                 (0 shl 16)                      or
                                 (24 shl 8)                      or
                                 (3 shl 0);
 
     SDL_PIXELFORMAT_BGR24 =     (1 shl 28)                      or
                                 (SDL_PIXELTYPE_ARRAYU8 shl 24)  or
-                                (SDL_ARRAYORDER_BGR shl 20)    or
+                                (SDL_ARRAYORDER_BGR shl 20)     or
                                 (0 shl 16)                      or
                                 (24 shl 8)                      or
                                 (3 shl 0);
@@ -403,41 +403,68 @@ function SDL_DEFINE_PIXELFOURCC(A,B,C,D: Variant): Variant;
                                 (SDL_PACKEDLAYOUT_8888 shl 16)  or
                                 (24 shl 8)                      or
                                 (4 shl 0);
-                          {
-    SDL_PIXELFORMAT_BGR888 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_XBGR,
-                               SDL_PACKEDLAYOUT_8888, 24, 4),
-    SDL_PIXELFORMAT_BGRX8888 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_BGRX,
-                               SDL_PACKEDLAYOUT_8888, 24, 4),
-    SDL_PIXELFORMAT_ARGB8888 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ARGB,
-                               SDL_PACKEDLAYOUT_8888, 32, 4),
-    SDL_PIXELFORMAT_RGBA8888 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_RGBA,
-                               SDL_PACKEDLAYOUT_8888, 32, 4),
-    SDL_PIXELFORMAT_ABGR8888 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ABGR,
-                               SDL_PACKEDLAYOUT_8888, 32, 4),
-    SDL_PIXELFORMAT_BGRA8888 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_BGRA,
-                               SDL_PACKEDLAYOUT_8888, 32, 4),
-    SDL_PIXELFORMAT_ARGB2101010 =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ARGB,
-                               SDL_PACKEDLAYOUT_2101010, 32, 4),
 
-    SDL_PIXELFORMAT_YV12 =      /**< Planar mode: Y + V + U  (3 planes) */
-        SDL_DEFINE_PIXELFOURCC('Y', 'V', '1', '2'),
-    SDL_PIXELFORMAT_IYUV =      /**< Planar mode: Y + U + V  (3 planes) */
-        SDL_DEFINE_PIXELFOURCC('I', 'Y', 'U', 'V'),
-    SDL_PIXELFORMAT_YUY2 =      /**< Packed mode: Y0+U0+Y1+V0 (1 plane) */
-        SDL_DEFINE_PIXELFOURCC('Y', 'U', 'Y', '2'),
-    SDL_PIXELFORMAT_UYVY =      /**< Packed mode: U0+Y0+V0+Y1 (1 plane) */
-        SDL_DEFINE_PIXELFOURCC('U', 'Y', 'V', 'Y'),
-    SDL_PIXELFORMAT_YVYU =      /**< Packed mode: Y0+V0+Y1+U0 (1 plane) */
-        SDL_DEFINE_PIXELFOURCC('Y', 'V', 'Y', 'U')
+    SDL_PIXELFORMAT_BGR888 =    (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED32 shl 24) or
+                                (SDL_PACKEDORDER_XBGR shl 20)   or
+                                (SDL_PACKEDLAYOUT_8888 shl 16)  or
+                                (24 shl 8)                      or
+                                (4 shl 0);
 
-        }
+    SDL_PIXELFORMAT_BGRX8888 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED32 shl 24) or
+                                (SDL_PACKEDORDER_BGRX shl 20)   or
+                                (SDL_PACKEDLAYOUT_8888 shl 16)  or
+                                (24 shl 8)                      or
+                                (4 shl 0);
+
+    SDL_PIXELFORMAT_ARGB8888 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED32 shl 24) or
+                                (SDL_PACKEDORDER_ARGB shl 20)   or
+                                (SDL_PACKEDLAYOUT_8888 shl 16)  or
+                                (32 shl 8)                      or
+                                (4 shl 0);
+
+    SDL_PIXELFORMAT_RGBA8888 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED32 shl 24) or
+                                (SDL_PACKEDORDER_RGBA shl 20)   or
+                                (SDL_PACKEDLAYOUT_8888 shl 16)  or
+                                (32 shl 8)                      or
+                                (4 shl 0);
+
+    SDL_PIXELFORMAT_ABGR8888 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED32 shl 24) or
+                                (SDL_PACKEDORDER_ABGR shl 20)   or
+                                (SDL_PACKEDLAYOUT_8888 shl 16)  or
+                                (32 shl 8)                      or
+                                (4 shl 0);
+
+    SDL_PIXELFORMAT_BGRA8888 =  (1 shl 28)                      or
+                                (SDL_PIXELTYPE_PACKED32 shl 24) or
+                                (SDL_PACKEDORDER_RGBX shl 20)   or
+                                (SDL_PACKEDLAYOUT_8888 shl 16)  or
+                                (32 shl 8)                      or
+                                (4 shl 0);
+
+    SDL_PIXELFORMAT_ARGB2101010 = (1 shl 28)                       or
+                                  (SDL_PIXELTYPE_PACKED32 shl 24)  or
+                                  (SDL_PACKEDORDER_ARGB shl 20)    or
+                                  (SDL_PACKEDLAYOUT_2101010 shl 16)or
+                                  (32 shl 8)                       or
+                                  (4 shl 0);
+
+    {SDL_PIXELFORMAT_YV12 =      {**< Planar mode: Y + V + U  (3 planes) *}
+     {   SDL_DEFINE_PIXELFOURCC('Y', 'V', '1', '2'),
+    SDL_PIXELFORMAT_IYUV =      {**< Planar mode: Y + U + V  (3 planes) *}
+    {    SDL_DEFINE_PIXELFOURCC('I', 'Y', 'U', 'V'),
+    SDL_PIXELFORMAT_YUY2 =      {**< Packed mode: Y0+U0+Y1+V0 (1 plane) *}
+     {   SDL_DEFINE_PIXELFOURCC('Y', 'U', 'Y', '2'),
+    SDL_PIXELFORMAT_UYVY =      {**< Packed mode: U0+Y0+V0+Y1 (1 plane) *}
+    {    SDL_DEFINE_PIXELFOURCC('U', 'Y', 'V', 'Y'),
+    SDL_PIXELFORMAT_YVYU =      {**< Packed mode: Y0+V0+Y1+U0 (1 plane) *}
+     {   SDL_DEFINE_PIXELFOURCC('Y', 'V', 'Y', 'U')     }
+
+
 
 type
   PSDLColor = ^TSDLColor;
@@ -687,6 +714,8 @@ function SDL_EnclosePoints(const points: PSDLPoint; count: SInt32; const clip: P
 
 function SDL_IntersectRectAndLine(const rect: PSDLRect; X1: PInt; Y1: PInt; X2: PInt; Y2: PInt): TSDLBool cdecl external {$IFDEF GPC} name 'SDL_IntersectRectAndLine' {$ELSE} SDL_LibName {$ENDIF};
 
+//from "sdl_rwops"
+
 const
   {**
    *  Surface flags
@@ -717,6 +746,7 @@ type
    *  which, if not NULL, contains the raw pixel data for the surface.
    *}
 
+  PSDLSurface = ^TSDLSurface;
   TSDLSurface = record
     flags: UInt32;              {**< Read-only *}
     format: PSDLPixelFormat;    {**< Read-only *}
@@ -735,7 +765,7 @@ type
     clip_rect: PSDLRect;        {**< Read-only *}
 
     {** info for fast blit mapping to other surfaces *}
-    map: PSDLBlitMap;           {**< Private *}
+    map: Pointer;               {**< Private *} //SDL_BlitMap
 
     {** Reference count -- used when freeing surface *}
     refcount: SInt32;           {**< Read-mostly *}
@@ -793,7 +823,7 @@ type
    *  SDL_UnlockSurface()
    *}
 
-  function SDL_LockSurface(surface: PSDLSurface) cdecl external {$IFDEF GPC} name 'SDL_LockSurface' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_LockSurface(surface: PSDLSurface): SInt32 cdecl external {$IFDEF GPC} name 'SDL_LockSurface' {$ELSE} SDL_LibName {$ENDIF};
 
   {** SDL_LockSurface() *}
 
@@ -944,7 +974,7 @@ function SDL_GetSurfaceAlphaMod(surface: PSDLSurface; alpha: PUInt8): SInt32 cde
  *  SDL_GetSurfaceBlendMode()
  *}
 
-function SDL_SetSurfaceBlendMode(surface: PSDLSurface; blendMode: TSDLBlendMode): SInt32;
+function SDL_SetSurfaceBlendMode(surface: PSDLSurface; blendMode: TSDLBlendMode): SInt32 cdecl external {$IFDEF GPC} name 'SDL_SetSurfaceBlendMode' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Get the blend mode used for blit operations.
@@ -957,7 +987,7 @@ function SDL_SetSurfaceBlendMode(surface: PSDLSurface; blendMode: TSDLBlendMode)
  *  SDL_SetSurfaceBlendMode()
  *}
 
-function SDL_GetSurfaceBlendMode(surface: PSDLSurface; blendMode: PSDLBlendMode): SInt32;
+function SDL_GetSurfaceBlendMode(surface: PSDLSurface; blendMode: PSDLBlendMode): SInt32 cdecl external {$IFDEF GPC} name 'SDL_GetSurfaceBlendMode' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Sets the clipping rectangle for the destination surface in a blit.
@@ -973,7 +1003,7 @@ function SDL_GetSurfaceBlendMode(surface: PSDLSurface; blendMode: PSDLBlendMode)
  *  and destination surfaces.
  *}
 
-function SDL_SetClipRect(surface: PSDLSurface; const rect: PSDLRect): TSDLBool;
+function SDL_SetClipRect(surface: PSDLSurface; const rect: PSDLRect): TSDLBool cdecl external {$IFDEF GPC} name 'SDL_SetClipRect' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Gets the clipping rectangle for the destination surface in a blit.
@@ -982,7 +1012,7 @@ function SDL_SetClipRect(surface: PSDLSurface; const rect: PSDLRect): TSDLBool;
  *  with the correct values.
  *}
 
-procedure SDL_GetClipRect(surface: PSDLSurface; rect: PSDLRect);
+procedure SDL_GetClipRect(surface: PSDLSurface; rect: PSDLRect) cdecl external {$IFDEF GPC} name 'SDL_GetClipRect' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Creates a new surface of the specified format, and then copies and maps
@@ -995,8 +1025,8 @@ procedure SDL_GetClipRect(surface: PSDLSurface; rect: PSDLRect);
  *  surface.
  *}
 
-function SDL_ConvertSurface(SDL_Surface * src, SDL_PixelFormat * fmt, Uint32 flags): PSDLSurface;
-function SDL_ConvertSurfaceFormat(SDL_Surface * src, Uint32 pixel_format, Uint32 flags): PSDLSurface;
+function SDL_ConvertSurface(src: PSDLSurface; fmt: PSDLPixelFormat; flags: UInt32): PSDLSurface cdecl external {$IFDEF GPC} name 'SDL_ConvertSurface' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_ConvertSurfaceFormat(src: PSDLSurface; pixel_format: UInt32; flags: UInt32): PSDLSurface cdecl external {$IFDEF GPC} name 'SDL_ConvertSurfaceFormat' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Copy a block of pixels of one format to another format
@@ -1004,7 +1034,7 @@ function SDL_ConvertSurfaceFormat(SDL_Surface * src, Uint32 pixel_format, Uint32
  *  0 on success, or -1 if there was an error
  *}
 
-function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; const src: Pointer; src_pitch: SInt32; Uint32 dst_format; dst: Pointer; dst_pitch: SInt32): SInt32;;
+function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; const src: Pointer; src_pitch: SInt32; Uint32 dst_format; dst: Pointer; dst_pitch: SInt32): SInt32 cdecl external {$IFDEF GPC} name 'SDL_ConvertPixels' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Performs a fast fill of the given rectangle with color.
@@ -1017,26 +1047,24 @@ function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; co
  *  0 on success, or -1 on error.
  *}
 
-extern DECLSPEC int SDLCALL SDL_FillRect
-    (SDL_Surface * dst, const SDL_Rect * rect, Uint32 color);
-extern DECLSPEC int SDLCALL SDL_FillRects
-    (SDL_Surface * dst, const SDL_Rect * rects, int count, Uint32 color);
+function SDL_FillRect(dst: PSDLSurface; const rect: PSDLRect; color: UInt32): SInt32;
+function SDL_FillRects(dst: PSDLSurface; const rects: PSDLRect; count: SInt32; color: UInt32): SInt32;
 
 {**
  *  Performs a fast blit from the source surface to the destination surface.
  *  
  *  This assumes that the source and destination rectangles are
  *  the same size.  If either \c srcrect or \c dstrect are NULL, the entire
- *  surface (\c src or \c dst) is copied.  The final blit rectangles are saved
- *  in \c srcrect and \c dstrect after all clipping is performed.
+ *  surface ( src or  dst) is copied.  The final blit rectangles are saved
+ *  in srcrect and dstrect after all clipping is performed.
  *  
- *  \return If the blit is successful, it returns 0, otherwise it returns -1.
+ *  If the blit is successful, it returns 0, otherwise it returns -1.
  *
  *  The blit function should not be called on a locked surface.
  *
  *  The blit semantics for surfaces with and without alpha and colorkey
  *  are defined as follows:
- *  \verbatim
+ *
     RGBA->RGB:
       SDL_SRCALPHA set:
         alpha-blend (using alpha-channel).
@@ -1075,8 +1103,7 @@ extern DECLSPEC int SDLCALL SDL_FillRects
         copy RGB.
       both:
         if SDL_SRCCOLORKEY set, only copy the pixels matching the
-        source colour key.
-    \endverbatim
+        source colour key.r
  *  
  *  You should call SDL_BlitSurface() unless you know exactly how SDL
  *  blitting works internally and how to use the other blit functions.
@@ -1089,14 +1116,14 @@ SDL_BlitSurface = SDL_UpperBlit;
  *  rectangle validation and clipping before passing it to SDL_LowerBlit()
  *}
 
-function SDL_UpperBlit(src: PSDLSurface; const srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32;
+function SDL_UpperBlit(src: PSDLSurface; const srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32 cdecl external {$IFDEF GPC} name 'SDL_UpperBlit' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  This is a semi-private blit function and it performs low-level surface
  *  blitting only.
  *}
 
-function SDL_LowerBlit(src: PSDLSurface; srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32;
+function SDL_LowerBlit(src: PSDLSurface; srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32 cdecl external {$IFDEF GPC} name 'SDL_LowerBlit' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Perform a fast, low quality, stretch blit between two surfaces of the
@@ -1105,7 +1132,7 @@ function SDL_LowerBlit(src: PSDLSurface; srcrect: PSDLRect; dst: PSDLSurface; ds
  *  This function uses a static buffer, and is not thread-safe.
  *}
 
-function SDL_SoftStretch(src: PSDLSurface; const srcrect: PSDLRect; dst: PSDLSurface; const dstrect: PSDLSurface);
+function SDL_SoftStretch(src: PSDLSurface; const srcrect: PSDLRect; dst: PSDLSurface; const dstrect: PSDLSurface) cdecl external {$IFDEF GPC} name 'SDL_SoftStretch' {$ELSE} SDL_LibName {$ENDIF};
 
 SDL_BlitScaled = SDL_UpperBlitScaled;
 
@@ -3869,6 +3896,13 @@ end;
 function SDL_RectEquals(A: TSDLRect; B: TSDLRect);
 begin
   Result := (A.x = B.x) and (A.y = B.y) and (A.w = B.w) and (A.h = B.h);
+end;
+
+//from "sdl_pixels.h"
+function SDL_IsPixelFormat_FOURCC(format: Variant): Boolean;
+begin
+  {* The flag is set to 1 because 0x1? is not in the printable ASCII range *}
+  Result := format and SDL_PIXELFLAG(format) <> 1;
 end;
 
 //from "sdl_surface.h"
