@@ -717,6 +717,194 @@ function SDL_IntersectRectAndLine(const rect: PSDLRect; X1: PInt; Y1: PInt; X2: 
 //from "sdl_rwops"
 
 const
+  {* RWops Types *}
+  SDL_RWOPS_UNKNOWN	  = 0	{* Unknown stream type *}
+  SDL_RWOPS_WINFILE	  = 1	{* Win32 file *}
+  SDL_RWOPS_STDFILE	  = 2	{* Stdio file *}
+  SDL_RWOPS_JNIFILE	  = 3	{* Android asset *}
+  SDL_RWOPS_MEMORY    =	4	{* Memory stream *}
+  SDL_RWOPS_MEMORY_RO =	5	{* Read-Only memory stream *}
+
+type
+  {**
+   * This is the read/write operation structure -- very basic.
+   *}
+
+  {**
+   *  Return the size of the file in this rwops, or -1 if unknown
+   *}
+  TSize = function(context: PSDLRWops): SInt64;
+  
+  {**
+   *  Seek to offset relative to whence, one of stdio's whence values:
+   *  RW_SEEK_SET, RW_SEEK_CUR, RW_SEEK_END
+   *
+   *  the final offset in the data stream, or -1 on error.
+   *}
+  TSeek = function(context: PSDLRWops; offset: SInt64; whence: SInt32): SInt64;
+                   
+  {**
+   *  Read up to maxnum objects each of size size from the data
+   *  stream to the area pointed at by ptr.
+   *
+   *  the number of objects read, or 0 at error or end of file.
+   *}
+
+   TSize_t = function(context: PSDLRWops; ptr: Pointer; size);
+
+  TSDLRWops = packed record;
+    size: TSize;
+    seek: TSeek;
+    read:
+
+    size_t (SDLCALL * read) (struct SDL_RWops * context, void *ptr,
+                             size_t size, size_t maxnum);
+
+    {**
+     *  Write exactly num objects each of size size from the area
+     *  pointed at by ptr to data stream.
+     *  
+     *  the number of objects written, or 0 at error or end of file.
+     *}
+    size_t (SDLCALL * write) (struct SDL_RWops * context, const void *ptr,
+                              size_t size, size_t num);
+
+    {**
+     *  Close and free an allocated SDL_RWops structure.
+     *  
+     *  0 if successful or -1 on write error when flushing data.
+     *}
+    int (SDLCALL * close) (struct SDL_RWops * context);
+
+    Uint32 type;
+    union
+    {
+#if defined(ANDROID)
+        struct
+        {
+            void *fileNameRef;
+            void *inputStreamRef;
+            void *readableByteChannelRef;
+            void *readMethod;
+            void *assetFileDescriptorRef;
+            long position;
+            long size;
+            long offset;
+            int fd;
+        } androidio;
+#elif defined(__WIN32__)
+        struct
+        {
+            SDL_bool append;
+            void *h;
+            struct
+            {
+                void *data;
+                size_t size;
+                size_t left;
+            } buffer;
+        } windowsio;
+#endif
+
+#ifdef HAVE_STDIO_H
+        struct
+        {
+            SDL_bool autoclose;
+            FILE *fp;
+        } stdio;
+#endif
+        struct
+        {
+            Uint8 *base;
+            Uint8 *here;
+            Uint8 *stop;
+        } mem;
+        struct
+        {
+            void *data1;
+        } unknown;
+    } hidden;
+
+} SDL_RWops;
+
+
+{**
+ *  RWFrom functions
+ *  
+ *  Functions to create SDL_RWops structures from various data streams.
+ *}
+
+extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromFile(const char *file,
+                                                  const char *mode);
+
+#ifdef HAVE_STDIO_H
+extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromFP(FILE * fp,
+                                                SDL_bool autoclose);
+#else
+extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromFP(void * fp,
+                                                SDL_bool autoclose);
+#endif
+
+extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromMem(void *mem, int size);
+extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromConstMem(const void *mem,
+                                                      int size);
+
+/*@}*//*RWFrom functions*/
+
+
+extern DECLSPEC SDL_RWops *SDLCALL SDL_AllocRW(void);
+extern DECLSPEC void SDLCALL SDL_FreeRW(SDL_RWops * area);
+
+#define RW_SEEK_SET	0       /**< Seek from the beginning of data */
+#define RW_SEEK_CUR	1       /**< Seek relative to current read point */
+#define RW_SEEK_END	2       /**< Seek relative to the end of data */
+
+/**
+ *  \name Read/write macros
+ *  
+ *  Macros to easily read and write from an SDL_RWops structure.
+ */
+/*@{*/
+#define SDL_RWsize(ctx)	        (ctx)->size(ctx)
+#define SDL_RWseek(ctx, offset, whence)	(ctx)->seek(ctx, offset, whence)
+#define SDL_RWtell(ctx)			(ctx)->seek(ctx, 0, RW_SEEK_CUR)
+#define SDL_RWread(ctx, ptr, size, n)	(ctx)->read(ctx, ptr, size, n)
+#define SDL_RWwrite(ctx, ptr, size, n)	(ctx)->write(ctx, ptr, size, n)
+#define SDL_RWclose(ctx)		(ctx)->close(ctx)
+/*@}*//*Read/write macros*/
+
+
+/** 
+ *  \name Read endian functions
+ *  
+ *  Read an item of the specified endianness and return in native format.
+ */
+/*@{*/
+extern DECLSPEC Uint8 SDLCALL SDL_ReadU8(SDL_RWops * src);
+extern DECLSPEC Uint16 SDLCALL SDL_ReadLE16(SDL_RWops * src);
+extern DECLSPEC Uint16 SDLCALL SDL_ReadBE16(SDL_RWops * src);
+extern DECLSPEC Uint32 SDLCALL SDL_ReadLE32(SDL_RWops * src);
+extern DECLSPEC Uint32 SDLCALL SDL_ReadBE32(SDL_RWops * src);
+extern DECLSPEC Uint64 SDLCALL SDL_ReadLE64(SDL_RWops * src);
+extern DECLSPEC Uint64 SDLCALL SDL_ReadBE64(SDL_RWops * src);
+/*@}*//*Read endian functions*/
+
+/** 
+ *  \name Write endian functions
+ *  
+ *  Write an item of native format to the specified endianness.
+ */
+/*@{*/
+extern DECLSPEC size_t SDLCALL SDL_WriteU8(SDL_RWops * dst, Uint8 value);
+extern DECLSPEC size_t SDLCALL SDL_WriteLE16(SDL_RWops * dst, Uint16 value);
+extern DECLSPEC size_t SDLCALL SDL_WriteBE16(SDL_RWops * dst, Uint16 value);
+extern DECLSPEC size_t SDLCALL SDL_WriteLE32(SDL_RWops * dst, Uint32 value);
+extern DECLSPEC size_t SDLCALL SDL_WriteBE32(SDL_RWops * dst, Uint32 value);
+extern DECLSPEC size_t SDLCALL SDL_WriteLE64(SDL_RWops * dst, Uint64 value);
+extern DECLSPEC size_t SDLCALL SDL_WriteBE64(SDL_RWops * dst, Uint64 value);
+/*@}*//*Write endian functions*/
+
+const
   {**
    *  Surface flags
    *
@@ -745,6 +933,11 @@ type
    *  This structure should be treated as read-only, except for \c pixels,
    *  which, if not NULL, contains the raw pixel data for the surface.
    *}
+
+  PSDLBlitMap = ^TSDLBlitMap;
+  TSDLBlitMap = record
+    map: Pointer;
+  end;
 
   PSDLSurface = ^TSDLSurface;
   TSDLSurface = record
@@ -775,7 +968,7 @@ type
    *  The type of function used for surface blitting functions.
    *}
 
-   SDLBlit = function(src: PSDLSurface; srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32;
+   TSDLBlit = function(src: PSDLSurface; srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32;
 
   {**
    *  Allocate and free an RGB surface.
