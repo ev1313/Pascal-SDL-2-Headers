@@ -21,7 +21,8 @@ unit SDL;
     "sdl_pixels.h",
     "sdl_surface.h",
     "sdl_rwops.h",
-	"sdl_blendmode.h"
+	"sdl_blendmode.h",
+	"sdl_rect.h"
 
   Parts of the SDL.pas are from the SDL-1.2-Headerconversion from the JEDI-Team,
   written by Domenique Louis and others.
@@ -91,7 +92,7 @@ const
   //types from SDLtype_s.h / SDL_stdinc.h
 type
 
-  TSDLBool = (SDL_FALSE,SDL_TRUE);
+  TSDL_Bool = (SDL_FALSE,SDL_TRUE);
 
   PUInt8Array = ^TUInt8Array;
   PUInt8 = ^UInt8;
@@ -483,21 +484,21 @@ function SDL_DEFINE_PIXELFOURCC(A,B,C,D: Variant): Variant;
                            (Integer('U') shl 24);
 
 type
-  PSDLColor = ^TSDLColor;
-  TSDLColor = record
+  PSDL_Color = ^TSDL_Color;
+  TSDL_Color = record
     r: UInt8;
     g: UInt8;
     b: UInt8;
     unused: UInt8;
   end;
 
-  TSDLColour = TSDLColor;
-  PSDLColour = ^TSDLColour;
+  TSDL_Colour = TSDL_Color;
+  PSDL_Colour = ^TSDL_Colour;
 
-  PSDLPalette = ^TSDLPalette;
-  TSDLPalette = record
+  PSDL_Palette = ^TSDL_Palette;
+  TSDL_Palette = record
     ncolors: SInt32;
-    colors: PSDLColor;
+    colors: PSDL_Color;
     version: UInt32;
     refcount: SInt32;
   end;
@@ -506,10 +507,10 @@ type
    *  Everything in the pixel format structure is read-only.
    *}
 
-  PSDLPixelFormat = ^TSDLPixelFormat;
-  TSDLPixelFormat = record
+  PSDL_PixelFormat = ^TSDL_PixelFormat;
+  TSDL_PixelFormat = record
     format: UInt32;
-    palette: PSDLPalette;
+    palette: PSDL_Palette;
     BitsPerPixel: UInt8;
     BytesPerPixel: UInt8;
     padding: array[0..1] of UInt8;
@@ -526,7 +527,7 @@ type
     Bshift: UInt8;
     Ashift: UInt8;
     refcount: SInt32;
-    next: PSDLPixelFormat;
+    next: PSDL_PixelFormat;
   end;
 
   {**
@@ -543,7 +544,7 @@ function SDL_GetPixelFormatName(format: UInt32): PChar cdecl; external {$IFDEF G
    *  SDL_MasksToPixelFormatEnum()
    *}
 
-function SDL_PixelFormatEnumToMasks(format: UInt32; bpp: PInt; Rmask: PUInt32; Gmask: PUInt32; Bmask: PUInt32; Amask: PUInt32): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_PixelFormatEnumToMasks' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_PixelFormatEnumToMasks(format: UInt32; bpp: PInt; Rmask: PUInt32; Gmask: PUInt32; Bmask: PUInt32; Amask: PUInt32): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_PixelFormatEnumToMasks' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Convert a bpp and RGBA masks to an enumerated pixel format.
@@ -560,13 +561,13 @@ function SDL_MasksToPixelFormatEnum(bpp: SInt32; Rmask: UInt32; Gmask: UInt32; B
    *  Create an SDL_PixelFormat structure from a pixel format enum.
    *}
 
-function SDL_AllocFormat(pixel_format: UInt32): PSDLPixelFormat cdecl; external {$IFDEF GPC} name 'SDL_AllocFormat' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_AllocFormat(pixel_format: UInt32): PSDL_PixelFormat cdecl; external {$IFDEF GPC} name 'SDL_AllocFormat' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Free an SDL_PixelFormat structure.
    *}
 
-procedure SDL_FreeFormat(format: PSDLPixelFormat) cdecl; external {$IFDEF GPC} name 'SDL_FreeFormat' {$ELSE} SDL_LibName {$ENDIF};
+procedure SDL_FreeFormat(format: PSDL_PixelFormat) cdecl; external {$IFDEF GPC} name 'SDL_FreeFormat' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a palette structure with the specified number of color
@@ -579,13 +580,13 @@ procedure SDL_FreeFormat(format: PSDLPixelFormat) cdecl; external {$IFDEF GPC} n
    *  SDL_FreePalette()
    *}
 
-function SDL_AllocPalette(ncolors: SInt32): PSDLPalette cdecl; external {$IFDEF GPC} name 'SDL_AllocPalette' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_AllocPalette(ncolors: SInt32): PSDL_Palette cdecl; external {$IFDEF GPC} name 'SDL_AllocPalette' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the palette for a pixel format structure.
    *}
 
-function SDL_SetPixelFormatPalette(format: PSDLPixelFormat; palette: PSDLPalette): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetPixelFormatPalette' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetPixelFormatPalette(format: PSDL_PixelFormat; palette: PSDL_Palette): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetPixelFormatPalette' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set a range of colors in a palette.
@@ -598,7 +599,7 @@ function SDL_SetPixelFormatPalette(format: PSDLPixelFormat; palette: PSDLPalette
    *  0 on success, or -1 if not all of the colors could be set.
    *}
 
-function SDL_SetPaletteColors(palette: PSDLPalette; const colors: PSDLColor; firstcolor: SInt32; ncolors: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetPaletteColors' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetPaletteColors(palette: PSDL_Palette; const colors: PSDL_Color; firstcolor: SInt32; ncolors: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetPaletteColors' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Free a palette created with SDL_AllocPalette().
@@ -606,7 +607,7 @@ function SDL_SetPaletteColors(palette: PSDLPalette; const colors: PSDLColor; fir
    *  SDL_AllocPalette()
    *}
 
-procedure SDL_FreePalette(palette: PSDLPalette) cdecl; external {$IFDEF GPC} name 'SDL_FreePalette' {$ELSE} SDL_LibName {$ENDIF};
+procedure SDL_FreePalette(palette: PSDL_Palette) cdecl; external {$IFDEF GPC} name 'SDL_FreePalette' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Maps an RGB triple to an opaque pixel value for a given pixel format.
@@ -614,7 +615,7 @@ procedure SDL_FreePalette(palette: PSDLPalette) cdecl; external {$IFDEF GPC} nam
    *  SDL_MapRGBA
    *}
 
-function SDL_MapRGB(const format: PSDLPixelFormat; r: UInt8; g: UInt8; b: UInt8): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_MapRGB' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_MapRGB(const format: PSDL_PixelFormat; r: UInt8; g: UInt8; b: UInt8): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_MapRGB' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Maps an RGBA quadruple to a pixel value for a given pixel format.
@@ -622,7 +623,7 @@ function SDL_MapRGB(const format: PSDLPixelFormat; r: UInt8; g: UInt8; b: UInt8)
    *  SDL_MapRGB
    *}
 
-function SDL_MapRGBA(const format: PSDLPixelFormat; r: UInt8; g: UInt8; b: UInt8; a: UInt8): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_MapRGBA' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_MapRGBA(const format: PSDL_PixelFormat; r: UInt8; g: UInt8; b: UInt8; a: UInt8): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_MapRGBA' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the RGB components from a pixel of the specified format.
@@ -630,7 +631,7 @@ function SDL_MapRGBA(const format: PSDLPixelFormat; r: UInt8; g: UInt8; b: UInt8
    *  SDL_GetRGBA
    *}
 
-procedure SDL_GetRGB(pixel: UInt32; const format: PSDLPixelFormat; r: PUInt8; g: PUInt8; b: PUInt8) cdecl; external {$IFDEF GPC} name 'SDL_GetRGB' {$ELSE} SDL_LibName {$ENDIF};
+procedure SDL_GetRGB(pixel: UInt32; const format: PSDL_PixelFormat; r: PUInt8; g: PUInt8; b: PUInt8) cdecl; external {$IFDEF GPC} name 'SDL_GetRGB' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the RGBA components from a pixel of the specified format.
@@ -638,7 +639,7 @@ procedure SDL_GetRGB(pixel: UInt32; const format: PSDLPixelFormat; r: PUInt8; g:
    *  SDL_GetRGB
    *}
 
-procedure SDL_GetRGBA(pixel: UInt32; const format: PSDLPixelFormat; r: PUInt8; g: PUInt8; b: PUInt8; a: PUInt8) cdecl; external {$IFDEF GPC} name 'SDL_GetRGBA' {$ELSE} SDL_LibName {$ENDIF};
+procedure SDL_GetRGBA(pixel: UInt32; const format: PSDL_PixelFormat; r: PUInt8; g: PUInt8; b: PUInt8; a: PUInt8) cdecl; external {$IFDEF GPC} name 'SDL_GetRGBA' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Calculate a 256 entry gamma ramp for a gamma value.
@@ -655,8 +656,8 @@ type
    *  SDL_EnclosePoints
    *}
 
-  PSDLPoint = ^TSDLPoint;
-  TSDLPoint = record
+  PSDL_Point = ^TSDL_Point;
+  TSDL_Point = record
     x: SInt32;
     y: SInt32;
   end;
@@ -672,8 +673,8 @@ type
    *  SDL_EnclosePoints
    *}
 
-  PSDLRect = ^TSDLRect;
-  TSDLRect = record
+  PSDL_Rect = ^TSDL_Rect;
+  TSDL_Rect = record
     x,y: SInt32;
     w,h: SInt32;
   end;
@@ -682,15 +683,15 @@ type
    *  Returns true if the rectangle has no area.
    *}
 
-//changed from variant(b‰‰‰‰‰h!) to TSDLRect
-//maybe PSDLRect?
-function SDL_RectEmpty(X: TSDLRect): Boolean;
+//changed from variant(b‰‰‰‰‰h!) to TSDL_Rect
+//maybe PSDL_Rect?
+function SDL_RectEmpty(X: TSDL_Rect): Boolean;
 
   {**
    *  Returns true if the two rectangles are equal.
    *}
 
-function SDL_RectEquals(A: TSDLRect; B: TSDLRect): Boolean;
+function SDL_RectEquals(A: TSDL_Rect; B: TSDL_Rect): Boolean;
 
 {**
  *  Determine whether two rectangles intersect.
@@ -698,7 +699,7 @@ function SDL_RectEquals(A: TSDLRect; B: TSDLRect): Boolean;
  *  SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
  *}
 
-function SDL_HasIntersection(const A: PSDLRect; const B: PSDLRect): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_HasIntersection' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_HasIntersection(const A: PSDL_Rect; const B: PSDL_Rect): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_HasIntersection' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Calculate the intersection of two rectangles.
@@ -706,13 +707,13 @@ function SDL_HasIntersection(const A: PSDLRect; const B: PSDLRect): TSDLBool cde
  *  SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
  *}
 
-function SDL_IntersectRect(const A: PSDLRect; const B: PSDLRect; result: PSDLRect): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_IntersectRect' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_IntersectRect(const A: PSDL_Rect; const B: PSDL_Rect; result: PSDL_Rect): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_IntersectRect' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Calculate the union of two rectangles.
  *}
 
-procedure SDL_UnionRect(const A: PSDLRect; const B: PSDLRect; result: PSDLRect) cdecl; external {$IFDEF GPC} name 'SDL_UnionRect' {$ELSE} SDL_LibName {$ENDIF};
+procedure SDL_UnionRect(const A: PSDL_Rect; const B: PSDL_Rect; result: PSDL_Rect) cdecl; external {$IFDEF GPC} name 'SDL_UnionRect' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Calculate a minimal rectangle enclosing a set of points
@@ -720,7 +721,7 @@ procedure SDL_UnionRect(const A: PSDLRect; const B: PSDLRect; result: PSDLRect) 
  *  SDL_TRUE if any points were within the clipping rect
  *}
 
-function SDL_EnclosePoints(const points: PSDLPoint; count: SInt32; const clip: PSDLRect; result: PSDLRect): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_EnclosePoints' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_EnclosePoints(const points: PSDL_Point; count: SInt32; const clip: PSDL_Rect; result: PSDL_Rect): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_EnclosePoints' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Calculate the intersection of a rectangle and line segment.
@@ -728,7 +729,7 @@ function SDL_EnclosePoints(const points: PSDLPoint; count: SInt32; const clip: P
  *  SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
  *}
 
-function SDL_IntersectRectAndLine(const rect: PSDLRect; X1: PInt; Y1: PInt; X2: PInt; Y2: PInt): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_IntersectRectAndLine' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_IntersectRectAndLine(const rect: PSDL_Rect; X1: PInt; Y1: PInt; X2: PInt; Y2: PInt): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_IntersectRectAndLine' {$ELSE} SDL_LibName {$ENDIF};
 
 //from "sdl_rwops"
 
@@ -742,7 +743,7 @@ const
   SDL_RWOPS_MEMORY_RO =	5;	{* Read-Only memory stream *}
 
 type
-  PSDLRWops = ^TSDLRWops;
+  PSDL_RWops = ^TSDL_RWops;
 
   {**
    * This is the read/write operation structure -- very basic.
@@ -751,7 +752,7 @@ type
   {**
    *  Return the size of the file in this rwops, or -1 if unknown
    *}
-  TSize = function(context: PSDLRWops): SInt64; {$IFNDEF GPC} cdecl; {$ENDIF}
+  TSize = function(context: PSDL_RWops): SInt64; {$IFNDEF GPC} cdecl; {$ENDIF}
   
   {**
    *  Seek to offset relative to whence, one of stdio's whence values:
@@ -759,7 +760,7 @@ type
    *
    *  the final offset in the data stream, or -1 on error.
    *}
-  TSeek = function(context: PSDLRWops; offset: SInt64; whence: SInt32): SInt64; {$IFNDEF GPC} cdecl; {$ENDIF}
+  TSeek = function(context: PSDL_RWops; offset: SInt64; whence: SInt32): SInt64; {$IFNDEF GPC} cdecl; {$ENDIF}
                    
   {**
    *  Read up to maxnum objects each of size size from the data
@@ -768,7 +769,7 @@ type
    *  the number of objects read, or 0 at error or end of file.
    *}
 
-   TRead = function(context: PSDLRWops; ptr: Pointer; size: size_t; maxnum: size_t): size_t; {$IFNDEF GPC} cdecl; {$ENDIF}
+   TRead = function(context: PSDL_RWops; ptr: Pointer; size: size_t; maxnum: size_t): size_t; {$IFNDEF GPC} cdecl; {$ENDIF}
    
   {**
    *  Write exactly num objects each of size size from the area
@@ -777,7 +778,7 @@ type
    *  the number of objects written, or 0 at error or end of file.
    *}
 	
-   TWrite = function(context: PSDLRWops; const ptr: Pointer; size: size_t; num: size_t): size_t; {$IFNDEF GPC} cdecl; {$ENDIF}
+   TWrite = function(context: PSDL_RWops; const ptr: Pointer; size: size_t; num: size_t): size_t; {$IFNDEF GPC} cdecl; {$ENDIF}
 	
   {**
    *  Close and free an allocated SDL_RWops structure.
@@ -785,7 +786,7 @@ type
    *  0 if successful or -1 on write error when flushing data.
    *}
 
-  TClose =  function(context: PSDLRWops): SInt32;  
+  TClose =  function(context: PSDL_RWops): SInt32;  
 	
   TStdio = record
     autoclose: Boolean;
@@ -826,7 +827,7 @@ type
     buffer: TWindowsIOBuffer;
   end;
 	
-  TSDLRWops = packed record
+  TSDL_RWops = packed record
     size: TSize;
     seek: TSeek;
     read: TRead;
@@ -853,20 +854,20 @@ type
  *  Functions to create SDL_RWops structures from various data streams.
  *}
 
-function SDL_RWFromFile(const _file: PAnsiChar; const mode: PChar): PSDLRWops; cdecl; external {$IFDEF GPC} name 'SDL_RWFromFile' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_RWFromFile(const _file: PAnsiChar; const mode: PChar): PSDL_RWops; cdecl; external {$IFDEF GPC} name 'SDL_RWFromFile' {$ELSE} SDL_LibName {$ENDIF};
 
-{function SDL_RWFromFP(fp: file; autoclose: Boolean): PSDLRWops; cdecl; external SDL_LibName;} //don't know if this works
+{function SDL_RWFromFP(fp: file; autoclose: Boolean): PSDL_RWops; cdecl; external SDL_LibName;} //don't know if this works
 
-function SDL_RWFromFP(fp: Pointer; autoclose: Boolean): PSDLRWops; cdecl; external {$IFDEF GPC} name 'SDL_RWFromFP' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_RWFromFP(fp: Pointer; autoclose: Boolean): PSDL_RWops; cdecl; external {$IFDEF GPC} name 'SDL_RWFromFP' {$ELSE} SDL_LibName {$ENDIF};
 
-function SDL_RWFromMem(mem: Pointer; size: SInt32): PSDLRWops; cdecl; external {$IFDEF GPC} name 'SDL_RWFromMem' {$ELSE} SDL_LibName {$ENDIF};
-function SDL_RWFromConstMem(const mem: Pointer; size: SInt32): PSDLRWops; cdecl; external {$IFDEF GPC} name 'SDL_RWFromConstMem' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_RWFromMem(mem: Pointer; size: SInt32): PSDL_RWops; cdecl; external {$IFDEF GPC} name 'SDL_RWFromMem' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_RWFromConstMem(const mem: Pointer; size: SInt32): PSDL_RWops; cdecl; external {$IFDEF GPC} name 'SDL_RWFromConstMem' {$ELSE} SDL_LibName {$ENDIF};
 
 {*RWFrom functions*}
 
 
-function SDL_AllocRW: PSDLRWops; cdecl; external {$IFDEF GPC} name 'SDL_AllocRW' {$ELSE} SDL_LibName {$ENDIF};
-procedure SDL_FreeRW(area: PSDLRWops); cdecl; external {$IFDEF GPC} name 'SDL_FreeRW' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_AllocRW: PSDL_RWops; cdecl; external {$IFDEF GPC} name 'SDL_AllocRW' {$ELSE} SDL_LibName {$ENDIF};
+procedure SDL_FreeRW(area: PSDL_RWops); cdecl; external {$IFDEF GPC} name 'SDL_FreeRW' {$ELSE} SDL_LibName {$ENDIF};
 
 const
   RW_SEEK_SET = 0;       {**< Seek from the beginning of data *}
@@ -894,13 +895,13 @@ const
  *  Read an item of the specified endianness and return in native format.
  *}
 
-function SDL_ReadU8(src: PSDLRWops): UInt8;
-function SDL_ReadLE16(src: PSDLRWops): UInt16;
-function SDL_ReadBE16(src: PSDLRWops): UInt16;
-function SDL_ReadLE32(src: PSDLRWops): UInt32;
-function SDL_ReadBE32(src: PSDLRWops): UInt32;
-function SDL_ReadLE64(src: PSDLRWops): UInt64;
-function SDL_ReadBE64(src: PSDLRWops): UInt64;
+function SDL_ReadU8(src: PSDL_RWops): UInt8;
+function SDL_ReadLE16(src: PSDL_RWops): UInt16;
+function SDL_ReadBE16(src: PSDL_RWops): UInt16;
+function SDL_ReadLE32(src: PSDL_RWops): UInt32;
+function SDL_ReadBE32(src: PSDL_RWops): UInt32;
+function SDL_ReadLE64(src: PSDL_RWops): UInt64;
+function SDL_ReadBE64(src: PSDL_RWops): UInt64;
 
 {*Read endian functions*}
 
@@ -910,13 +911,13 @@ function SDL_ReadBE64(src: PSDLRWops): UInt64;
  *  Write an item of native format to the specified endianness.
  *}
 
-function SDL_WriteU8(dst: PSDLRWops; value: UInt8): size_t;
-function SDL_WriteLE16(dst: PSDLRWops; value: UInt16): size_t;
-function SDL_WriteBE16(dst: PSDLRWops; value: UInt16): size_t;
-function SDL_WriteLE32(dst: PSDLRWops; value: UInt32): size_t;
-function SDL_WriteBE32(dst: PSDLRWops; value: UInt32): size_t;
-function SDL_WriteLE64(dst: PSDLRWops; value: UInt64): size_t;
-function SDL_WriteBE64(dst: PSDLRWops; value: UInt64): size_t;
+function SDL_WriteU8(dst: PSDL_RWops; value: UInt8): size_t;
+function SDL_WriteLE16(dst: PSDL_RWops; value: UInt16): size_t;
+function SDL_WriteBE16(dst: PSDL_RWops; value: UInt16): size_t;
+function SDL_WriteLE32(dst: PSDL_RWops; value: UInt32): size_t;
+function SDL_WriteBE32(dst: PSDL_RWops; value: UInt32): size_t;
+function SDL_WriteLE64(dst: PSDL_RWops; value: UInt64): size_t;
+function SDL_WriteBE64(dst: PSDL_RWops; value: UInt64): size_t;
 { Write endian functions }
 
 //from "sdl_blendmode.h"
@@ -925,13 +926,15 @@ function SDL_WriteBE64(dst: PSDLRWops; value: UInt64): size_t;
  *  The blend mode used in SDL_RenderCopy() and drawing operations.
  *}
  
- TSDLBlendMode = DWord;
+type
+  PSDL_BlendMode = ^TSDL_BlendMode;
+  TSDL_BlendMode = DWord;
  
- const
-    SDL_BLENDMODE_NONE  = $00000000;    {**< No blending *}
-    SDL_BLENDMODE_BLEND = $00000001;    {**< dst = (src * A) + (dst * (1-A)) *}
-    SDL_BLENDMODE_ADD   = $00000002;    {**< dst = (src * A) + dst *}
-    SDL_BLENDMODE_MOD   = $00000004;    {**< dst = src * dst *}
+const
+  SDL_BLENDMODE_NONE  = $00000000;    {**< No blending *}
+  SDL_BLENDMODE_BLEND = $00000001;    {**< dst = (src * A) + (dst * (1-A)) *}
+  SDL_BLENDMODE_ADD   = $00000002;    {**< dst = (src * A) + dst *}
+  SDL_BLENDMODE_MOD   = $00000004;    {**< dst = src * dst *}
 
 //from "sdl_surface.h"
 
@@ -965,15 +968,15 @@ type
    *  which, if not NULL, contains the raw pixel data for the surface.
    *}
 
-  PSDLBlitMap = ^TSDLBlitMap;
-  TSDLBlitMap = record
+  PSDL_BlitMap = ^TSDL_BlitMap;
+  TSDL_BlitMap = record
     map: Pointer;
   end;
 
-  PSDLSurface = ^TSDLSurface;
-  TSDLSurface = record
+  PSDL_Surface = ^TSDL_Surface;
+  TSDL_Surface = record
     flags: UInt32;              {**< Read-only *}
-    format: PSDLPixelFormat;    {**< Read-only *}
+    format: PSDL_PixelFormat;    {**< Read-only *}
     w, h: SInt32;               {**< Read-only *}
     pitch: SInt32;              {**< Read-only *}
     pixels: Pointer;            {**< Read-write *}
@@ -986,7 +989,7 @@ type
     lock_data: Pointer;         {**< Read-only *}
 
     {** clipping information *}
-    clip_rect: PSDLRect;        {**< Read-only *}
+    clip_rect: PSDL_Rect;        {**< Read-only *}
 
     {** info for fast blit mapping to other surfaces *}
     map: Pointer;               {**< Private *} //SDL_BlitMap
@@ -999,7 +1002,7 @@ type
    *  The type of function used for surface blitting functions.
    *}
 
-   TSDLBlit = function(src: PSDLSurface; srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32;
+   TSDL_Blit = function(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32;
 
   {**
    *  Allocate and free an RGB surface.
@@ -1013,9 +1016,9 @@ type
    *  flags The flags are obsolete and should be set to 0.
    *}
 
-  function SDL_CreateRGBSurface(flags: UInt32; width: SInt32; height: SInt32; depth: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): PSDLSurface cdecl; external {$IFDEF GPC} name 'SDL_CreateRGBSurface' {$ELSE} SDL_LibName {$ENDIF};
-  function SDL_CreateRGBSurfaceFrom(pixels: Pointer; width: SInt32; height: SInt32; depth: SInt32; pitch: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): PSDLSurface cdecl; external {$IFDEF GPC} name 'SDL_CreateRGBSurfaceFrom' {$ELSE} SDL_LibName {$ENDIF};
-  procedure SDL_FreeSurface(surface: PSDLSurface) cdecl; external {$IFDEF GPC} name 'SDL_FreeSurface' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_CreateRGBSurface(flags: UInt32; width: SInt32; height: SInt32; depth: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): PSDL_Surface cdecl; external {$IFDEF GPC} name 'SDL_CreateRGBSurface' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_CreateRGBSurfaceFrom(pixels: Pointer; width: SInt32; height: SInt32; depth: SInt32; pitch: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): PSDL_Surface cdecl; external {$IFDEF GPC} name 'SDL_CreateRGBSurfaceFrom' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_FreeSurface(surface: PSDL_Surface) cdecl; external {$IFDEF GPC} name 'SDL_FreeSurface' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the palette used by a surface.
@@ -1025,7 +1028,7 @@ type
    *  A single palette can be shared with many surfaces.
    *}
 
-  function SDL_SetSurfacePalette(surface: PSDLSurface; palette: PSDLPalette): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfacePalette' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_SetSurfacePalette(surface: PSDL_Surface; palette: PSDL_Palette): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfacePalette' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Sets up a surface for directly accessing the pixels.
@@ -1047,11 +1050,11 @@ type
    *  SDL_UnlockSurface()
    *}
 
-  function SDL_LockSurface(surface: PSDLSurface): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LockSurface' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_LockSurface(surface: PSDL_Surface): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LockSurface' {$ELSE} SDL_LibName {$ENDIF};
 
   {** SDL_LockSurface() *}
 
-  procedure SDL_UnlockSurface(surface: PSDLSurface) cdecl; external {$IFDEF GPC} name 'SDL_UnlockSurface' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_UnlockSurface(surface: PSDL_Surface) cdecl; external {$IFDEF GPC} name 'SDL_UnlockSurface' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Load a surface from a seekable SDL data stream (memory or file).
@@ -1063,7 +1066,7 @@ type
    *  the new surface, or NULL if there was an error.
    *}
 
-  function SDL_LoadBMP_RW(src: PSDLRWops; freesrc: SInt32): PSDLSurface cdecl; external {$IFDEF GPC} name 'SDL_LoadBMP_RW' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_LoadBMP_RW(src: PSDL_RWops; freesrc: SInt32): PSDL_Surface cdecl; external {$IFDEF GPC} name 'SDL_LoadBMP_RW' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Load a surface from a file.
@@ -1071,7 +1074,7 @@ type
    *  Convenience macro.
    *}
 
-  function SDL_LoadBMP(_file: AnsiString): PSDLSurface;
+  function SDL_LoadBMP(_file: AnsiString): PSDL_Surface;
 
   {**
    *  Save a surface to a seekable SDL data stream (memory or file).
@@ -1081,7 +1084,7 @@ type
    *  0 if successful or -1 if there was an error.
    *}
 
-function SDL_SaveBMP_RW(surface: PSDLSurface; dst: PSDLRWops; freedst: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LoadBMP_RW' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SaveBMP_RW(surface: PSDL_Surface; dst: PSDL_RWops; freedst: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LoadBMP_RW' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Save a surface to a file.
@@ -1102,7 +1105,7 @@ function SDL_SaveBMP_RW(surface: PSDLSurface; dst: PSDLRWops; freedst: SInt32): 
  *  but the surface must be locked before directly accessing the pixels.
  *}
 
-function SDL_SetSurfaceRLE(surface: PSDLSurface; flag: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceRLE' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetSurfaceRLE(surface: PSDL_Surface; flag: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceRLE' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Sets the color key (transparent pixel) in a blittable surface.
@@ -1116,7 +1119,7 @@ function SDL_SetSurfaceRLE(surface: PSDLSurface; flag: SInt32): SInt32 cdecl; ex
  *  You can pass SDL_RLEACCEL to enable RLE accelerated blits.
  *}
 
-function SDL_SetColorKey(surface: PSDLSurface; flag: SInt32; key: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetColorKey' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetColorKey(surface: PSDL_Surface; flag: SInt32; key: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetColorKey' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Gets the color key (transparent pixel) in a blittable surface.
@@ -1129,7 +1132,7 @@ function SDL_SetColorKey(surface: PSDLSurface; flag: SInt32; key: UInt32): SInt3
  *  enabled.
  *}
 
-function SDL_GetColorKey(surface: PSDLSurface; key: PUInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetColorKey' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_GetColorKey(surface: PSDL_Surface; key: PUInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetColorKey' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Set an additional color value used in blit operations.
@@ -1144,7 +1147,7 @@ function SDL_GetColorKey(surface: PSDLSurface; key: PUInt32): SInt32 cdecl; exte
  *  SDL_GetSurfaceColorMod()
  *}
 
-function SDL_SetSurfaceColorMod(surface: PSDLSurface; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceColorMod' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetSurfaceColorMod(surface: PSDL_Surface; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceColorMod' {$ELSE} SDL_LibName {$ENDIF};
 
 
 {**
@@ -1160,7 +1163,7 @@ function SDL_SetSurfaceColorMod(surface: PSDLSurface; r: UInt8; g: UInt8; b: UIn
  *  SDL_SetSurfaceColorMod()
  *}
 
-function SDL_GetSurfaceColorMod(surface: PSDLSurface; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetSurfaceColorMod' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_GetSurfaceColorMod(surface: PSDL_Surface; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetSurfaceColorMod' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Set an additional alpha value used in blit operations.
@@ -1173,7 +1176,7 @@ function SDL_GetSurfaceColorMod(surface: PSDLSurface; r: UInt8; g: UInt8; b: UIn
  *  SDL_GetSurfaceAlphaMod()
  *}
 
-function SDL_SetSurfaceAlphaMod(surface: PSDLSurface; alpha: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceAlphaMod' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetSurfaceAlphaMod(surface: PSDL_Surface; alpha: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceAlphaMod' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Get the additional alpha value used in blit operations.
@@ -1186,7 +1189,7 @@ function SDL_SetSurfaceAlphaMod(surface: PSDLSurface; alpha: UInt8): SInt32 cdec
  *  SDL_SetSurfaceAlphaMod()
  *}
 
-function SDL_GetSurfaceAlphaMod(surface: PSDLSurface; alpha: PUInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetSurfaceAlphaMod' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_GetSurfaceAlphaMod(surface: PSDL_Surface; alpha: PUInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetSurfaceAlphaMod' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Set the blend mode used for blit operations.
@@ -1199,7 +1202,7 @@ function SDL_GetSurfaceAlphaMod(surface: PSDLSurface; alpha: PUInt8): SInt32 cde
  *  SDL_GetSurfaceBlendMode()
  *}
 
-function SDL_SetSurfaceBlendMode(surface: PSDLSurface; blendMode: TSDLBlendMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceBlendMode' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetSurfaceBlendMode(surface: PSDL_Surface; blendMode: TSDL_BlendMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceBlendMode' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Get the blend mode used for blit operations.
@@ -1212,7 +1215,7 @@ function SDL_SetSurfaceBlendMode(surface: PSDLSurface; blendMode: TSDLBlendMode)
  *  SDL_SetSurfaceBlendMode()
  *}
 
-function SDL_GetSurfaceBlendMode(surface: PSDLSurface; blendMode: PSDLBlendMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetSurfaceBlendMode' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_GetSurfaceBlendMode(surface: PSDL_Surface; blendMode: PSDL_BlendMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetSurfaceBlendMode' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Sets the clipping rectangle for the destination surface in a blit.
@@ -1228,7 +1231,7 @@ function SDL_GetSurfaceBlendMode(surface: PSDLSurface; blendMode: PSDLBlendMode)
  *  and destination surfaces.
  *}
 
-function SDL_SetClipRect(surface: PSDLSurface; const rect: PSDLRect): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_SetClipRect' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetClipRect(surface: PSDL_Surface; const rect: PSDL_Rect): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_SetClipRect' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Gets the clipping rectangle for the destination surface in a blit.
@@ -1237,7 +1240,7 @@ function SDL_SetClipRect(surface: PSDLSurface; const rect: PSDLRect): TSDLBool c
  *  with the correct values.
  *}
 
-procedure SDL_GetClipRect(surface: PSDLSurface; rect: PSDLRect) cdecl; external {$IFDEF GPC} name 'SDL_GetClipRect' {$ELSE} SDL_LibName {$ENDIF};
+procedure SDL_GetClipRect(surface: PSDL_Surface; rect: PSDL_Rect) cdecl; external {$IFDEF GPC} name 'SDL_GetClipRect' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Creates a new surface of the specified format, and then copies and maps
@@ -1250,8 +1253,8 @@ procedure SDL_GetClipRect(surface: PSDLSurface; rect: PSDLRect) cdecl; external 
  *  surface.
  *}
 
-function SDL_ConvertSurface(src: PSDLSurface; fmt: PSDLPixelFormat; flags: UInt32): PSDLSurface cdecl; external {$IFDEF GPC} name 'SDL_ConvertSurface' {$ELSE} SDL_LibName {$ENDIF};
-function SDL_ConvertSurfaceFormat(src: PSDLSurface; pixel_format: UInt32; flags: UInt32): PSDLSurface cdecl; external {$IFDEF GPC} name 'SDL_ConvertSurfaceFormat' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_ConvertSurface(src: PSDL_Surface; fmt: PSDL_PixelFormat; flags: UInt32): PSDL_Surface cdecl; external {$IFDEF GPC} name 'SDL_ConvertSurface' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_ConvertSurfaceFormat(src: PSDL_Surface; pixel_format: UInt32; flags: UInt32): PSDL_Surface cdecl; external {$IFDEF GPC} name 'SDL_ConvertSurfaceFormat' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Copy a block of pixels of one format to another format
@@ -1259,7 +1262,7 @@ function SDL_ConvertSurfaceFormat(src: PSDLSurface; pixel_format: UInt32; flags:
  *  0 on success, or -1 if there was an error
  *}
 
-function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; const src: Pointer; src_pitch: SInt32; Uint32 dst_format; dst: Pointer; dst_pitch: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_ConvertPixels' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; const src: Pointer; src_pitch: SInt32; dst_format: UInt32; dst: Pointer; dst_pitch: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_ConvertPixels' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  Performs a fast fill of the given rectangle with color.
@@ -1272,8 +1275,8 @@ function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; co
  *  0 on success, or -1 on error.
  *}
 
-function SDL_FillRect(dst: PSDLSurface; const rect: PSDLRect; color: UInt32): SInt32;
-function SDL_FillRects(dst: PSDLSurface; const rects: PSDLRect; count: SInt32; color: UInt32): SInt32;
+function SDL_FillRect(dst: PSDL_Surface; const rect: PSDL_Rect; color: UInt32): SInt32;
+function SDL_FillRects(dst: PSDL_Surface; const rects: PSDL_Rect; count: SInt32; color: UInt32): SInt32;
 
 {**
  *  Performs a fast blit from the source surface to the destination surface.
@@ -1334,53 +1337,52 @@ function SDL_FillRects(dst: PSDLSurface; const rects: PSDLRect; count: SInt32; c
  *  blitting works internally and how to use the other blit functions.
  *}
 
-SDL_BlitSurface = SDL_UpperBlit;
+  {**
+   *  This is the public blit function, SDL_BlitSurface(), and it performs
+   *  rectangle validation and clipping before passing it to SDL_LowerBlit()
+   *}
 
-{**
- *  This is the public blit function, SDL_BlitSurface(), and it performs
- *  rectangle validation and clipping before passing it to SDL_LowerBlit()
- *}
+  function SDL_UpperBlit(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_UpperBlit' {$ELSE} SDL_LibName {$ENDIF};
 
-function SDL_UpperBlit(src: PSDLSurface; const srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_UpperBlit' {$ELSE} SDL_LibName {$ENDIF};
+  //SDL_BlitSurface = SDL_UpperBlit;
 
-{**
- *  This is a semi-private blit function and it performs low-level surface
- *  blitting only.
- *}
+  {**
+   *  This is a semi-private blit function and it performs low-level surface
+   *  blitting only.
+   *}
 
-function SDL_LowerBlit(src: PSDLSurface; srcrect: PSDLRect; dst: PSDLSurface; dstrect: PSDLRect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LowerBlit' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_LowerBlit(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LowerBlit' {$ELSE} SDL_LibName {$ENDIF};
 
-{**
- *  Perform a fast, low quality, stretch blit between two surfaces of the
- *  same pixel format.
- *  
- *  This function uses a static buffer, and is not thread-safe.
- *}
+  {**
+   *  Perform a fast, low quality, stretch blit between two surfaces of the
+   *  same pixel format.
+   *  
+   *  This function uses a static buffer, and is not thread-safe.
+   *}
 
-function SDL_SoftStretch(src: PSDLSurface; const srcrect: PSDLRect; dst: PSDLSurface; const dstrect: PSDLSurface) cdecl; external {$IFDEF GPC} name 'SDL_SoftStretch' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_SoftStretch(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; const dstrect: PSDL_Surface): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SoftStretch' {$ELSE} SDL_LibName {$ENDIF};
 
-SDL_BlitScaled = SDL_UpperBlitScaled;
+  //SDL_BlitScaled = SDL_UpperBlitScaled;
 
-{**
- *  This is the public scaled blit function, SDL_BlitScaled(), and it performs
- *  rectangle validation and clipping before passing it to SDL_LowerBlitScaled()
- *}
+  {**
+   *  This is the public scaled blit function, SDL_BlitScaled(), and it performs
+   *  rectangle validation and clipping before passing it to SDL_LowerBlitScaled()
+   *}
 
-extern DECLSPEC int SDLCALL SDL_UpperBlitScaled
-    (SDL_Surface * src, const SDL_Rect * srcrect,
-    SDL_Surface * dst, SDL_Rect * dstrect);
+  function SDL_UpperBlitScaled(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32;
 
-{**
- *  This is a semi-private blit function and it performs low-level surface
- *  scaled blitting only.
- *}
+  {**
+   *  This is a semi-private blit function and it performs low-level surface
+   *  scaled blitting only.
+   *}
 
-extern DECLSPEC int SDLCALL SDL_LowerBlitScaled
-    (SDL_Surface * src, SDL_Rect * srcrect,
-    SDL_Surface * dst, SDL_Rect * dstrect);
+  function SDL_LowerBlitScaled(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32;
 
-//from "sdl_video.h"
+  //from "sdl_video.h"
+  
 type
+  PSDL_Window = Pointer; //todo!!
+
   {**
    *  The structure that defines a display mode
    *
@@ -1393,9 +1395,9 @@ type
    *   SDL_GetWindowDisplayMode()
    *}
 
-  PSDLDisplayMode = ^TSDLDisplayMode;
-  TSDLDisplayMode = record
-    format: Uint32;              {**< pixel format *}
+  PSDL_DisplayMode = ^TSDL_DisplayMode;
+  TSDL_DisplayMode = record
+    format: UInt32;              {**< pixel format *}
     w: SInt32;                   {**< width *}
     h: SInt32;                   {**< height *}
     refresh_rate: SInt32;        {**< refresh rate (or zero for unspecified) *}
@@ -1496,13 +1498,13 @@ const
   SDL_WINDOWEVENT_CLOSE = 14;          {**< The window manager requests that the window be closed *}
 
 type
-  TSDLWindowEventID = DWord;
+  TSDL_WindowEventID = DWord;
 
   {**
    *  An opaque handle to an OpenGL context.
    *}
 
-  TSDLGLContext = Pointer;
+  TSDL_GLContext = Pointer;
 
   {**
    *  OpenGL configuration attributes
@@ -1639,7 +1641,7 @@ type
    *  SDL_GetNumVideoDisplays()
    *}
 
-  function SDL_GetDisplayBounds(displayIndex: SInt32; rect: PSDLRect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetDisplayBounds' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetDisplayBounds(displayIndex: SInt32; rect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetDisplayBounds' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Returns the number of available display modes.
@@ -1661,19 +1663,19 @@ type
    *  SDL_GetNumDisplayModes()
    *}
 
-  function SDL_GetDisplayMode(displayIndex: SInt32; modeIndex: SInt32; mode: PSDLDisplayMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetDisplayMode' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetDisplayMode(displayIndex: SInt32; modeIndex: SInt32; mode: PSDL_DisplayMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetDisplayMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Fill in information about the desktop display mode.
    *}
 
-  function SDL_GetDesktopDisplayMode(displayIndex: SInt32; mode: PSDLDisplayMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetDesktopDisplayMode' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetDesktopDisplayMode(displayIndex: SInt32; mode: PSDL_DisplayMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetDesktopDisplayMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Fill in information about the current display mode.
    *}
 
-  function SDL_GetCurrentDisplayMode(displayIndex: SInt32; mode: PSDLDisplayMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetCurrentDisplayIndex' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetCurrentDisplayMode(displayIndex: SInt32; mode: PSDL_DisplayMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetCurrentDisplayIndex' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the closest match to the requested display mode.
@@ -1696,7 +1698,7 @@ type
    *  SDL_GetDisplayMode()
    *}
 
-  function SDL_GetClosestDisplayMode(displayIndex: SInt32; const mode: PSDLDisplayMode; closest: PSDLDisplayMode): PSDLDisplayMode cdecl; external {$IFDEF GPC} name 'SDL_GetClosestDisplayMode' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetClosestDisplayMode(displayIndex: SInt32; const mode: PSDL_DisplayMode; closest: PSDL_DisplayMode): PSDL_DisplayMode cdecl; external {$IFDEF GPC} name 'SDL_GetClosestDisplayMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the display index associated with a window.
@@ -1705,7 +1707,7 @@ type
    *  window, or -1 on error.
    *}
 
-  function SDL_GetWindowDisplayIndex(window: PSDLWindow): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowDisplayIndex' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowDisplayIndex(window: PSDL_Window): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowDisplayIndex' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the display mode used when a fullscreen window is visible.
@@ -1721,7 +1723,7 @@ type
    *  SDL_SetWindowFullscreen()
    *}
 
-  function SDL_SetWindowDisplayMode(window: PSDLWindow; const mode: PSDLDisplayMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetWindowDisplayMode' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_SetWindowDisplayMode(window: PSDL_Window; const mode: PSDL_DisplayMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetWindowDisplayMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Fill in information about the display mode used when a fullscreen
@@ -1731,13 +1733,13 @@ type
    *  SDL_SetWindowFullscreen()
    *}
 
-  function SDL_GetWindowDisplayMode(window: PSDLWindow; mode: PSDLDisplayMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowDisplayMode' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowDisplayMode(window: PSDL_Window; mode: PSDL_DisplayMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowDisplayMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the pixel format associated with the window.
    *}
 
-  function SDL_GetWindowPixelFormat(window: PSDLWindow): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowPixelFormat' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowPixelFormat(window: PSDL_Window): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowPixelFormat' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a window with the specified position, dimensions, and flags.
@@ -1760,7 +1762,7 @@ type
    *  SDL_DestroyWindow()
    *}
 
-  function SDL_CreateWindow(const title: PChar; x: SInt32; y: SInt32; w: SInt32; h: SInt32; flags: UInt32): PSDLWindow cdecl; external {$IFDEF GPC} name 'SDL_CreateWindow' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_CreateWindow(const title: PChar; x: SInt32; y: SInt32; w: SInt32; h: SInt32; flags: UInt32): PSDL_Window cdecl; external {$IFDEF GPC} name 'SDL_CreateWindow' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create an SDL window from an existing native window.
@@ -1772,25 +1774,25 @@ type
    *  SDL_DestroyWindow()
    *}
 
-  function SDL_CreateWindowFrom(const data: Pointer): PSDLWindow cdecl; external {$IFDEF GPC} name 'SDL_CreateWindowFrom' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_CreateWindowFrom(const data: Pointer): PSDL_Window cdecl; external {$IFDEF GPC} name 'SDL_CreateWindowFrom' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the numeric ID of a window, for logging purposes.
    *}
 
-  function SDL_GetWindowID(window: PSDLWindow): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowID' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowID(window: PSDL_Window): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowID' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get a window from a stored ID, or nil if it doesn't exist.
    *}
 
-  function SDL_GetWindowFromID(id: UInt32): PSDLWindow cdecl; external {$IFDEF GPC} name 'SDL_GetWindowFromID' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowFromID(id: UInt32): PSDL_Window cdecl; external {$IFDEF GPC} name 'SDL_GetWindowFromID' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the window flags.
    *}
 
-  function SDL_GetWindowFlags(window: PSDLWindow): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowFlags' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowFlags(window: PSDL_Window): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowFlags' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the title of a window, in UTF-8 format.
@@ -1798,7 +1800,7 @@ type
    *  SDL_GetWindowTitle()
    *}
 
-  procedure SDL_SetWindowTitle(window: PSDLWindow; const title: PChar) cdecl; external {$IFDEF GPC} name 'SDL_GetWindowTitle' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_SetWindowTitle(window: PSDL_Window; const title: PChar) cdecl; external {$IFDEF GPC} name 'SDL_GetWindowTitle' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the title of a window, in UTF-8 format.
@@ -1806,7 +1808,7 @@ type
    *  SDL_SetWindowTitle()
    *}
 
-  function SDL_GetWindowTitle(window: PSDLWindow): PChar cdecl; external {$IFDEF GPC} name 'SDL_GetWindowTitle' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowTitle(window: PSDL_Window): PChar cdecl; external {$IFDEF GPC} name 'SDL_GetWindowTitle' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the icon for a window.
@@ -1814,7 +1816,7 @@ type
    *  icon The icon for the window.
    *}
 
-  procedure SDL_SetWindowIcon(window: PSDLWindow; icon: PSDLSurface) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowIcon' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_SetWindowIcon(window: PSDL_Window; icon: PSDL_Surface) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowIcon' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Associate an arbitrary named pointer with a window.
@@ -1830,7 +1832,7 @@ type
    *  SDL_GetWindowData()
    *}
 
-  function SDL_SetWindowData(window: PSDLWindow; const name: PChar; userdata: Pointer): Pointer cdecl; external {$IFDEF GPC} name 'SDL_SetWindowData' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_SetWindowData(window: PSDL_Window; const name: PChar; userdata: Pointer): Pointer cdecl; external {$IFDEF GPC} name 'SDL_SetWindowData' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Retrieve the data pointer associated with a window.
@@ -1843,7 +1845,7 @@ type
    *  SDL_SetWindowData()
    *}
 
-  function SDL_GetWindowData(window: PSDLWindow; const name: PChar): Pointer cdecl; external {$IFDEF GPC} name 'SDL_GetWindowData' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowData(window: PSDL_Window; const name: PChar): Pointer cdecl; external {$IFDEF GPC} name 'SDL_GetWindowData' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the position of a window.
@@ -1859,7 +1861,7 @@ type
    *  SDL_GetWindowPosition()
    *}
 
-  procedure SDL_SetWindowPosition(window: PSDLWindow; x: SInt32; y: SInt32) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowPosition' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_SetWindowPosition(window: PSDL_Window; x: SInt32; y: SInt32) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowPosition' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the position of a window.
@@ -1870,7 +1872,7 @@ type
    *  SDL_SetWindowPosition()
    *}
 
-  procedure SDL_GetWindowPosition(window: PSDLWindow; x: PInt; y: PInt) cdecl; external {$IFDEF GPC} name 'SDL_GetWindowPosition' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_GetWindowPosition(window: PSDL_Window; x: PInt; y: PInt) cdecl; external {$IFDEF GPC} name 'SDL_GetWindowPosition' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the size of a window's client area.
@@ -1884,7 +1886,7 @@ type
    *  SDL_GetWindowSize()
    *}
 
-  procedure SDL_SetWindowSize(window: PSDLWindow; w: SInt32; h: SInt32) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowSize' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_SetWindowSize(window: PSDL_Window; w: SInt32; h: SInt32) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowSize' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the size of a window's client area.
@@ -1895,7 +1897,7 @@ type
    *  SDL_SetWindowSize()
    *}
 
-  procedure SDL_GetWindowSize(window: PSDLWindow; w: PInt; h: PInt) cdecl; external {$IFDEF GPC} name 'SDL_GetWindowSize' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_GetWindowSize(window: PSDL_Window; w: PInt; h: PInt) cdecl; external {$IFDEF GPC} name 'SDL_GetWindowSize' {$ELSE} SDL_LibName {$ENDIF};
     
   {**
    *  Set the minimum size of a window's client area.
@@ -1910,7 +1912,7 @@ type
    *  SDL_SetWindowMaximumSize()
    *}
 
-  procedure SDL_SetWindowMinimumSize(window: PSDLWindow; min_w: SInt32; min_h: SInt32) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowMinimumSize' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_SetWindowMinimumSize(window: PSDL_Window; min_w: SInt32; min_h: SInt32) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowMinimumSize' {$ELSE} SDL_LibName {$ENDIF};
     
   {**
    *  Get the minimum size of a window's client area.
@@ -1922,7 +1924,7 @@ type
    *  SDL_SetWindowMinimumSize()
    *}
 
-  procedure SDL_GetWindowMinimumSize(window: PSDLWindow; w: PInt; h: PInt) cdecl; external {$IFDEF GPC} name 'SDL_GetWindowMinimumSize' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_GetWindowMinimumSize(window: PSDL_Window; w: PInt; h: PInt) cdecl; external {$IFDEF GPC} name 'SDL_GetWindowMinimumSize' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the maximum size of a window's client area.
@@ -1937,7 +1939,7 @@ type
    *  SDL_SetWindowMinimumSize()
    *}
 
-  procedure SDL_SetWindowMaximumSize(window: PSDLWindow; max_w: SInt32; max_h: SInt32) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowMaximumSize' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_SetWindowMaximumSize(window: PSDL_Window; max_w: SInt32; max_h: SInt32) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowMaximumSize' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the maximum size of a window's client area.
@@ -1949,7 +1951,7 @@ type
    *  SDL_SetWindowMaximumSize()
    *}
 
-  procedure SDL_GetWindowMaximumSize(window: PSDLWindow; w: PInt; h: PInt) cdecl; external {$IFDEF GPC} name 'SDL_GetWindowMaximumSize' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_GetWindowMaximumSize(window: PSDL_Window; w: PInt; h: PInt) cdecl; external {$IFDEF GPC} name 'SDL_GetWindowMaximumSize' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the border state of a window.
@@ -1966,7 +1968,7 @@ type
    *  SDL_GetWindowFlags()
    *}
 
-  procedure SDL_SetWindowBordered(window: PSDLWindow; bordered: TSDLBool) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowBordered' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_SetWindowBordered(window: PSDL_Window; bordered: TSDL_Bool) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowBordered' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Show a window.
@@ -1974,7 +1976,7 @@ type
    *  SDL_HideWindow()
    *}
 
-  procedure SDL_ShowWindow(window: PSDLWindow) cdecl; external {$IFDEF GPC} name 'SDL_ShowWindow' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_ShowWindow(window: PSDL_Window) cdecl; external {$IFDEF GPC} name 'SDL_ShowWindow' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Hide a window.
@@ -1982,13 +1984,13 @@ type
    *  SDL_ShowWindow()
    *}
 
-  procedure SDL_HideWindow(window: PSDLWindow) cdecl; external {$IFDEF GPC} name 'SDL_HideWindow' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_HideWindow(window: PSDL_Window) cdecl; external {$IFDEF GPC} name 'SDL_HideWindow' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Raise a window above other windows and set the input focus.
    *}
 
-  procedure SDL_RaiseWindow(window: PSDLWindow) cdecl; external {$IFDEF GPC} name 'SDL_RaiseWindow' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_RaiseWindow(window: PSDL_Window) cdecl; external {$IFDEF GPC} name 'SDL_RaiseWindow' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Make a window as large as possible.
@@ -1996,7 +1998,7 @@ type
    *  SDL_RestoreWindow()
    *}
 
-  procedure SDL_MaximizeWindow(window: PSDLWindow) cdecl; external {$IFDEF GPC} name 'SDL_MaximizeWindow' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_MaximizeWindow(window: PSDL_Window) cdecl; external {$IFDEF GPC} name 'SDL_MaximizeWindow' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Minimize a window to an iconic representation.
@@ -2004,7 +2006,7 @@ type
    *  SDL_RestoreWindow()
    *}
 
-  procedure SDL_MinimizeWindow(window: PSDLWindow) cdecl; external {$IFDEF GPC} name 'SDL_MinimizeWindow' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_MinimizeWindow(window: PSDL_Window) cdecl; external {$IFDEF GPC} name 'SDL_MinimizeWindow' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Restore the size and position of a minimized or maximized window.
@@ -2013,7 +2015,7 @@ type
    *  SDL_MinimizeWindow()
    *}
 
-  procedure SDL_RestoreWindow(window: PSDLWindow) cdecl; external {$IFDEF GPC} name 'SDL_RestoreWindow' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_RestoreWindow(window: PSDL_Window) cdecl; external {$IFDEF GPC} name 'SDL_RestoreWindow' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set a window's fullscreen state.
@@ -2024,7 +2026,7 @@ type
    *  SDL_GetWindowDisplayMode()
    *}
 
-  function SDL_SetWindowFullscreen(window: PSDLWindow; flags: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetWindowFullscreen' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_SetWindowFullscreen(window: PSDL_Window; flags: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetWindowFullscreen' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the SDL surface associated with the window.
@@ -2040,7 +2042,7 @@ type
    *  SDL_UpdateWindowSurfaceRects()
    *}
 
-  function SDL_GetWindowSurface(window: PSDLWindow): PSDLWindow cdecl; external {$IFDEF GPC} name 'SDL_GetWindowSurface' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowSurface(window: PSDL_Window): PSDL_Window cdecl; external {$IFDEF GPC} name 'SDL_GetWindowSurface' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Copy the window surface to the screen.
@@ -2051,7 +2053,7 @@ type
    *  SDL_UpdateWindowSurfaceRects()
    *}
 
-  function SDL_UpdateWindowSurface(window: PSDLWindow): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_UpdateWindowSurface' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_UpdateWindowSurface(window: PSDL_Window): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_UpdateWindowSurface' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Copy a number of rectangles on the window surface to the screen.
@@ -2062,7 +2064,7 @@ type
    *  SDL_UpdateWindowSurfaceRect()
    *}
 
-  function SDL_UpdateWindowSurfaceRects(window: PSDLWindow; rects: PSDLRect; numrects: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_UpdateWindowSurfaceRects' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_UpdateWindowSurfaceRects(window: PSDL_Window; rects: PSDL_Rect; numrects: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_UpdateWindowSurfaceRects' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set a window's input grab mode.
@@ -2072,7 +2074,7 @@ type
    *  SDL_GetWindowGrab()
    *}
 
-  procedure SDL_SetWindowGrab(window: PSDLWindow; grabbed: TSDLBool) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowGrab' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_SetWindowGrab(window: PSDL_Window; grabbed: TSDL_Bool) cdecl; external {$IFDEF GPC} name 'SDL_SetWindowGrab' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get a window's input grab mode.
@@ -2082,7 +2084,7 @@ type
    *  SDL_SetWindowGrab()
    *}
 
-  function SDL_GetWindowGrab(window: PSDLWindow): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_GetWindowGrab' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowGrab(window: PSDL_Window): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_GetWindowGrab' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the brightness (gamma correction) for a window.
@@ -2093,7 +2095,7 @@ type
    *  SDL_SetWindowGammaRamp()
    *}
 
-  function SDL_SetWindowBrightness(window: PSDLWindow; brightness: Float): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetWindowBrightness' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_SetWindowBrightness(window: PSDL_Window; brightness: Float): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetWindowBrightness' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the brightness (gamma correction) for a window.
@@ -2103,7 +2105,7 @@ type
    *  SDL_SetWindowBrightness()
    *}
 
-  function SDL_GetWindowBrightness(window: PSDLWindow): Float cdecl; external {$IFDEF GPC} name 'SDL_GetWindowBrightness' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowBrightness(window: PSDL_Window): Float cdecl; external {$IFDEF GPC} name 'SDL_GetWindowBrightness' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the gamma ramp for a window.
@@ -2123,7 +2125,7 @@ type
    *  SDL_GetWindowGammaRamp()
    *}
 
-  function SDL_SetWindowGammaRamp(window: PSDLWindow; const red: PUInt16; const green: PUInt16; const blue: PUInt16): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetWindowGammaRamp' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_SetWindowGammaRamp(window: PSDL_Window; const red: PUInt16; const green: PUInt16; const blue: PUInt16): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetWindowGammaRamp' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the gamma ramp for a window.
@@ -2140,13 +2142,13 @@ type
    *  SDL_SetWindowGammaRamp()
    *}
 
-  function SDL_GetWindowGammaRamp(window: PSDLWindow; red: PUInt16; green: PUInt16; blue: PUInt16): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowGammaRamp' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetWindowGammaRamp(window: PSDL_Window; red: PUInt16; green: PUInt16; blue: PUInt16): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetWindowGammaRamp' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Destroy a window.
    *}
 
-  procedure SDL_DestroyWindow(window: PSDLWindow) cdecl; external {$IFDEF GPC} name 'SDL_DestroyWindow' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_DestroyWindow(window: PSDL_Window) cdecl; external {$IFDEF GPC} name 'SDL_DestroyWindow' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Returns whether the screensaver is currently enabled (default on).
@@ -2155,7 +2157,7 @@ type
    *  SDL_DisableScreenSaver()
    *}
 
-  function SDL_IsScreenSaverEnabled: TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_IsScreenSaverEnabled' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_IsScreenSaverEnabled: TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_IsScreenSaverEnabled' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Allow the screen to be blanked by a screensaver
@@ -2219,19 +2221,19 @@ type
    *  context.
    *}
 
-  function SDL_GL_ExtensionSupported(const extension: PChar): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_GL_ExtensionSupported' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GL_ExtensionSupported(const extension: PChar): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_GL_ExtensionSupported' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set an OpenGL window attribute before window creation.
    *}
 
-  function SDL_GL_SetAttribute(SDL_GLattr attr, int value): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GL_SetAttribute' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GL_SetAttribute(attr: TSDL_GLattr; value: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GL_SetAttribute' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the actual value for an attribute from the current context.
    *}
 
-  function SDL_GL_GetAttribute(SDL_GLattr attr, int *value): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GL_GetAttribute' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GL_GetAttribute(attr: TSDL_GLattr; value: PInt): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GL_GetAttribute' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create an OpenGL context for use with an OpenGL window, and make it
@@ -2240,7 +2242,7 @@ type
    *  SDL_GL_DeleteContext()
    *}
 
-  function SDL_GL_CreateContext(window: PSDLWindow): TSDLGLContext cdecl; external {$IFDEF GPC} name 'SDL_GL_CreateContext' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GL_CreateContext(window: PSDL_Window): TSDL_GLContext cdecl; external {$IFDEF GPC} name 'SDL_GL_CreateContext' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set up an OpenGL context for rendering into an OpenGL window.
@@ -2248,7 +2250,7 @@ type
    *  The context must have been created with a compatible window.
    *}
 
-  function SDL_GL_MakeCurrent(window: PSDLWindow; context: TSDLGLContext): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GL_MakeCurrent' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GL_MakeCurrent(window: PSDL_Window; context: TSDL_GLContext): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GL_MakeCurrent' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the swap interval for the current OpenGL context.
@@ -2284,7 +2286,7 @@ type
    *  supported.
    *}
 
-  procedure SDL_GL_SwapWindow(window: PSDLWindow) cdecl; external {$IFDEF GPC} name 'SDL_GL_SwapWindow' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_GL_SwapWindow(window: PSDL_Window) cdecl; external {$IFDEF GPC} name 'SDL_GL_SwapWindow' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Delete an OpenGL context.
@@ -2292,7 +2294,7 @@ type
    *  SDL_GL_CreateContext()
    *}
 
-  procedure SDL_GL_DeleteContext(context: TSDLGLContext) cdecl; external {$IFDEF GPC} name 'SDL_GL_DeleteContext' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_GL_DeleteContext(context: TSDL_GLContext) cdecl; external {$IFDEF GPC} name 'SDL_GL_DeleteContext' {$ELSE} SDL_LibName {$ENDIF};
 
   {*OpenGL support functions*}
 
@@ -3069,7 +3071,7 @@ type
    *  SDL_Keycode
    *}
 
-  function SDL_GetKeyFromName(const char *name): TSDL_KeyCode cdecl; external {$IFDEF GPC} name 'SDL_GetKeyFromName' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetKeyFromName(const name: PChar): TSDL_KeyCode cdecl; external {$IFDEF GPC} name 'SDL_GetKeyFromName' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Start accepting Unicode text input events.
@@ -3089,7 +3091,7 @@ type
    *  SDL_StopTextInput()
    *}
 
-  function SDL_IsTextInputActive: TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_IsTextInputActive' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_IsTextInputActive: TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_IsTextInputActive' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Stop receiving any text input events.
@@ -3108,7 +3110,7 @@ type
    *  SDL_StartTextInput()
    *}
 
-  procedure SDL_SetTextInputRect(rect: PSDLRect) cdecl; external {$IFDEF GPC} name 'SDL_SetTextInputRect' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_SetTextInputRect(rect: PSDL_Rect) cdecl; external {$IFDEF GPC} name 'SDL_SetTextInputRect' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Returns whether the platform has some screen keyboard support.
@@ -3120,7 +3122,7 @@ type
    *  SDL_IsScreenKeyboardShown()
    *}
 
-  function SDL_HasScreenKeyboardSupport: TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_HasScreenKeyboardSupport' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_HasScreenKeyboardSupport: TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_HasScreenKeyboardSupport' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Returns whether the screen keyboard is shown for given window.
@@ -3132,7 +3134,7 @@ type
    *  SDL_HasScreenKeyboardSupport()
    *}
 
-  function SDL_IsScreenKeyboardShown(SDL_Window *window): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_IsScreenKeyboardShown' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_IsScreenKeyboardShown(window: PSDL_Window): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_IsScreenKeyboardShown' {$ELSE} SDL_LibName {$ENDIF};
 
   //from "sdl_mouse.h"
 
@@ -3219,7 +3221,7 @@ type
    *  SDL_GetRelativeMouseMode()
    *}
 
-  function SDL_SetRelativeMouseMode(enabled: TSDLBool): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetRelativeMouseMode' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_SetRelativeMouseMode(enabled: TSDL_Bool): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetRelativeMouseMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Query whether relative mouse mode is enabled.
@@ -3227,7 +3229,7 @@ type
    *  SDL_SetRelativeMouseMode()
    *}
 
-  function SDL_GetRelativeMouseMode: TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_GetRelativeMouseMode' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetRelativeMouseMode: TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_GetRelativeMouseMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a cursor, using the specified bitmap data and
@@ -3251,7 +3253,7 @@ type
   function SDL_CreateCursor(const Uint8 * data,
                             const Uint8 * mask,
                             int w, int h, int hot_x,
-                            int hot_y): PSDLCursor cdecl; external {$IFDEF GPC} name 'SDL_CreateCursor' {$ELSE} SDL_LibName {$ENDIF};
+                            int hot_y): PSDL_Cursor cdecl; external {$IFDEF GPC} name 'SDL_CreateCursor' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a color cursor.
@@ -3395,13 +3397,13 @@ const
 
 type
 
-  TSDLEventType = Word;
+  TSDL_EventType = Word;
 
   {**
    *  Fields shared by every event
    *}
 
-  TSDLGenericEvent = record
+  TSDL_GenericEvent = record
     type_: UInt32;
     timestamp: UInt32;
   end;
@@ -3410,7 +3412,7 @@ type
    *  Window state change event data (event.window.*)
    *}
 
-  TSDLWindowEvent = record
+  TSDL_WindowEvent = record
     type_: UInt32;       // SDL_WINDOWEVENT 
     timestamp: UInt32;
     windowID: UInt32;    // The associated window 
@@ -3425,7 +3427,7 @@ type
   {**
    *  Keyboard button event structure (event.key.*)
    *}
-  TSDLKeyboardEvent = record
+  TSDL_KeyboardEvent = record
     type_: UInt32;        // SDL_KEYDOWN or SDL_KEYUP 
     timestamp: UInt32;
     windowID: UInt32;     // The window with keyboard focus, if any 
@@ -3433,7 +3435,7 @@ type
     _repeat: UInt8;       // Non-zero if this is a key repeat
     padding2: UInt8;
     padding3: UInt8;
-    keysym: TSDLKeySym;  // The key that was pressed or released
+    keysym: TSDL_KeySym;  // The key that was pressed or released
   end;
 
 const
@@ -3445,7 +3447,7 @@ type
    *  Keyboard text editing event structure (event.edit.*)
    *}
  
-  TSDLTextEditingEvent = record
+  TSDL_TextEditingEvent = record
     type_: UInt32;                               // SDL_TEXTEDITING 
     timestamp: UInt32;
     windowID: UInt32;                            // The window with keyboard focus, if any
@@ -3463,7 +3465,7 @@ type
    *  Keyboard text input event structure (event.text.*)
    *}
  
-  TSDLTextInputEvent = record
+  TSDL_TextInputEvent = record
     type_: UInt32;                                          // SDL_TEXTINPUT 
     timestamp: UInt32;
     windowID: UInt32;                                       // The window with keyboard focus, if any
@@ -3474,7 +3476,7 @@ type
    *  Mouse motion event structure (event.motion.*)
    *}
  
-  TSDLMouseMotionEvent = record
+  TSDL_MouseMotionEvent = record
     type_: UInt32;       // SDL_MOUSEMOTION
     timestamp: UInt32;
     windowID: UInt32;    // The window with mouse focus, if any 
@@ -3493,7 +3495,7 @@ type
    *  Mouse button event structure (event.button.*)
    *}
  
-  TSDLMouseButtonEvent = record
+  TSDL_MouseButtonEvent = record
     type_: UInt32;       // SDL_MOUSEBUTTONDOWN or SDL_MOUSEBUTTONUP 
     timestamp: UInt32;
     windowID: UInt32;    // The window with mouse focus, if any
@@ -3510,7 +3512,7 @@ type
    *  Mouse wheel event structure (event.wheel.*)
    *}
  
-  TSDLMouseWheelEvent = record
+  TSDL_MouseWheelEvent = record
     type_: UInt32;        // SDL_MOUSEWHEEL
     timestamp: UInt32;
     windowID: UInt32;    // The window with mouse focus, if any 
@@ -3523,10 +3525,10 @@ type
    *  Joystick axis motion event structure (event.jaxis.*)
    *}
  
-  TSDLJoyAxisEvent = record
+  TSDL_JoyAxisEvent = record
     type_: UInt32;         // SDL_JOYAXISMOTION 
     timestamp: UInt32;
-    which: TSDLJoystickID; // The joystick instance id
+    which: TSDL_JoystickID; // The joystick instance id
     axis: UInt8;           // The joystick axis index 
     padding1: UInt8;
     padding2: UInt8;
@@ -3539,10 +3541,10 @@ type
    *  Joystick trackball motion event structure (event.jball.*)
    *}
 
-  TSDLJoyBallEvent = record
+  TSDL_JoyBallEvent = record
     type_: UInt32;         // SDL_JOYBALLMOTION
     timestamp: UInt32;
-    which: TSDLJoystickID; // The joystick instance id
+    which: TSDL_JoystickID; // The joystick instance id
     ball: UInt8;           // The joystick trackball index
     padding1: UInt8;
     padding2: UInt8;
@@ -3555,10 +3557,10 @@ type
    *  Joystick hat position change event structure (event.jhat.*)
    *}
 
-  TSDLJoyHatEvent = record
+  TSDL_JoyHatEvent = record
     type_: UInt32;         // SDL_JOYHATMOTION
     timestamp: UInt32;
-    which: TSDLJoystickID; // The joystick instance id
+    which: TSDL_JoystickID; // The joystick instance id
     hat: UInt8;            // The joystick hat index
     value: UInt8;         {*  The hat position value.
                            *  SDL_HAT_LEFTUP   SDL_HAT_UP       SDL_HAT_RIGHTUP
@@ -3575,10 +3577,10 @@ type
    *  Joystick button event structure (event.jbutton.*)
    *}
 
-  TSDLJoyButtonEvent = record
+  TSDL_JoyButtonEvent = record
     type_: UInt32;        // SDL_JOYBUTTONDOWN or SDL_JOYBUTTONUP
     timestamp: UInt32;
-    which: TSDLJoystickID; // The joystick instance id 
+    which: TSDL_JoystickID; // The joystick instance id 
     button: UInt8;         // The joystick button index 
     state: UInt8;          // SDL_PRESSED or SDL_RELEASED
     padding1: UInt8;
@@ -3589,7 +3591,7 @@ type
    *  Joystick device event structure (event.jdevice.*)
    *}
 
-  TSDLJoyDeviceEvent = record
+  TSDL_JoyDeviceEvent = record
     type_: UInt32;      // SDL_JOYDEVICEADDED or SDL_JOYDEVICEREMOVED
     timestamp: UInt32;
     which: SInt32;      // The joystick device index for the ADDED event, instance id for the REMOVED event
@@ -3599,10 +3601,10 @@ type
    *  Game controller axis motion event structure (event.caxis.*)
    *}
 
-  TSDLControllerAxisEvent = record
+  TSDL_ControllerAxisEvent = record
     type_: UInt32;         // SDL_CONTROLLERAXISMOTION
     timestamp: UInt32;
-    which: TSDLJoystickID; // The joystick instance id
+    which: TSDL_JoystickID; // The joystick instance id
     axis: UInt8;           // The controller axis (SDL_GameControllerAxis)
     padding1: UInt8;
     padding2: UInt8;
@@ -3615,10 +3617,10 @@ type
    *  Game controller button event structure (event.cbutton.*)
    *}
 
-  TSDLControllerButtonEvent = record
+  TSDL_ControllerButtonEvent = record
     type_: UInt32;         // SDL_CONTROLLERBUTTONDOWN or SDL_CONTROLLERBUTTONUP
     timestamp: UInt32;
-    which: TSDLJoystickID; // The joystick instance id
+    which: TSDL_JoystickID; // The joystick instance id
     button: UInt8;         // The controller button (SDL_GameControllerButton)
     state: UInt8;          // SDL_PRESSED or SDL_RELEASED
     padding1: UInt8;
@@ -3630,7 +3632,7 @@ type
    *  Controller device event structure (event.cdevice.*)
    *}
 
-  TSDLControllerDeviceEvent = record
+  TSDL_ControllerDeviceEvent = record
     type_: UInt32;       // SDL_CONTROLLERDEVICEADDED, SDL_CONTROLLERDEVICEREMOVED, or SDL_CONTROLLERDEVICEREMAPPED
     timestamp: UInt32;
     which: SInt32;       // The joystick device index for the ADDED event, instance id for the REMOVED or REMAPPED event
@@ -3640,11 +3642,11 @@ type
    *  Touch finger event structure (event.tfinger.*)
    *}
 
-  TSDLTouchFingerEvent = record
+  TSDL_TouchFingerEvent = record
     type_: UInt32;         // SDL_FINGERMOTION or SDL_FINGERDOWN or SDL_FINGERUP
     timestamp: UInt32;
-    touchId: TSDLTouchID;  // The touch device id
-    fingerId: TSDLFingerID;
+    touchId: TSDL_TouchID;  // The touch device id
+    fingerId: TSDL_FingerID;
     x: Float;              // Normalized in the range 0...1
     y: Float;              // Normalized in the range 0...1
     dx: Float;             // Normalized in the range 0...1
@@ -3655,10 +3657,10 @@ type
   {**
    *  Multiple Finger Gesture Event (event.mgesture.*)
    *}
-  TSDLMultiGestureEvent = record
+  TSDL_MultiGestureEvent = record
     type_: UInt32;        // SDL_MULTIGESTURE
     timestamp: UInt32;
-    touchId: TSDLTouchID; // The touch device index
+    touchId: TSDL_TouchID; // The touch device index
     dTheta: Float;
     dDist: Float;
     x: Float;
@@ -3669,11 +3671,11 @@ type
 
 
   {* (event.dgesture.*) *}
-  TSDLDollarGestureEvent = record
+  TSDL_DollarGestureEvent = record
     type_: UInt32;         // SDL_DOLLARGESTURE
     timestamp: UInt32;
-    touchId: TSDLTouchID;  // The touch device id
-    gestureId: TSDLGestureID;
+    touchId: TSDL_TouchID;  // The touch device id
+    gestureId: TSDL_GestureID;
     numFingers: UInt32;
     error: Float;
     x: Float;              // Normalized center of gesture
@@ -3724,7 +3726,7 @@ type
   {$IFDEF Windows}
     PSDL_SysWMmsg = ^TSDL_SysWMmsg;
     TSDL_SysWMmsg = record
-      version: TSDLVersion;
+      version: TSDL_Version;
       h_wnd: HWND; // The window for the message
       msg: UInt; // The type of message
       w_Param: WPARAM; // WORD message parameter
@@ -3736,8 +3738,8 @@ type
       { The Linux custom event structure }
       PSDL_SysWMmsg = ^TSDL_SysWMmsg;
       TSDL_SysWMmsg = record
-        version : TSDLVersion;
-        subsystem : TSDLSysWm;
+        version : TSDL_Version;
+        subsystem : TSDL_SysWm;
         {$IFDEF FPC}
           event : TXEvent;
         {$ELSE}
@@ -3748,7 +3750,7 @@ type
       { The generic custom event structure }
       PSDL_SysWMmsg = ^TSDL_SysWMmsg;
       TSDL_SysWMmsg = record
-        version: TSDLVersion;
+        version: TSDL_Version;
         data: Integer;
       end;
     {$ENDIF}
@@ -3759,7 +3761,7 @@ type
   {$IFDEF Windows}
     PSDL_SysWMinfo = ^TSDL_SysWMinfo;
     TSDL_SysWMinfo = record
-      version : TSDLVersion;
+      version : TSDL_Version;
       window : HWnd;	// The display window
     end;
   {$ELSE}
@@ -3783,15 +3785,15 @@ type
 
       PSDL_SysWMinfo = ^TSDL_SysWMinfo;
       TSDL_SysWMinfo = record
-         version : TSDLVersion;
-         subsystem : TSDLSysWm;
+         version : TSDL_Version;
+         subsystem : TSDL_SysWm;
          X11 : TX11;
       end;
     {$ELSE}
       // The generic custom window manager information structure
-      PSDL_SysWMinfo = ^TSDLSysWMinfo;
+      PSDL_SysWMinfo = ^TSDL_SysWMinfo;
       TSDL_SysWMinfo = record
-        version : TSDLVersion;
+        version : TSDL_Version;
         data : integer;
       end;
     {$ENDIF}
@@ -3805,62 +3807,62 @@ type
    *  If you want to use this event, you should include SDL_syswm.h.
    *}
 
-  PSDLSysWMEvent = ^TSDLSysWMEvent;
-  TSDLSysWMEvent = record
+  PSDL_SysWMEvent = ^TSDL_SysWMEvent;
+  TSDL_SysWMEvent = record
     type_: UInt32;       // SDL_SYSWMEVENT
     timestamp: UInt32;
-    msg: PSDLSysWMmsg;  // driver dependent data (defined in SDL_syswm.h)
+    msg: PSDL_SysWMmsg;  // driver dependent data (defined in SDL_syswm.h)
   end;
 
   {**
    *  General event structure
    *}
 
-  PSDLEvent = ^TSDLEvent;
-  TSDLEvent = record
+  PSDL_Event = ^TSDL_Event;
+  TSDL_Event = record
     case Integer of
       0:  (type_: UInt32);
 
-      SDL_GENERICEVENT:  (generic: TSDLGenericEvent);
-      SDL_WINDOWEVENT:  (window: TSDLWindowEvent);
+      SDL_GENERICEVENT:  (generic: TSDL_GenericEvent);
+      SDL_WINDOWEVENT:  (window: TSDL_WindowEvent);
 
       SDL_KEYUP,
-      SDL_KEYDOWN:  (key: TSDLKeyboardEvent);
-      SDL_TEXTEDITING:  (edit: TSDLTextEditingEvent);
-      SDL_TEXTINPUT:  (text: TSDLTextInputEvent);
+      SDL_KEYDOWN:  (key: TSDL_KeyboardEvent);
+      SDL_TEXTEDITING:  (edit: TSDL_TextEditingEvent);
+      SDL_TEXTINPUT:  (text: TSDL_TextInputEvent);
 
-      SDL_MOUSEMOTION:  (motion: TSDLMouseMotionEvent);
+      SDL_MOUSEMOTION:  (motion: TSDL_MouseMotionEvent);
       SDL_MOUSEBUTTONUP,
-      SDL_MOUSEBUTTONDOWN:  (button: TSDLMouseButtonEvent);
-      SDL_MOUSEWHEEL:  (wheel: TSDLMouseWheelEvent);
+      SDL_MOUSEBUTTONDOWN:  (button: TSDL_MouseButtonEvent);
+      SDL_MOUSEWHEEL:  (wheel: TSDL_MouseWheelEvent);
 	  
-      SDL_JOYAXISMOTION:  (jaxis: TSDLJoyAxisEvent);
-      SDL_JOYBALLMOTION: (jball: TSDLJoyBallEvent);
-      SDL_JOYHATMOTION: (jhat: TSDLJoyHatEvent);
+      SDL_JOYAXISMOTION:  (jaxis: TSDL_JoyAxisEvent);
+      SDL_JOYBALLMOTION: (jball: TSDL_JoyBallEvent);
+      SDL_JOYHATMOTION: (jhat: TSDL_JoyHatEvent);
       SDL_JOYBUTTONDOWN,
-      SDL_JOYBUTTONUP: (jbutton: TSDLJoyButtonEvent);
+      SDL_JOYBUTTONUP: (jbutton: TSDL_JoyButtonEvent);
       SDL_JOYDEVICEADDED,
-      SDL_JOYDEVICEREMOVED: (jdevice: TSDLJoyDeviceEvent);
+      SDL_JOYDEVICEREMOVED: (jdevice: TSDL_JoyDeviceEvent);
 
-      SDL_CONTROLLERAXISMOTION: (caxis: TSDLControllerAxisEvent);
+      SDL_CONTROLLERAXISMOTION: (caxis: TSDL_ControllerAxisEvent);
       SDL_CONTROLLERBUTTONUP,
-      SDL_CONTROLLERBUTTONDOWN: (cbutton: TSDLControllerButtonEvent);
+      SDL_CONTROLLERBUTTONDOWN: (cbutton: TSDL_ControllerButtonEvent);
       SDL_CONTROLLERDEVICEADDED,
       SDL_CONTROLLERDEVICEREMOVED,
-      SDL_CONTROLLERDEVICEREMAPPED: (cdevice: TSDLControllerDeviceEvent);
+      SDL_CONTROLLERDEVICEREMAPPED: (cdevice: TSDL_ControllerDeviceEvent);
 
-      SDL_QUITEV: (quit: TSDLQuitEvent);
+      SDL_QUITEV: (quit: TSDL_QuitEvent);
 
-      SDL_USEREVENT: (user: TSDLUserEvent);
-      SDL_SYSWMEVENT: (syswm: TSDLSysWMEvent);
+      SDL_USEREVENT: (user: TSDL_UserEvent);
+      SDL_SYSWMEVENT: (syswm: TSDL_SysWMEvent);
 
       SDL_TOUCHFINGERDOWN,
       SDL_TOUCHFINGERUP,
-      SDL_TOUCHFINGERMOTION: (tfinger: TSDLTouchFingerEvent);
-      SDL_MULTIGESTURE: (mgesture: TSDLMultiGestureEvent);
-      SDL_DOLLARGESTURE,SDL_DOLLARRECORD: (dgesture: TSDLDollarGestureEvent);
+      SDL_TOUCHFINGERMOTION: (tfinger: TSDL_TouchFingerEvent);
+      SDL_MULTIGESTURE: (mgesture: TSDL_MultiGestureEvent);
+      SDL_DOLLARGESTURE,SDL_DOLLARRECORD: (dgesture: TSDL_DollarGestureEvent);
 
-      SDL_DROPFILE: (drop: TSDLDropEvent);
+      SDL_DROPFILE: (drop: TSDL_DropEvent);
 	  end;
   end;
 
@@ -3882,7 +3884,7 @@ const
   SDL_GETEVENT = 2;
 
 type
-  TSDLEventAction = Word;
+  TSDL_EventAction = Word;
 
   {**
    *  Checks the event queue for messages and optionally returns them.
@@ -3903,14 +3905,14 @@ type
    *  This function is thread-safe.
    *}
 
-  function SDL_PeepEvents(events: PSDLEvent; numevents: SInt32; action: TSDL_EventAction; minType: UInt32; maxType: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_PeepEvents' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_PeepEvents(events: PSDL_Event; numevents: SInt32; action: TSDL_EventAction; minType: UInt32; maxType: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_PeepEvents' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Checks to see if certain event types are in the event queue.
    *}
  
-  function SDL_HasEvent(type_: UInt32): TSDLBool  cdecl; external {$IFDEF GPC} name 'SDL_HasEvent' {$ELSE} SDL_LibName {$ENDIF};
-  function SDL_HasEvents(minType: UInt32; maxType: UInt32): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_HasEvents' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_HasEvent(type_: UInt32): TSDL_Bool  cdecl; external {$IFDEF GPC} name 'SDL_HasEvent' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_HasEvents(minType: UInt32; maxType: UInt32): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_HasEvents' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  This function clears events from the event queue
@@ -3928,7 +3930,7 @@ type
    *               stored in that area.
    *}
 
-  function SDL_PollEvent(event: PSDLEvent): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_PollEvent' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_PollEvent(event: PSDL_Event): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_PollEvent' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Waits indefinitely for the next available event.
@@ -3939,7 +3941,7 @@ type
    *  stored in that area.
    *}
  
-  function SDL_WaitEvent(event: PSDLEvent): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_WaitEvent' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_WaitEvent(event: PSDL_Event): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_WaitEvent' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Waits until the specified timeout (in milliseconds) for the next
@@ -3951,7 +3953,7 @@ type
    *  stored in that area.
    *}
  
-  function SDL_WaitEventTimeout(event: PSDLEvent; timeout: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_WaitEventTimeout' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_WaitEventTimeout(event: PSDL_Event; timeout: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_WaitEventTimeout' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Add an event to the event queue.
@@ -3960,12 +3962,12 @@ type
    *  was full or there was some other error.
    *}
 
-  function SDL_PushEvent(event: PSDLEvent): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_PumpEvents' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_PushEvent(event: PSDL_Event): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_PumpEvents' {$ELSE} SDL_LibName {$ENDIF};
 
   {$IFNDEF GPC}
-    TSDLEventFilter = function( event: PSDLEvent ): Integer; cdecl;;
+    TSDL_EventFilter = function( event: PSDL_Event ): Integer; cdecl;;
   {$ELSE}
-    TSDLEventFilter = function( event: PSDLEvent ): Integer;
+    TSDL_EventFilter = function( event: PSDL_Event ): Integer;
   {$ENDIF}
 
   {**
@@ -3989,33 +3991,33 @@ type
    *  internal queue and be delivered to the application at the next event poll.
    *}
  
-  procedure SDL_SetEventFilter(filter: TSDLEventFilter; userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_SetEventFilter' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_SetEventFilter(filter: TSDL_EventFilter; userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_SetEventFilter' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Return the current event filter - can be used to "chain" filters.
    *  If there is no event filter set, this function returns SDL_FALSE.
    *}
 
-  function SDL_GetEventFilter(filter: PSDLEventFilter; userdata: Pointer): TSDLBool cdecl; external {$IFDEF GPC} name 'SDL_GetEventFilter' {$ELSE} SDL_LibName {$ENDIF};
+  function SDL_GetEventFilter(filter: PSDL_EventFilter; userdata: Pointer): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_GetEventFilter' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Add a function which is called when an event is added to the queue.
    *}
  
-  procedure SDL_AddEventWatch(filter: TSDLEventFilter, userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_AddEventWatch' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_AddEventWatch(filter: TSDL_EventFilter, userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_AddEventWatch' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Remove an event watch function added with SDL_AddEventWatch()
    *}
  
-  procedure SDL_DelEventWatch(filter: TSDLEventFilter, userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_DelEventWatch' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_DelEventWatch(filter: TSDL_EventFilter, userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_DelEventWatch' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Run the filter function on the current event queue, removing any
    *  events for which the filter returns 0.
    *}
 
-  procedure SDL_FilterEvents(filter: TSDLEventFilter; userdata: Pointer);
+  procedure SDL_FilterEvents(filter: TSDL_EventFilter; userdata: Pointer);
 
 const
 
@@ -4113,12 +4115,12 @@ procedure SDL_Quit cdecl; external {$IFDEF GPC} name 'SDL_Quit' {$ELSE} SDL_LibN
 implementation
 
 //from "sdl_rect.h"
-function SDL_RectEmpty(X: TSDLRect): Boolean;
+function SDL_RectEmpty(X: TSDL_Rect): Boolean;
 begin
   Result := (X.w <= 0) or (X.h <= 0);
 end;
 
-function SDL_RectEquals(A: TSDLRect; B: TSDLRect);
+function SDL_RectEquals(A: TSDL_Rect; B: TSDL_Rect);
 begin
   Result := (A.x = B.x) and (A.y = B.y) and (A.w = B.w) and (A.h = B.h);
 end;
