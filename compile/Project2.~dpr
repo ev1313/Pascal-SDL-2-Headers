@@ -3,7 +3,7 @@ program Project2;
 {$APPTYPE CONSOLE}
 
 uses
-  SDL in 'D:\Program Files (x86)\Borland\Delphi7\SDL.pas';
+  SDL in '..\SDL.pas';
 
 begin
   { TODO -oUser -cConsole Main : Insert code here }
