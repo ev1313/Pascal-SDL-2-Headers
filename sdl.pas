@@ -376,12 +376,14 @@ function SDL_DEFINE_PIXELFOURCC(A,B,C,D: Variant): Variant;
 #define SDL_DEFINE_PIXELFORMAT(type, order, layout, bits, bytes) \
     ((1 << 28) | ((type) << 24) | ((order) << 20) | ((layout) << 16) | \
      ((bits) << 8) | ((bytes) << 0))
+       }
 
-#define SDL_PIXELFLAG(X)	(((X) >> 28) & 0x0F)
-#define SDL_PIXELTYPE(X)	(((X) >> 24) & 0x0F)
-#define SDL_PIXELORDER(X)	(((X) >> 20) & 0x0F)
-#define SDL_PIXELLAYOUT(X)	(((X) >> 16) & 0x0F)
-#define SDL_BITSPERPIXEL(X)	(((X) >> 8) & 0xFF)
+function SDL_PIXELFLAG(X: Cardinal): Boolean;
+function SDL_PIXELTYPE(X: Cardinal): Boolean;
+function SDL_PIXELORDER(X: Cardinal): Boolean;
+function SDL_PIXELLAYOUT(X: Cardinal): Boolean;
+function SDL_BITSPERPIXEL(X: Cardinal): Boolean;
+     {
 #define SDL_BYTESPERPIXEL(X) \
     (SDL_ISPIXELFORMAT_FOURCC(X) ? \
         ((((X) == SDL_PIXELFORMAT_YUY2) || \
@@ -404,7 +406,8 @@ function SDL_DEFINE_PIXELFOURCC(A,B,C,D: Variant): Variant;
   function SDL_IsPixelFormat_FOURCC(format: Variant);
 
   {* Note: If you modify this list, update SDL_GetPixelFormatName() *}
-           
+
+const
     SDL_PIXELFORMAT_UNKNOWN = 0;
     SDL_PIXELFORMAT_INDEX1LSB = (1 shl 28)                    or
                                 (SDL_PIXELTYPE_INDEX1 shl 24) or
@@ -714,7 +717,7 @@ function SDL_PixelFormatEnumToMasks(format: UInt32; bpp: PInt; Rmask: PUInt32; G
    *  SDL_PixelFormatEnumToMasks()
    *}
 
-function SDL_MasksToPixelFormatEnum(bpp: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): UInt32;
+function SDL_MasksToPixelFormatEnum(bpp: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_MasksToPixelFormatEnum' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create an SDL_PixelFormat structure from a pixel format enum.
@@ -1054,13 +1057,13 @@ const
    *  Read an item of the specified endianness and return in native format.
    *}
 
-function SDL_ReadU8(src: PSDL_RWops): UInt8;
-function SDL_ReadLE16(src: PSDL_RWops): UInt16;
-function SDL_ReadBE16(src: PSDL_RWops): UInt16;
-function SDL_ReadLE32(src: PSDL_RWops): UInt32;
-function SDL_ReadBE32(src: PSDL_RWops): UInt32;
-function SDL_ReadLE64(src: PSDL_RWops): UInt64;
-function SDL_ReadBE64(src: PSDL_RWops): UInt64;
+function SDL_ReadU8(src: PSDL_RWops): UInt8 cdecl; external {$IFDEF GPC} name 'SDL_ReadU8' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_ReadLE16(src: PSDL_RWops): UInt16 cdecl; external {$IFDEF GPC} name 'SDL_ReadLE16' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_ReadBE16(src: PSDL_RWops): UInt16 cdecl; external {$IFDEF GPC} name 'SDL_ReadBE16' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_ReadLE32(src: PSDL_RWops): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_ReadLE32' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_ReadBE32(src: PSDL_RWops): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_ReadBE32' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_ReadLE64(src: PSDL_RWops): UInt64 cdecl; external {$IFDEF GPC} name 'SDL_ReadLE64' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_ReadBE64(src: PSDL_RWops): UInt64 cdecl; external {$IFDEF GPC} name 'SDL_ReadBE64' {$ELSE} SDL_LibName {$ENDIF};
 
   {*Read endian functions*}
 
@@ -1070,13 +1073,13 @@ function SDL_ReadBE64(src: PSDL_RWops): UInt64;
    *  Write an item of native format to the specified endianness.
    *}
 
-function SDL_WriteU8(dst: PSDL_RWops; value: UInt8): size_t;
-function SDL_WriteLE16(dst: PSDL_RWops; value: UInt16): size_t;
-function SDL_WriteBE16(dst: PSDL_RWops; value: UInt16): size_t;
-function SDL_WriteLE32(dst: PSDL_RWops; value: UInt32): size_t;
-function SDL_WriteBE32(dst: PSDL_RWops; value: UInt32): size_t;
-function SDL_WriteLE64(dst: PSDL_RWops; value: UInt64): size_t;
-function SDL_WriteBE64(dst: PSDL_RWops; value: UInt64): size_t;
+function SDL_WriteU8(dst: PSDL_RWops; value: UInt8): size_t cdecl; external {$IFDEF GPC} name 'SDL_WriteU8' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_WriteLE16(dst: PSDL_RWops; value: UInt16): size_t cdecl; external {$IFDEF GPC} name 'SDL_WriteLE16' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_WriteBE16(dst: PSDL_RWops; value: UInt16): size_t cdecl; external {$IFDEF GPC} name 'SDL_WriteBE16' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_WriteLE32(dst: PSDL_RWops; value: UInt32): size_t cdecl; external {$IFDEF GPC} name 'SDL_WriteLE32' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_WriteBE32(dst: PSDL_RWops; value: UInt32): size_t cdecl; external {$IFDEF GPC} name 'SDL_WriteBE32' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_WriteLE64(dst: PSDL_RWops; value: UInt64): size_t cdecl; external {$IFDEF GPC} name 'SDL_WriteLE64' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_WriteBE64(dst: PSDL_RWops; value: UInt64): size_t cdecl; external {$IFDEF GPC} name 'SDL_WriteBE64' {$ELSE} SDL_LibName {$ENDIF};
   { Write endian functions }
 
 //from "sdl_blendmode.h"
@@ -1233,7 +1236,7 @@ function SDL_LoadBMP_RW(src: PSDL_RWops; freesrc: SInt32): PSDL_Surface cdecl; e
    *  Convenience macro.
    *}
 
-function SDL_LoadBMP(_file: AnsiString): PSDL_Surface;
+function SDL_LoadBMP(_file: PAnsiChar): PSDL_Surface;
 
   {**
    *  Save a surface to a seekable SDL data stream (memory or file).
@@ -1434,8 +1437,8 @@ function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; co
    *  0 on success, or -1 on error.
    *}
 
-function SDL_FillRect(dst: PSDL_Surface; const rect: PSDL_Rect; color: UInt32): SInt32;
-function SDL_FillRects(dst: PSDL_Surface; const rects: PSDL_Rect; count: SInt32; color: UInt32): SInt32;
+function SDL_FillRect(dst: PSDL_Surface; const rect: PSDL_Rect; color: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_FillRect' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_FillRects(dst: PSDL_Surface; const rects: PSDL_Rect; count: SInt32; color: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_FillRects' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Performs a fast blit from the source surface to the destination surface.
@@ -1528,14 +1531,14 @@ function SDL_SoftStretch(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_
    *  rectangle validation and clipping before passing it to SDL_LowerBlitScaled()
    *}
 
-function SDL_UpperBlitScaled(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32;
+function SDL_UpperBlitScaled(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_UpperBlitScaled' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  This is a semi-private blit function and it performs low-level surface
    *  scaled blitting only.
    *}
 
-function SDL_LowerBlitScaled(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32;
+function SDL_LowerBlitScaled(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LowerBlitScaled' {$ELSE} SDL_LibName {$ENDIF};
 
   //from "sdl_video.h"
   
@@ -1808,7 +1811,7 @@ function SDL_GetDisplayBounds(displayIndex: SInt32; rect: PSDL_Rect): SInt32 cde
    *  SDL_GetDisplayMode()
    *}
 
-function SDL_GetNumDisplayModes(displayIndex: SInt32): SInt32;
+function SDL_GetNumDisplayModes(displayIndex: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetNumDisplayModes' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Fill in information about a specific display mode.
@@ -3449,7 +3452,7 @@ type
    *  SDL_CreateCursor()
    *}
 
-  procedure SDL_FreeCursor(cursor: PSDL_Cursor);
+  procedure SDL_FreeCursor(cursor: PSDL_Cursor) cdecl; external {$IFDEF GPC} name 'SDL_FreeCursor' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Toggle whether or not the cursor is shown.
@@ -3460,7 +3463,7 @@ type
    *  1 if the cursor is shown, or 0 if the cursor is hidden.
    *}
 
-  function SDL_ShowCursor(toggle: SInt32): SInt32;
+  function SDL_ShowCursor(toggle: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_ShowCursor' {$ELSE} SDL_LibName {$ENDIF};
 
 const
   {**
@@ -3508,7 +3511,7 @@ type
   {**
    *  Count the number of joysticks attached to the system right now
    *}
-function SDL_NumJoysticks: SInt32;
+function SDL_NumJoysticks: SInt32 cdecl; external {$IFDEF GPC} name 'SDL_NumJoysticks' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the implementation dependent name of a joystick.
@@ -3693,22 +3696,22 @@ const
   {**
    *  Get the number of registered touch devices.
    *}
-function SDL_GetNumTouchDevices: SInt32;
+function SDL_GetNumTouchDevices: SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetNumTouchDevices' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the touch ID with the given index, or 0 if the index is invalid.
    *}
-function SDL_GetTouchDevice(index: SInt32): TSDL_TouchID;
+function SDL_GetTouchDevice(index: SInt32): TSDL_TouchID cdecl; external {$IFDEF GPC} name 'SDL_GetTouchDevice' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the number of active fingers for a given touch device.
    *}
-function SDL_GetNumTouchFingers(touchID: TSDL_TouchID): SInt32;
+function SDL_GetNumTouchFingers(touchID: TSDL_TouchID): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetNumTouchFingers' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the finger object of the given touch, with the given index.
    *}
-function SDL_GetTouchFinger(touchID: TSDL_TouchID; index: SInt32): PSDL_Finger;
+function SDL_GetTouchFinger(touchID: TSDL_TouchID; index: SInt32): PSDL_Finger cdecl; external {$IFDEF GPC} name 'SDL_GetTouchFinger' {$ELSE} SDL_LibName {$ENDIF};
 
 
   //from "sdl_gesture.h"
@@ -3723,21 +3726,21 @@ type
    *
    *
    *}
-function SDL_RecordGesture(touchId: TSDL_TouchID): SInt32;
+function SDL_RecordGesture(touchId: TSDL_TouchID): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RecordGesture' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Save all currently loaded Dollar Gesture templates
    *
    *
    *}
-function SDL_SaveAllDollarTemplates(src: PSDL_RWops): SInt32;
+function SDL_SaveAllDollarTemplates(src: PSDL_RWops): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SaveAllDollarTemplates' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Save a currently loaded Dollar Gesture template
    *
    *
    *}
-function SDL_SaveDollarTemplate(gestureId: TSDL_GestureID; src: PSDL_RWops): SInt32;
+function SDL_SaveDollarTemplate(gestureId: TSDL_GestureID; src: PSDL_RWops): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SaveDollarTemplate' {$ELSE} SDL_LibName {$ENDIF};
 
 
   {**
@@ -3745,7 +3748,7 @@ function SDL_SaveDollarTemplate(gestureId: TSDL_GestureID; src: PSDL_RWops): SIn
    *
    *
    *}
-function SDL_LoadDollarTemplates(touchId: TSDL_TouchID; src: PSDL_RWops): SInt32;
+function SDL_LoadDollarTemplates(touchId: TSDL_TouchID; src: PSDL_RWops): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LoadDollarTemplates' {$ELSE} SDL_LibName {$ENDIF};
 
   //from "sdl_events.h"
 
@@ -4471,7 +4474,7 @@ type
    *  events for which the filter returns 0.
    *}
 
-  procedure SDL_FilterEvents(filter: TSDL_EventFilter; userdata: Pointer);
+  procedure SDL_FilterEvents(filter: TSDL_EventFilter; userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_FilterEvents' {$ELSE} SDL_LibName {$ENDIF};
 
 const
 
@@ -4605,6 +4608,32 @@ begin
 end;
 
 //from "sdl_pixels.h"
+
+function SDL_PIXELFLAG(X: Cardinal): Boolean;
+begin
+  Result := (X shr 28) = $0F;
+end;
+
+function SDL_PIXELTYPE(X: Cardinal): Boolean;
+begin
+  Result := (X shr 24) = $0F;
+end;
+
+function SDL_PIXELORDER(X: Cardinal): Boolean;
+begin
+  Result := (X shr 20) = $0F;
+end;
+
+function SDL_PIXELLAYOUT(X: Cardinal): Boolean;
+begin
+  Result := (X shr 16) = $0F;
+end;
+
+function SDL_BITSPERPIXEL(X: Cardinal): Boolean;
+begin
+  Result := (X shr 8) = $FF;
+end;
+
 function SDL_IsPixelFormat_FOURCC(format: Variant): Boolean;
 begin
   {* The flag is set to 1 because 0x1? is not in the printable ASCII range *}
@@ -4612,20 +4641,20 @@ begin
 end;
 
 //from "sdl_surface.h"
-function SDL_LoadBMP(file_: PAnsiChar);
+function SDL_LoadBMP(_file: PAnsiChar): PSDL_Surface;
 begin
-  SDL_LoadBMP_RW(SDL_RWFromFile(file_, "rb"), 1);
+  Result := SDL_LoadBMP_RW(SDL_RWFromFile(_file, 'rb'), 1);
 end;
 
 //from "sdl_video.h"
 function SDL_WindowPos_IsUndefined(X: Variant): Variant;
 begin
-  Result := (X and $FFFF0000) == SDL_WINDOWPOS_UNDEFINED_MASK;
+  Result := (X and $FFFF0000) = SDL_WINDOWPOS_UNDEFINED_MASK;
 end;
 
 function SDL_WindowPos_IsCentered(X: Variant): Variant;
 begin
-  Result := (X and $FFFF0000) == SDL_WINDOWPOS_CENTERED_MASK;
+  Result := (X and $FFFF0000) = SDL_WINDOWPOS_CENTERED_MASK;
 end;
 
 //from "sdl_events.h"
