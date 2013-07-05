@@ -844,13 +844,13 @@ type
 
   //changed from variant(bäääääh!) to TSDL_Rect
   //maybe PSDL_Rect?
-function SDL_RectEmpty(X: TSDL_Rect): TSDL_Bool;
+function SDL_RectEmpty(X: TSDL_Rect): Boolean;
 
     {**
      *  Returns true if the two rectangles are equal.
      *}
 
-function SDL_RectEquals(A: TSDL_Rect; B: TSDL_Rect): TSDL_Bool;
+function SDL_RectEquals(A: TSDL_Rect; B: TSDL_Rect): Boolean;
 
   {**
    *  Determine whether two rectangles intersect.
@@ -3757,6 +3757,8 @@ const
 
   SDL_FIRSTEVENT       = 0;     // Unused (do not remove) (needed in pascal?)
 
+  SDL_COMMONEVENT      = 1;     //added for pascal-compatibility
+
   { Application events }
   SDL_QUITEV           = $100;  // User-requested quit (originally SDL_QUIT, but changed, cause theres a method called SDL_QUIT)
 
@@ -4307,14 +4309,13 @@ type
       SDL_USEREVENT: (user: TSDL_UserEvent);
       SDL_SYSWMEVENT: (syswm: TSDL_SysWMEvent);
 
-      SDL_TOUCHFINGERDOWN,
-      SDL_TOUCHFINGERUP,
-      SDL_TOUCHFINGERMOTION: (tfinger: TSDL_TouchFingerEvent);
+      SDL_FINGERDOWN,
+      SDL_FINGERUP,
+      SDL_FINGERMOTION: (tfinger: TSDL_TouchFingerEvent);
       SDL_MULTIGESTURE: (mgesture: TSDL_MultiGestureEvent);
       SDL_DOLLARGESTURE,SDL_DOLLARRECORD: (dgesture: TSDL_DollarGestureEvent);
 
       SDL_DROPFILE: (drop: TSDL_DropEvent);
-	  end;
   end;
 
 
@@ -4415,9 +4416,10 @@ type
 
   function SDL_PushEvent(event: PSDL_Event): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_PumpEvents' {$ELSE} SDL_LibName {$ENDIF};
 
-const
+type
+  PSDL_EventFilter = ^TSDL_EventFilter;
   {$IFNDEF GPC}
-    TSDL_EventFilter = function( event: PSDL_Event ): Integer; cdecl;;
+    TSDL_EventFilter = function( event: PSDL_Event ): Integer; cdecl;
   {$ELSE}
     TSDL_EventFilter = function( event: PSDL_Event ): Integer;
   {$ENDIF}
@@ -4456,13 +4458,13 @@ const
    *  Add a function which is called when an event is added to the queue.
    *}
  
-  procedure SDL_AddEventWatch(filter: TSDL_EventFilter, userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_AddEventWatch' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_AddEventWatch(filter: TSDL_EventFilter; userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_AddEventWatch' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Remove an event watch function added with SDL_AddEventWatch()
    *}
  
-  procedure SDL_DelEventWatch(filter: TSDL_EventFilter, userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_DelEventWatch' {$ELSE} SDL_LibName {$ENDIF};
+  procedure SDL_DelEventWatch(filter: TSDL_EventFilter; userdata: Pointer) cdecl; external {$IFDEF GPC} name 'SDL_DelEventWatch' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Run the filter function on the current event queue, removing any
@@ -4473,10 +4475,10 @@ const
 
 const
 
-  SDL_QUERY   =	-1
-  SDL_IGNORE  =	 0
-  SDL_DISABLE =	 0
-  SDL_ENABLE  =  1
+  SDL_QUERY   =	-1;
+  SDL_IGNORE  =	 0;
+  SDL_DISABLE =	 0;
+  SDL_ENABLE  =  1;
 
   {**
    *  This function allows you to set the state of processing certain events.
@@ -4567,7 +4569,7 @@ procedure SDL_Quit cdecl; external {$IFDEF GPC} name 'SDL_Quit' {$ELSE} SDL_LibN
 implementation
 
 //from "sdl_version.h"
-function SDL_VERSION(x: PSDL_Version);
+procedure SDL_VERSION(x: PSDL_Version);
 begin
   x.major := SDL_MAJOR_VERSION;
   x.minor := SDL_MINOR_VERSION;
@@ -4586,24 +4588,24 @@ begin
                            SDL_PATCHLEVEL);
 end;
 
-function SDL_VERSION_ATLEAST(X,Y,Z): Boolean;
+function SDL_VERSION_ATLEAST(X,Y,Z: Cardinal): Boolean;
 begin
   Result := SDL_COMPILEDVERSION >= SDL_VERSIONNUM(X,Y,Z);
 end;
 
 //from "sdl_rect.h"
-function SDL_RectEmpty(X: TSDL_Rect): TSDL_Bool;
+function SDL_RectEmpty(X: TSDL_Rect): Boolean;
 begin
   Result := (X.w <= 0) or (X.h <= 0);
 end;
 
-function SDL_RectEquals(A: TSDL_Rect; B: TSDL_Rect);
+function SDL_RectEquals(A: TSDL_Rect; B: TSDL_Rect): Boolean;
 begin
   Result := (A.x = B.x) and (A.y = B.y) and (A.w = B.w) and (A.h = B.h);
 end;
 
 //from "sdl_pixels.h"
-function SDL_IsPixelFormat_FOURCC(format: Variant): TSDL_Bool;
+function SDL_IsPixelFormat_FOURCC(format: Variant): Boolean;
 begin
   {* The flag is set to 1 because 0x1? is not in the printable ASCII range *}
   Result := format and SDL_PIXELFLAG(format) <> 1;
