@@ -38,7 +38,7 @@
 {
   Changelog:
   ----------
-  v. 1.0; 22.03.13: Initial Release
+  v. 1.0; 05.07.13: Initial Alpha-Release
 }
 
 {.$define Debug}           { uncomment for debugging }
