@@ -27,7 +27,17 @@ unit SDL;
   "sdl_touch.h",
   "sdl_gesture.h",
   "sdl_error.h",
-  "sdl_version.h"
+  "sdl_version.h",
+  "sdl_render.h"
+
+  I will not translate:
+  "sdl_opengl.h",
+  "sdl_opengles.h"
+  "sdl_opengles2.h"
+
+  cause there's a much better OpenGL-Header avaible at delphigl.com:
+
+  the dglopengl.pas
 
   Parts of the SDL.pas are from the SDL-1.2-Headerconversion from the JEDI-Team,
   written by Domenique Louis and others.
@@ -2553,7 +2563,7 @@ type
    *   SDL_GetRenderDriverInfo()
    *   SDL_CreateRenderer()
    *}
-function SDL_GetNumRenderDrivers: SInt32;
+function SDL_GetNumRenderDrivers: SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetNumRenderDrivers' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get information about a specific 2D rendering driver for the current
@@ -2567,7 +2577,7 @@ function SDL_GetNumRenderDrivers: SInt32;
    *
    *   SDL_CreateRenderer()
    *}
-function SDL_GetRenderDriverInfo(index: SInt32; info: PSDL_RendererInfo): SInt32;
+function SDL_GetRenderDriverInfo(index: SInt32; info: PSDL_RendererInfo): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetRenderDriverInfo' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a window and default renderer
@@ -2580,7 +2590,7 @@ function SDL_GetRenderDriverInfo(index: SInt32; info: PSDL_RendererInfo): SInt32
    *
    *   0 on success, or -1 on error
    *}
-function SDL_CreateWindowAndRenderer(width: SInt32; height: SInt32; window_flags: UInt32; window: PPSDL_Window; renderer: PPSDL_Renderer): SInt32;
+function SDL_CreateWindowAndRenderer(width: SInt32; height: SInt32; window_flags: UInt32; window: PPSDL_Window; renderer: PPSDL_Renderer): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_CreateWindowAndRenderer' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a 2D rendering context for a window.
@@ -2596,7 +2606,7 @@ function SDL_CreateWindowAndRenderer(width: SInt32; height: SInt32; window_flags
    *   SDL_GetRendererInfo()
    *   SDL_DestroyRenderer()
    *}
-function SDL_CreateRenderer(window: PSDL_Window; index: SInt32; flags: UInt32): PSDL_Renderer;
+function SDL_CreateRenderer(window: PSDL_Window; index: SInt32; flags: UInt32): PSDL_Renderer cdecl; external {$IFDEF GPC} name 'SDL_CreateRenderer' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a 2D software rendering context for a surface.
@@ -2608,22 +2618,22 @@ function SDL_CreateRenderer(window: PSDL_Window; index: SInt32; flags: UInt32): 
    *   SDL_CreateRenderer()
    *   SDL_DestroyRenderer()
    *}
-function SDL_CreateSoftwareRenderer(surface: PSDL_Surface): PSDL_Renderer;
+function SDL_CreateSoftwareRenderer(surface: PSDL_Surface): PSDL_Renderer cdecl; external {$IFDEF GPC} name 'SDL_CreateSoftwareRenderer' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the renderer associated with a window.
    *}
-function SDL_GetRenderer(window: PSDL_Window): PSDL_Renderer;
+function SDL_GetRenderer(window: PSDL_Window): PSDL_Renderer cdecl; external {$IFDEF GPC} name 'SDL_GetRenderer' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get information about a rendering context.
    *}
-function SDL_GetRendererInfo(renderer: PSDL_Renderer; info: PSDL_RendererInfo): SInt32;
+function SDL_GetRendererInfo(renderer: PSDL_Renderer; info: PSDL_RendererInfo): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetRendererInfo' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the output size of a rendering context.
    *}
-function SDL_GetRendererOutputSize(renderer: PSDL_Renderer; w: PInt; h: PInt): SInt32;
+function SDL_GetRendererOutputSize(renderer: PSDL_Renderer; w: PInt; h: PInt): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetRendererOutputSize' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a texture for a rendering context.
@@ -2642,7 +2652,7 @@ function SDL_GetRendererOutputSize(renderer: PSDL_Renderer; w: PInt; h: PInt): S
    *  SDL_UpdateTexture()
    *  SDL_DestroyTexture()
    *}
-function SDL_CreateTexture(renderer: PSDL_Renderer; format: UInt32; access: SInt32; w: SInt32; h: SInt32): PSDL_Texture;
+function SDL_CreateTexture(renderer: PSDL_Renderer; format: UInt32; access: SInt32; w: SInt32; h: SInt32): PSDL_Texture cdecl; external {$IFDEF GPC} name 'SDL_CreateTexture' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a texture from an existing surface.
@@ -2657,7 +2667,7 @@ function SDL_CreateTexture(renderer: PSDL_Renderer; format: UInt32; access: SInt
    *   SDL_QueryTexture()
    *   SDL_DestroyTexture()
    *}
-function SDL_CreateTextureFromSurface(renderer: PSDL_Renderer; surface: PSDL_Surface): PSDL_Texture;
+function SDL_CreateTextureFromSurface(renderer: PSDL_Renderer; surface: PSDL_Surface): PSDL_Texture cdecl; external {$IFDEF GPC} name 'SDL_CreateTextureFromSurface' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Query the attributes of a texture
@@ -2672,7 +2682,7 @@ function SDL_CreateTextureFromSurface(renderer: PSDL_Renderer; surface: PSDL_Sur
    *
    *   0 on success, or -1 if the texture is not valid.
    *}
-function SDL_QueryTexture(texture: PSDL_Texture; format: PUInt32; access: PInt; w: PInt; h: PInt): SInt32;
+function SDL_QueryTexture(texture: PSDL_Texture; format: PUInt32; access: PInt; w: PInt; h: PInt): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_QueryTexture' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set an additional color value used in render copy operations.
@@ -2687,7 +2697,7 @@ function SDL_QueryTexture(texture: PSDL_Texture; format: PUInt32; access: PInt; 
    *
    *   SDL_GetTextureColorMod()
    *}
-function SDL_SetTextureColorMod(texture: PSDL_Texture; r: UInt8; g: UInt8; b: UInt8): SInt32;
+function SDL_SetTextureColorMod(texture: PSDL_Texture; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetTextureColorMod' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the additional color value used in render copy operations.
@@ -2701,7 +2711,7 @@ function SDL_SetTextureColorMod(texture: PSDL_Texture; r: UInt8; g: UInt8; b: UI
    *
    *   SDL_SetTextureColorMod()
    *}
-function SDL_GetTextureColorMod(texture: PSDL_Texture; r: PUInt8; g: PUInt8; b: PUInt8): SInt32;
+function SDL_GetTextureColorMod(texture: PSDL_Texture; r: PUInt8; g: PUInt8; b: PUInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetTextureColorMod' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set an additional alpha value used in render copy operations.
@@ -2714,7 +2724,7 @@ function SDL_GetTextureColorMod(texture: PSDL_Texture; r: PUInt8; g: PUInt8; b: 
    *
    *   SDL_GetTextureAlphaMod()
    *}
-function SDL_SetTextureAlphaMod(texture: PSDL_Texture; alpha: UInt8): SInt32;
+function SDL_SetTextureAlphaMod(texture: PSDL_Texture; alpha: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetTextureAlphaMod' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the additional alpha value used in render copy operations.
@@ -2726,7 +2736,7 @@ function SDL_SetTextureAlphaMod(texture: PSDL_Texture; alpha: UInt8): SInt32;
    *
    *   SDL_SetTextureAlphaMod()
    *}
-function SDL_GetTextureAlphaMod(texture: PSDL_Texture; alpha: PUInt8): SInt32;
+function SDL_GetTextureAlphaMod(texture: PSDL_Texture; alpha: PUInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetTextureAlphaMod' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *   Set the blend mode used for texture copy operations.
@@ -2742,7 +2752,7 @@ function SDL_GetTextureAlphaMod(texture: PSDL_Texture; alpha: PUInt8): SInt32;
    *
    *   SDL_GetTextureBlendMode()
    *}
-function SDL_SetTextureBlendMode(texture: PSDL_Texture; blendMode: TSDL_BlendMode): SInt32;
+function SDL_SetTextureBlendMode(texture: PSDL_Texture; blendMode: TSDL_BlendMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetTextureBlendMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the blend mode used for texture copy operations.
@@ -2754,7 +2764,7 @@ function SDL_SetTextureBlendMode(texture: PSDL_Texture; blendMode: TSDL_BlendMod
    *
    *   SDL_SetTextureBlendMode()
    *}
-function SDL_GetTextureBlendMode(texture: PSDL_Texture; blendMode: PSDL_BlendMode): SInt32;
+function SDL_GetTextureBlendMode(texture: PSDL_Texture; blendMode: PSDL_BlendMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetTextureBlendMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Update the given texture rectangle with new pixel data.
@@ -2769,7 +2779,7 @@ function SDL_GetTextureBlendMode(texture: PSDL_Texture; blendMode: PSDL_BlendMod
    *
    *   This is a fairly slow function.
    *}
-function SDL_UpdateTexture(texture: PSDL_Texture; rect: PSDL_Rect; pixels: Pointer; pitch: SInt32): SInt32;
+function SDL_UpdateTexture(texture: PSDL_Texture; rect: PSDL_Rect; pixels: Pointer; pitch: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_UpdateTexture' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Lock a portion of the texture for write-only pixel access.
@@ -2786,14 +2796,14 @@ function SDL_UpdateTexture(texture: PSDL_Texture; rect: PSDL_Rect; pixels: Point
    *
    *   SDL_UnlockTexture()
    *}
-function SDL_LockTexture(texture: PSDL_Texture; rect: PSDL_Rect; pixels: PPointer; pitch: PInt): SInt32;
+function SDL_LockTexture(texture: PSDL_Texture; rect: PSDL_Rect; pixels: PPointer; pitch: PInt): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LockTexture' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Unlock a texture, uploading the changes to video memory, if needed.
    *
    *   SDL_LockTexture()
    *}
-procedure SDL_UnlockTexture(texture: PSDL_Texture);
+procedure SDL_UnlockTexture(texture: PSDL_Texture) cdecl; external {$IFDEF GPC} name 'SDL_LockTexture' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Determines whether a window supports the use of render targets
@@ -2802,7 +2812,7 @@ procedure SDL_UnlockTexture(texture: PSDL_Texture);
    *
    *  SDL_TRUE if supported, SDL_FALSE if not.
    *}
-function SDL_RenderTargetSupported(renderer: PSDL_Renderer): Boolean;
+function SDL_RenderTargetSupported(renderer: PSDL_Renderer): Boolean cdecl; external {$IFDEF GPC} name 'SDL_RenderTargetSupported' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set a texture as the current rendering target.
@@ -2814,7 +2824,7 @@ function SDL_RenderTargetSupported(renderer: PSDL_Renderer): Boolean;
    *
    *   SDL_GetRenderTarget()
    *}
-function SDL_SetRenderTarget(renderer: PSDL_Renderer; texture: PSDL_Texture): SInt32;
+function SDL_SetRenderTarget(renderer: PSDL_Renderer; texture: PSDL_Texture): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetRenderTarget' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the current render target or NULL for the default render target.
@@ -2823,7 +2833,7 @@ function SDL_SetRenderTarget(renderer: PSDL_Renderer; texture: PSDL_Texture): SI
    *
    *   SDL_SetRenderTarget()
    *}
-function SDL_GetRenderTarget(renderer: PSDL_Renderer): PSDL_Texture;
+function SDL_GetRenderTarget(renderer: PSDL_Renderer): PSDL_Texture cdecl; external {$IFDEF GPC} name 'SDL_GetRenderTarget' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set device independent resolution for rendering
@@ -2848,7 +2858,7 @@ function SDL_GetRenderTarget(renderer: PSDL_Renderer): PSDL_Texture;
    *   SDL_RenderSetScale()
    *   SDL_RenderSetViewport()
    *}
-function SDL_RenderSetLogicalSize(renderer: PSDL_Renderer; w: SInt32; h: SInt32): SInt32;
+function SDL_RenderSetLogicalSize(renderer: PSDL_Renderer; w: SInt32; h: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderSetLogicalSize' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get device independent resolution for rendering
@@ -2859,7 +2869,7 @@ function SDL_RenderSetLogicalSize(renderer: PSDL_Renderer; w: SInt32; h: SInt32)
    *
    *   SDL_RenderSetLogicalSize()
    *}
-procedure SDL_RenderGetLogicalSize(renderer: PSDL_Renderer; w: PInt; h: PInt);
+procedure SDL_RenderGetLogicalSize(renderer: PSDL_Renderer; w: PInt; h: PInt) cdecl; external {$IFDEF GPC} name 'SDL_RenderGetLogicalSize' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the drawing area for rendering on the current target.
@@ -2876,14 +2886,14 @@ procedure SDL_RenderGetLogicalSize(renderer: PSDL_Renderer; w: PInt; h: PInt);
    *   SDL_RenderGetViewport()
    *   SDL_RenderSetLogicalSize()
    *}
-function SDL_RenderSetViewport(renderer: PSDL_Renderer; const rect: PSDL_Rect): SInt32;
+function SDL_RenderSetViewport(renderer: PSDL_Renderer; const rect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderSetViewport' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the drawing area for the current target.
    *
    *   SDL_RenderSetViewport()
    *}
-procedure SDL_RenderGetViewport(renderer: PSDL_Renderer; rect: PSDL_Rect);
+procedure SDL_RenderGetViewport(renderer: PSDL_Renderer; rect: PSDL_Rect) cdecl; external {$IFDEF GPC} name 'SDL_RenderGetViewport' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the clip rectangle for the current target.
@@ -2896,7 +2906,7 @@ procedure SDL_RenderGetViewport(renderer: PSDL_Renderer; rect: PSDL_Rect);
    *
    *   SDL_RenderGetClipRect()
    *}
-function SDL_RenderSetClipRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32;
+function SDL_RenderSetClipRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderSetClipRect' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the clip rectangle for the current target.
@@ -2907,7 +2917,7 @@ function SDL_RenderSetClipRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32
    *
    *   SDL_RenderSetClipRect()
    *}
-procedure SDL_RenderGetClipRect(renderer: PSDL_Renderer; rect: PSDL_Rect);
+procedure SDL_RenderGetClipRect(renderer: PSDL_Renderer; rect: PSDL_Rect) cdecl; external {$IFDEF GPC} name 'SDL_RenderGetClipRect' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the drawing scale for rendering on the current target.
@@ -2927,7 +2937,7 @@ procedure SDL_RenderGetClipRect(renderer: PSDL_Renderer; rect: PSDL_Rect);
    *   SDL_RenderGetScale()
    *   SDL_RenderSetLogicalSize()
    *}
-function SDL_RenderSetScale(renderer: PSDL_Renderer; scaleX: Float; scaleY: Float): SInt32;
+function SDL_RenderSetScale(renderer: PSDL_Renderer; scaleX: Float; scaleY: Float): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderSetScale' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the drawing scale for the current target.
@@ -2938,7 +2948,7 @@ function SDL_RenderSetScale(renderer: PSDL_Renderer; scaleX: Float; scaleY: Floa
    *
    *   SDL_RenderSetScale()
    *}
-procedure SDL_RenderGetScale(renderer: PSDL_Renderer; scaleX: PFloat; scaleY: PFloat);
+procedure SDL_RenderGetScale(renderer: PSDL_Renderer; scaleX: PFloat; scaleY: PFloat) cdecl; external {$IFDEF GPC} name 'SDL_RenderGetScale' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the color used for drawing operations (Rect, Line and Clear).
@@ -2952,7 +2962,7 @@ procedure SDL_RenderGetScale(renderer: PSDL_Renderer; scaleX: PFloat; scaleY: PF
    *
    *   0 on success, or -1 on error
    *}
-function SDL_SetRenderDrawColor(renderer: PSDL_Renderer; r: UInt8; g: UInt8; b: UInt8; a: UInt8);
+function SDL_SetRenderDrawColor(renderer: PSDL_Renderer; r: UInt8; g: UInt8; b: UInt8; a: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetRenderDrawColor' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the color used for drawing operations (Rect, Line and Clear).
@@ -2966,7 +2976,7 @@ function SDL_SetRenderDrawColor(renderer: PSDL_Renderer; r: UInt8; g: UInt8; b: 
    *
    *   0 on success, or -1 on error
    *}
-function SDL_GetRenderDrawColor(renderer: PSDL_Renderer; r: PUInt8; g: PUInt8: b: PUInt8; a: PUInt8): SInt32;
+function SDL_GetRenderDrawColor(renderer: PSDL_Renderer; r: PUInt8; g: PUInt8; b: PUInt8; a: PUInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetRenderDrawColor' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the blend mode used for drawing operations (Fill and Line).
@@ -2981,7 +2991,7 @@ function SDL_GetRenderDrawColor(renderer: PSDL_Renderer; r: PUInt8; g: PUInt8: b
    *
    *   SDL_GetRenderDrawBlendMode()
    *}
-function SDL_SetRenderDrawBlendMode(renderer: PSDL_Renderer; blendMode: TSDL_BlendMode): SInt32;
+function SDL_SetRenderDrawBlendMode(renderer: PSDL_Renderer; blendMode: TSDL_BlendMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetRenderDrawBlendMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Get the blend mode used for drawing operations.
@@ -2993,7 +3003,7 @@ function SDL_SetRenderDrawBlendMode(renderer: PSDL_Renderer; blendMode: TSDL_Ble
    *
    *   SDL_SetRenderDrawBlendMode()
    *}
-function SDL_GetRenderDrawBlendMode(renderer: PSDL_Renderer; blendMode: PSDL_BlendMode): SInt32;
+function SDL_GetRenderDrawBlendMode(renderer: PSDL_Renderer; blendMode: PSDL_BlendMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetRenderDrawBlendMode' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Clear the current rendering target with the drawing color
@@ -3002,7 +3012,7 @@ function SDL_GetRenderDrawBlendMode(renderer: PSDL_Renderer; blendMode: PSDL_Ble
    *
    *   0 on success, or -1 on error
    *}
-function SDL_RenderClear(renderer: PSDL_Renderer): SInt32;
+function SDL_RenderClear(renderer: PSDL_Renderer): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderClear' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Draw a point on the current rendering target.
@@ -3013,7 +3023,7 @@ function SDL_RenderClear(renderer: PSDL_Renderer): SInt32;
    *
    *   0 on success, or -1 on error
    *}
-function SDL_RenderDrawPoint(renderer: PSDL_Renderer; x: SInt32; y: SInt32): SInt32;
+function SDL_RenderDrawPoint(renderer: PSDL_Renderer; x: SInt32; y: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderDrawPoint' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Draw multiple points on the current rendering target.
@@ -3024,7 +3034,7 @@ function SDL_RenderDrawPoint(renderer: PSDL_Renderer; x: SInt32; y: SInt32): SIn
    *
    *   0 on success, or -1 on error
    *}
-function SDL_RenderDrawPoints(renderer: PSDL_Renderer; points: PSDL_Point; count: SInt32): SInt32;
+function SDL_RenderDrawPoints(renderer: PSDL_Renderer; points: PSDL_Point; count: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderDrawPoints' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Draw a line on the current rendering target.
@@ -3037,7 +3047,7 @@ function SDL_RenderDrawPoints(renderer: PSDL_Renderer; points: PSDL_Point; count
    *
    *   0 on success, or -1 on error
    *}
-function SDL_RenderDrawLine(renderer: PSDL_Renderer; x1: SInt32; y1: SInt32; x2: SInt32; y2: SInt32): SInt32;
+function SDL_RenderDrawLine(renderer: PSDL_Renderer; x1: SInt32; y1: SInt32; x2: SInt32; y2: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderDrawLine' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  \brief Draw a series of connected lines on the current rendering target.
@@ -3048,7 +3058,7 @@ function SDL_RenderDrawLine(renderer: PSDL_Renderer; x1: SInt32; y1: SInt32; x2:
    *
    *  \return 0 on success, or -1 on error
    *}
-function SDL_RenderDrawLines(renderer: PSDL_Renderer; points: PSDL_Point; count: SInt32): SInt32;
+function SDL_RenderDrawLines(renderer: PSDL_Renderer; points: PSDL_Point; count: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderDrawLines' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Draw a rectangle on the current rendering target.
@@ -3058,7 +3068,7 @@ function SDL_RenderDrawLines(renderer: PSDL_Renderer; points: PSDL_Point; count:
    *
    *   0 on success, or -1 on error
    *}
-function SDL_RenderDrawRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32;
+function SDL_RenderDrawRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderDrawRect' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Draw some number of rectangles on the current rendering target.
@@ -3069,7 +3079,7 @@ function SDL_RenderDrawRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32;
    *
    *   0 on success, or -1 on error
    *}
-function SDL_RenderDrawRects(renderer: PSDL_Renderer; rects: PSDL_Rect; count: SInt32): SInt32;
+function SDL_RenderDrawRects(renderer: PSDL_Renderer; rects: PSDL_Rect; count: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderDrawRects' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Fill a rectangle on the current rendering target with the drawing color.
@@ -3080,124 +3090,108 @@ function SDL_RenderDrawRects(renderer: PSDL_Renderer; rects: PSDL_Rect; count: S
    *
    *   0 on success, or -1 on error
    *}
-extern DECLSPEC int SDLCALL SDL_RenderFillRect(SDL_Renderer * renderer,
-                                               const SDL_Rect * rect);
+function SDL_RenderFillRect(renderer: PSDL_Renderer; rect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderFillRect' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Fill some number of rectangles on the current rendering target with the drawing color.
- *
- *  \param renderer The renderer which should fill multiple rectangles.
- *  \param rects A pointer to an array of destination rectangles.
- *  \param count The number of rectangles.
- *
- *  \return 0 on success, or -1 on error
- */
-extern DECLSPEC int SDLCALL SDL_RenderFillRects(SDL_Renderer * renderer,
-                                                const SDL_Rect * rects,
-                                                int count);
+  {**
+   *  Fill some number of rectangles on the current rendering target with the drawing color.
+   *
+   *   renderer The renderer which should fill multiple rectangles.
+   *   rects A pointer to an array of destination rectangles.
+   *   count The number of rectangles.
+   *
+   *   0 on success, or -1 on error
+   *}
+function SDL_RenderFillRects(renderer: PSDL_Renderer; rects: PSDL_Rect; count: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderFillRects' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Copy a portion of the texture to the current rendering target.
- *
- *  \param renderer The renderer which should copy parts of a texture.
- *  \param texture The source texture.
- *  \param srcrect   A pointer to the source rectangle, or NULL for the entire
- *                   texture.
- *  \param dstrect   A pointer to the destination rectangle, or NULL for the
- *                   entire rendering target.
- *
- *  \return 0 on success, or -1 on error
- */
-extern DECLSPEC int SDLCALL SDL_RenderCopy(SDL_Renderer * renderer,
-                                           SDL_Texture * texture,
-                                           const SDL_Rect * srcrect,
-                                           const SDL_Rect * dstrect);
+  {**
+   *  Copy a portion of the texture to the current rendering target.
+   *
+   *   renderer The renderer which should copy parts of a texture.
+   *   texture The source texture.
+   *   srcrect   A pointer to the source rectangle, or NULL for the entire
+   *             texture.
+   *   dstrect   A pointer to the destination rectangle, or NULL for the
+   *             entire rendering target.
+   *
+   *   0 on success, or -1 on error
+   *}
+function SDL_RenderCopy(renderer: PSDL_Renderer; texture: PSDL_Texture; srcrect: PSDL_Rect; dstrect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderCopy' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Copy a portion of the source texture to the current rendering target, rotating it by angle around the given center
- *
- *  \param renderer The renderer which should copy parts of a texture.
- *  \param texture The source texture.
- *  \param srcrect   A pointer to the source rectangle, or NULL for the entire
- *                   texture.
- *  \param dstrect   A pointer to the destination rectangle, or NULL for the
- *                   entire rendering target.
- *  \param angle    An angle in degrees that indicates the rotation that will be applied to dstrect
- *  \param center   A pointer to a point indicating the point around which dstrect will be rotated (if NULL, rotation will be done aroud dstrect.w/2, dstrect.h/2)
- *  \param flip     An SDL_RendererFlip value stating which flipping actions should be performed on the texture
- *
- *  \return 0 on success, or -1 on error
- */
-extern DECLSPEC int SDLCALL SDL_RenderCopyEx(SDL_Renderer * renderer,
-                                           SDL_Texture * texture,
-                                           const SDL_Rect * srcrect,
-                                           const SDL_Rect * dstrect,
-                                           const double angle,
-                                           const SDL_Point *center,
-                                           const SDL_RendererFlip flip);
+  {**
+   *  Copy a portion of the source texture to the current rendering target, rotating it by angle around the given center
+   *
+   *   renderer The renderer which should copy parts of a texture.
+   *   texture The source texture.
+   *   srcrect   A pointer to the source rectangle, or NULL for the entire
+   *                   texture.
+   *   dstrect   A pointer to the destination rectangle, or NULL for the
+   *                   entire rendering target.
+   *   angle    An angle in degrees that indicates the rotation that will be applied to dstrect
+   *   center   A pointer to a point indicating the point around which dstrect will be rotated (if NULL, rotation will be done aroud dstrect.w/2, dstrect.h/2)
+   *   flip     An SDL_RendererFlip value stating which flipping actions should be performed on the texture
+   *
+   *   0 on success, or -1 on error
+   *}
+function SDL_RenderCopyEx(renderer: PSDL_Renderer; texture: PSDL_Texture; const srcrect: PSDL_Rect; dstrect: PSDL_Rect; angle: Double; center: PSDL_Point; flip: PSDL_RendererFlip): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderCopyEx' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Read pixels from the current rendering target.
- *
- *  \param renderer The renderer from which pixels should be read.
- *  \param rect   A pointer to the rectangle to read, or NULL for the entire
- *                render target.
- *  \param format The desired format of the pixel data, or 0 to use the format
- *                of the rendering target
- *  \param pixels A pointer to be filled in with the pixel data
- *  \param pitch  The pitch of the pixels parameter.
- *
- *  \return 0 on success, or -1 if pixel reading is not supported.
- *
- *  \warning This is a very slow operation, and should not be used frequently.
- */
-extern DECLSPEC int SDLCALL SDL_RenderReadPixels(SDL_Renderer * renderer,
-                                                 const SDL_Rect * rect,
-                                                 Uint32 format,
-                                                 void *pixels, int pitch);
+  {**
+   *  Read pixels from the current rendering target.
+   *
+   *   renderer The renderer from which pixels should be read.
+   *   rect   A pointer to the rectangle to read, or NULL for the entire
+   *                render target.
+   *   format The desired format of the pixel data, or 0 to use the format
+   *                of the rendering target
+   *   pixels A pointer to be filled in with the pixel data
+   *   pitch  The pitch of the pixels parameter.
+   *
+   *   0 on success, or -1 if pixel reading is not supported.
+   *
+   *   This is a very slow operation, and should not be used frequently.
+   *}
+function SDL_RenderReadPixels(renderer: PSDL_Renderer; rect: PSDL_Rect; format: UInt32; pixels: Pointer; pitch: SInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_RenderReadPixels' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Update the screen with rendering performed.
- */
-extern DECLSPEC void SDLCALL SDL_RenderPresent(SDL_Renderer * renderer);
+  {**
+   *  Update the screen with rendering performed.
+   *}
+procedure SDL_RenderPresent(renderer: PSDL_Renderer) cdecl; external {$IFDEF GPC} name 'SDL_RenderPresent' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Destroy the specified texture.
- *
- *  \sa SDL_CreateTexture()
- *  \sa SDL_CreateTextureFromSurface()
- */
-extern DECLSPEC void SDLCALL SDL_DestroyTexture(SDL_Texture * texture);
+  {**
+   *  Destroy the specified texture.
+   *
+   *   SDL_CreateTexture()
+   *   SDL_CreateTextureFromSurface()
+   *}
+procedure SDL_DestroyTexture(texture: PSDL_Texture) cdecl; external {$IFDEF GPC} name 'SDL_DestroyTexture' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Destroy the rendering context for a window and free associated
- *         textures.
- *
- *  \sa SDL_CreateRenderer()
- */
-extern DECLSPEC void SDLCALL SDL_DestroyRenderer(SDL_Renderer * renderer);
+  {**
+   *  Destroy the rendering context for a window and free associated
+   *  textures.
+   *
+   *   SDL_CreateRenderer()
+   *}
+procedure SDL_DestroyRenderer(renderer: PSDL_Renderer) cdecl; external {$IFDEF GPC} name 'SDL_DestroyRenderer' {$ELSE} SDL_LibName {$ENDIF};
 
+  {**
+   *  Bind the texture to the current OpenGL/ES/ES2 context for use with
+   *  OpenGL instructions.
+   *
+   *   texture  The SDL texture to bind
+   *   texw     A pointer to a float that will be filled with the texture width
+   *   texh     A pointer to a float that will be filled with the texture height
+   *
+   *   0 on success, or -1 if the operation is not supported
+   *}
+function SDL_GL_BindTexture(texture: PSDL_Texture; texw: PFloat; texh: PFloat): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GL_BindTexture' {$ELSE} SDL_LibName {$ENDIF};
 
-/**
- *  \brief Bind the texture to the current OpenGL/ES/ES2 context for use with
- *         OpenGL instructions.
- *
- *  \param texture  The SDL texture to bind
- *  \param texw     A pointer to a float that will be filled with the texture width
- *  \param texh     A pointer to a float that will be filled with the texture height
- *
- *  \return 0 on success, or -1 if the operation is not supported
- */
-extern DECLSPEC int SDLCALL SDL_GL_BindTexture(SDL_Texture *texture, float *texw, float *texh);
-
-/**
- *  \brief Unbind a texture from the current OpenGL/ES/ES2 context.
- *
- *  \param texture  The SDL texture to unbind
- *
- *  \return 0 on success, or -1 if the operation is not supported
- */
-extern DECLSPEC int SDLCALL SDL_GL_UnbindTexture(SDL_Texture *texture);
+  {**
+   *  Unbind a texture from the current OpenGL/ES/ES2 context.
+   *
+   *   texture  The SDL texture to unbind
+   *
+   *   0 on success, or -1 if the operation is not supported
+   *}
+function SDL_GL_UnbindTexture(texture: PSDL_Texture): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GL_UnbindTexture' {$ELSE} SDL_LibName {$ENDIF};
 
   //from "sdl_scancode.h"
 
