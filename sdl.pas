@@ -9,10 +9,10 @@ unit SDL;
 
   SDL.pas is based on the files:
   "sdl.h",
- 	"sdl_main.h",
+  "sdl_main.h",
   "sdltype_s.h",
-	"sdl_stdinc.h",
-	"sdl_events.h",
+  "sdl_stdinc.h",
+  "sdl_events.h",
   "sdl_keyboard.h",
   "sdl_keycode.h",
   "sdl_scancode.h",
@@ -21,8 +21,8 @@ unit SDL;
   "sdl_pixels.h",
   "sdl_surface.h",
   "sdl_rwops.h",
-	"sdl_blendmode.h",
-	"sdl_rect.h",
+  "sdl_blendmode.h",
+  "sdl_rect.h",
   "sdl_joystick.h",
   "sdl_touch.h",
   "sdl_gesture.h",
@@ -71,7 +71,8 @@ unit SDL;
 {
   Changelog:
   ----------
-  v.1.0; 05.07.2013: Initial Alpha-Release.
+  v.1.1-Alpha; 09.07.2013: Added "sdl_render.h"
+  v.1.0-Alpha; 05.07.2013: Initial Alpha-Release.
 }
 
 {$DEFINE SDL}
