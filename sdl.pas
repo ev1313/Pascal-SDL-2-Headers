@@ -409,7 +409,7 @@ SDL_CreateThread(SDL_ThreadFunction fn: TSDL_ThreadFunction; name: PAnsiChar; da
  *    it (truncate, etc), but the original string contents will be available
  *    from SDL_GetThreadName().
  *}
-function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread cdecl; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_CreateThread(fn: PSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread cdecl; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  * Get the thread name, as it was specified in SDL_CreateThread().
