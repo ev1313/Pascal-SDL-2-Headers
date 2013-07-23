@@ -72,9 +72,10 @@ unit SDL;
 {
   Changelog:
   ----------
-  v.1.2-Alpha; 19.07.2013: Added "sdl_timer.h"
-  v.1.1-Alpha; 09.07.2013: Added "sdl_render.h"
-  v.1.0-Alpha; 05.07.2013: Initial Alpha-Release.
+  v.1.21-Alpha; 23.07.2013: Added TSDL_Error
+  v.1.20-Alpha; 19.07.2013: Added "sdl_timer.h"
+  v.1.10-Alpha; 09.07.2013: Added "sdl_render.h"
+  v.1.00-Alpha; 05.07.2013: Initial Alpha-Release.
 }
 
 {$DEFINE SDL}
@@ -153,6 +154,7 @@ type
 
   PShortInt = ^ShortInt;
 
+  {$IFNDEF Has_Int64}
   PUInt64 = ^UInt64;
   UInt64 = record
     hi: UInt32;
@@ -160,11 +162,16 @@ type
   end;
   {$EXTERNALSYM UInt64}
 
-  PSInt64 = ^SInt64;
-  SInt64 = record
+  PInt64 = ^Int64;
+  Int64 = record
     hi: UInt32;
     lo: UInt32;
   end;
+  {$EXTERNALSYM Int64}
+  {$ENDIF}
+
+  PSInt64 = ^SInt64;
+  SInt64 = Int64;
   {$EXTERNALSYM SInt64}
 
   {$IFDEF WIN64}
@@ -288,6 +295,9 @@ function SDL_GetRevision: PAnsiChar cdecl; external {$IFDEF GPC} name 'SDL_GetRe
 function SDL_GetRevisionNumber: SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetRevisionNumber' {$ELSE} SDL_LibName {$ENDIF};
 
   //from "sdl_error.h"
+const
+  ERR_MAX_STRLEN = 128;
+  ERR_MAX_ARGS   = 5;
 
   {* Public functions *}
 
@@ -295,7 +305,7 @@ function SDL_GetRevisionNumber: SInt32 cdecl; external {$IFDEF GPC} name 'SDL_Ge
 function SDL_SetError(const fmt: PAnsiChar): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetError' {$ELSE} SDL_LibName {$ENDIF};
 function SDL_GetError: PAnsiChar cdecl; external {$IFDEF GPC} name 'SDL_GetError' {$ELSE} SDL_LibName {$ENDIF};
 procedure SDL_ClearError cdecl; external {$IFDEF GPC} name 'SDL_ClearError' {$ELSE} SDL_LibName {$ENDIF};
-
+  {*Internal error functions*}
   {**
    *  Internal error functions
    *
@@ -307,7 +317,6 @@ procedure SDL_ClearError cdecl; external {$IFDEF GPC} name 'SDL_ClearError' {$EL
 #define SDL_Unsupported()   SDL_Error(SDL_UNSUPPORTED)
 #define SDL_InvalidParamError(param)    SDL_SetError("Parameter '%s' is invalid", (param))
    }
-
 type
   TSDL_ErrorCode = (SDL_ENOMEM,
                     SDL_EFREAD,
@@ -316,9 +325,30 @@ type
                     SDL_UNSUPPORTED,
                     SDL_LASTERROR);
 
+  TSDL_Error = record
+    {* This is a numeric value corresponding to the current error *}
+    error: SInt32;
+
+    {* This is a key used to index into a language hashtable containing
+       internationalized versions of the SDL error messages.  If the key
+       is not in the hashtable, or no hashtable is available, the key is
+       used directly as an error message format string.
+     *}
+    key: String[ERR_MAX_STRLEN];
+
+    {* These are the arguments for the error functions *}
+    argc: SInt32;
+    case SInt32 of
+         {* What is a character anyway?  (UNICODE issues) *}
+      0: (value_c: Byte;);
+      1: (value_ptr: Pointer;);
+      2: (value_i: SInt32;);
+      3: (value_f: Double;);
+      4: (buf: String[ERR_MAX_STRLEN];);
+  end;
+
   {* SDL_Error() unconditionally returns -1. *}
 function SDL_Error(code: TSDL_ErrorCode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_Error' {$ELSE} SDL_LibName {$ENDIF};
-  {*Internal error functions*}
 
   //from "sdl_timer.h"
 
