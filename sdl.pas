@@ -29,7 +29,7 @@ unit SDL;
   "sdl_error.h",
   "sdl_version.h",
   "sdl_render.h",
-  "sdl_thread.h"
+  "sdl_thread.h",
   "sdl_timer.h"
 
   I will not translate:
@@ -155,6 +155,7 @@ type
 
   PShortInt = ^ShortInt;
 
+  {$IFNDEF Has_Int64}
   PUInt64 = ^UInt64;
   UInt64 = record
     hi: UInt32;
@@ -168,8 +169,11 @@ type
     lo: UInt32;
   end;
   {$EXTERNALSYM SInt64}
+  {$ELSE}
+  SInt64 = Int64;
+  {$ENDIF}
 
-  {$IFDEF WIN64}
+  {$IFNDEF WIN64}
     size_t = UInt32;
   {$ELSE}
     size_t = UInt64;
@@ -327,27 +331,38 @@ function SDL_Error(code: TSDL_ErrorCode): SInt32 cdecl; external {$IFDEF GPC} na
 {* The SDL thread structure, defined in SDL_thread.c *}
 //todo!
 type
-  PSDL_Thread = Pointer;
-
-{* The SDL thread ID *}
-  TSDL_ThreadID = LongWord;
-
-{* The SDL thread priority
- *
- * Note: On many systems you require special privileges to set high priority.
- *}
+  {* The SDL thread priority
+   *
+   * Note: On many systems you require special privileges to set high priority.
+   *}
 
   TSDL_ThreadPriority = (SDL_THREAD_PRIORITY_LOW,
                          SDL_THREAD_PRIORITY_NORMAL,
                          SDL_THREAD_PRIORITY_HIGH);
 
-{* The function passed to SDL_CreateThread()
-   It is passed a void* user context parameter and returns an int.
- *}
+  {* The function passed to SDL_CreateThread()
+     It is passed a void* user context parameter and returns an int.
+   *}
   PSDL_ThreadFunction = ^TSDL_ThreadFunction;
   TSDL_ThreadFunction = function(data: Pointer):Integer;
 
-{.$IFDEF WIN32}
+  {* The SDL thread ID *}
+  TSDL_ThreadID = LongWord;
+
+  PSDL_Thread = Pointer;
+  {
+
+  PSDL_Thread = ^TSDL_Thread;
+  TSDL_Thread = record
+    threadid: TSDL_ThreadID;
+    handle: THandle;
+    status: SInt32;
+    errbuf: TSDL_Error;
+    name: PAnsiChar;
+    data: Pointer;
+  end;              }
+
+{$IFDEF WINDOWS}
   {**
    *  SDL_thread.h
    *
@@ -367,85 +382,79 @@ type
    *  So, in short:
    *  Always use the _beginthread() and _endthread() of the calling runtime
    *  library!
-   *}    {
-#define SDL_PASSED_BEGINTHREAD_ENDTHREAD
-#include <process.h>            /* This has _beginthread() and _endthread() defined! */
+   *}
+{$DEFINE SDL_PASSED_BEGINTHREAD_ENDTHREAD}
+type
+  TpfnSDL_CurrentBeginThread = function(SecurityAttributes: Pointer; StackSize: LongWord; ThreadFunc: TThreadFunc; Parameter: Pointer; CreationFlags: LongWord; var ThreadId: TThreadID): Integer;
 
-typedef uintptr_t(__cdecl * pfnSDL_CurrentBeginThread) (void *, unsigned,
-                                                        unsigned (__stdcall *
-                                                                  func) (void
-                                                                         *),
-                                                        void *arg, unsigned,
-                                                        unsigned *threadID);
-typedef void (__cdecl * pfnSDL_CurrentEndThread) (unsigned code);
-            }
-{**
- *  Create a thread.
- *}   {
-function
-SDL_CreateThread(SDL_ThreadFunction fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer;
-                 pfnSDL_CurrentBeginThread pfnBeginThread:
-                 pfnSDL_CurrentEndThread pfnEndThread): PSDL_Thread;
+  TpfnSDL_CurrentEndThread = procedure(ExitCode: Integer);
 
-{**
- *  Create a thread.
- *}   {
-#define SDL_CreateThread(fn, name, data) SDL_CreateThread(fn, name, data, _beginthreadex, _endthreadex)
+  {**
+   *  Create a thread.
+   *}
+function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer; pfnBeginThread: TpfnSDL_CurrentBeginThread; pfnEndThread: TpfnSDL_CurrentEndThread): PSDL_Thread overload; cdecl; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
 
-#else
-   }
-{**
- *  Create a thread.
- *
- *   Thread naming is a little complicated: Most systems have very small
- *    limits for the string length (BeOS has 32 bytes, Linux currently has 16,
- *    Visual C++ 6.0 has nine!), and possibly other arbitrary rules. You'll
- *    have to see what happens with your system's debugger. The name should be
- *    UTF-8 (but using the naming limits of C identifiers is a better bet).
- *   There are no requirements for thread naming conventions, so long as the
- *    string is null-terminated UTF-8, but these guidelines are helpful in
- *    choosing a name:
- *
- *    http://stackoverflow.com/questions/149932/naming-conventions-for-threads
- *
- *   If a system imposes requirements, SDL will try to munge the string for
- *    it (truncate, etc), but the original string contents will be available
- *    from SDL_GetThreadName().
- *}
-function SDL_CreateThread(fn: PSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread cdecl; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
+  {**
+   *  Create a thread.
+   *}
+function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread overload;
 
-{**
- * Get the thread name, as it was specified in SDL_CreateThread().
- *  This function returns a pointer to a UTF-8 string that names the
- *  specified thread, or NULL if it doesn't have a name. This is internal
- *  memory, not to be free()'d by the caller, and remains valid until the
- *  specified thread is cleaned up by SDL_WaitThread().
- *}
+{$ELSE}
+
+  {**
+   *  Create a thread.
+   *
+   *   Thread naming is a little complicated: Most systems have very small
+   *    limits for the string length (BeOS has 32 bytes, Linux currently has 16,
+   *    Visual C++ 6.0 has nine!), and possibly other arbitrary rules. You'll
+   *    have to see what happens with your system's debugger. The name should be
+   *    UTF-8 (but using the naming limits of C identifiers is a better bet).
+   *   There are no requirements for thread naming conventions, so long as the
+   *    string is null-terminated UTF-8, but these guidelines are helpful in
+   *    choosing a name:
+   *
+   *    http://stackoverflow.com/questions/149932/naming-conventions-for-threads
+   *
+   *   If a system imposes requirements, SDL will try to munge the string for
+   *    it (truncate, etc), but the original string contents will be available
+   *    from SDL_GetThreadName().
+   *}
+function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread cdecl; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
+
+{$ENDIF}
+
+  {**
+   * Get the thread name, as it was specified in SDL_CreateThread().
+   *  This function returns a pointer to a UTF-8 string that names the
+   *  specified thread, or NULL if it doesn't have a name. This is internal
+   *  memory, not to be free()'d by the caller, and remains valid until the
+   *  specified thread is cleaned up by SDL_WaitThread().
+   *}
 function SDL_GetThreadName(thread: PSDL_Thread): PAnsiChar cdecl; external {$IFDEF GPC} name 'SDL_GetThreadName' {$ELSE} SDL_LibName {$ENDIF};
 
-{**
- *  Get the thread identifier for the current thread.
- *}
+  {**
+   *  Get the thread identifier for the current thread.
+   *}
 function SDL_ThreadID: TSDL_ThreadID cdecl; external {$IFDEF GPC} name 'SDL_ThreadID' {$ELSE} SDL_LibName {$ENDIF};
 
-{**
- *  Get the thread identifier for the specified thread.
- *
- *  Equivalent to SDL_ThreadID() if the specified thread is NULL.
- *}
+  {**
+   *  Get the thread identifier for the specified thread.
+   *
+   *  Equivalent to SDL_ThreadID() if the specified thread is NULL.
+   *}
 function SDL_GetThreadID(thread: PSDL_Thread): TSDL_ThreadID cdecl; external {$IFDEF GPC} name 'SDL_GetThreadID' {$ELSE} SDL_LibName {$ENDIF};
 
-{**
- *  Set the priority for the current thread
- *}
+  {**
+   *  Set the priority for the current thread
+   *}
 function SDL_SetThreadPriority(priority: TSDL_ThreadPriority): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetThreadPriority' {$ELSE} SDL_LibName {$ENDIF};
 
-{**
- *  Wait for a thread to finish.
- *
- *  The return code for the thread function is placed in the area
- *  pointed to by status, if status is not NULL.
- *}
+  {**
+   *  Wait for a thread to finish.
+   *
+   *  The return code for the thread function is placed in the area
+   *  pointed to by status, if status is not NULL.
+   *}
 procedure SDL_WaitThread(thread: PSDL_Thread; status: PInt) cdecl; external {$IFDEF GPC} name 'SDL_WaitThread' {$ELSE} SDL_LibName {$ENDIF};
 
   //from "sdl_timer.h"
@@ -5517,6 +5526,16 @@ function SDL_VERSION_ATLEAST(X,Y,Z: Cardinal): Boolean;
 begin
   Result := SDL_COMPILEDVERSION >= SDL_VERSIONNUM(X,Y,Z);
 end;
+
+{$IFDEF WINDOWS}
+//from "sdl_thread.h"
+
+function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread;
+begin
+  Result := SDL_CreateThread(fn,name,data,BeginThread,EndThread);
+end;
+
+{$ENDIF}
 
 //from "sdl_rect.h"
 function SDL_RectEmpty(X: TSDL_Rect): Boolean;
