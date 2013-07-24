@@ -9,27 +9,28 @@ unit SDL;
 
   SDL.pas is based on the files:
   "sdl.h",
-  "sdl_main.h",
-  "sdltype_s.h",
-  "sdl_stdinc.h",
+  "sdl_blendmode.h",
   "sdl_events.h",
+  "sdl_error.h",
+  "sdl_gesture.h",
+  "sdl_joystick.h",
   "sdl_keyboard.h",
   "sdl_keycode.h",
-  "sdl_scancode.h",
-  "sdl_mouse.h",
-  "sdl_video.h",
   "sdl_pixels.h",
-  "sdl_surface.h",
-  "sdl_rwops.h",
-  "sdl_blendmode.h",
+  "sdl_main.h",
+  "sdl_mouse.h",
   "sdl_rect.h",
-  "sdl_joystick.h",
-  "sdl_touch.h",
-  "sdl_gesture.h",
-  "sdl_error.h",
-  "sdl_version.h",
   "sdl_render.h",
-  "sdl_timer.h"
+  "sdl_rwops.h",
+  "sdl_scancode.h",
+  "sdl_shape.h",
+  "sdl_stdinc.h",
+  "sdl_surface.h",
+  "sdl_timer.h",
+  "sdl_touch.h",
+  "sdl_version.h",
+  "sdl_video.h",
+  "sdltype_s.h"
 
   I will not translate:
   "sdl_opengl.h",
@@ -72,6 +73,8 @@ unit SDL;
 {
   Changelog:
   ----------
+  v.1.22-Alpha; 24.07.2013: Added "sdl_shape.h" and TSDL_Window
+                            (and ordered the translated header list ^^)
   v.1.21-Alpha; 23.07.2013: Added TSDL_Error
   v.1.20-Alpha; 19.07.2013: Added "sdl_timer.h"
   v.1.10-Alpha; 09.07.2013: Added "sdl_render.h"
@@ -1644,11 +1647,51 @@ function SDL_UpperBlitScaled(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: P
 
 function SDL_LowerBlitScaled(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LowerBlitScaled' {$ELSE} SDL_LibName {$ENDIF};
 
-  //from "sdl_video.h"
-  
+  //from "sdl_shape.h"
+
+{**  SDL_shape.h
+ *
+ * Header file for the shaped window API.
+ *}
+const
+  SDL_NONSHAPEABLE_WINDOW = -1;
+  SDL_INVALID_SHAPE_ARGUMENT = -2;
+  SDL_WINDOW_LACKS_SHAPE = -3;
+
 type
   PPSDL_Window = ^PSDL_Window;
-  PSDL_Window = Pointer; //todo!!
+  PSDL_Window = ^TSDL_Window;
+
+  {** An enum denoting the specific type of contents present in an SDL_WindowShapeParams union. *}
+  TWindowShapeMode = ({** The default mode, a binarized alpha cutoff of 1. *}
+                      ShapeModeDefault,
+                      {** A binarized alpha cutoff with a given integer value. *}
+                      ShapeModeBinarizeAlpha,
+                      {** A binarized alpha cutoff with a given integer value, but with the opposite comparison. *}
+                      ShapeModeReverseBinarizeAlpha,
+                      {** A color key is applied. *}
+                      ShapeModeColorKey);
+
+//#define SDL_SHAPEMODEALPHA(mode) (mode == ShapeModeDefault || mode == ShapeModeBinarizeAlpha || mode == ShapeModeReverseBinarizeAlpha)
+
+  {** A union containing parameters for shaped windows. *}
+  TSDL_WindowShapeParams = record
+    case Integer of
+      {** a cutoff alpha value for binarization of the window shape's alpha channel. *}
+      0: (binarizationCutoff: UInt8;);
+      1: (colorKey: TSDL_Color;);
+  end;
+
+  {** A struct that tags the SDL_WindowShapeParams union with an enum describing the type of its contents. *}
+  PSDL_WindowShapeMode = ^TSDL_WindowShapeMode;
+  TSDL_WindowShapeMode = record
+    {** The mode of these window-shape parameters. *}
+    mode: TWindowShapeMode;
+    {** Window-shape parameters. *}
+    parameters: TSDL_WindowShapeParams;
+  end;
+
+  //from "sdl_video.h"
 
   {**
    *  The structure that defines a display mode
@@ -1671,9 +1714,129 @@ type
     driverdata: Pointer;         {**< driver-specific data, initialize to 0 *}
   end;
 
+  {* Define the SDL window-shaper structure *}
+  PSDL_WindowShaper = ^TSDL_WindowShaper;
+  TSDL_WindowShaper = record
+    {* The window associated with the shaper *}
+    window: PSDL_Window;
+
+    {* The user's specified coordinates for the window, for once we give it a shape. *}
+    userx,usery: UInt32;
+
+    {* The parameters for shape calculation. *}
+    mode: TSDL_WindowShapeMode;
+
+    {* Has this window been assigned a shape? *}
+    hasshape: TSDL_Bool;
+
+    driverdata: Pointer;
+  end;
+
+  PSDL_WindowUserData = ^TSDL_WindowUserData;
+  TSDL_WindowUserData = record
+    name: PAnsiChar;
+    data: Pointer;
+    next: PSDL_WindowUserData;
+  end;
+
+  {* Define the SDL window structure, corresponding to toplevel windows *}
+  TSDL_Window = record
+    magic: Pointer;
+    id: UInt32;
+    title: PAnsiChar;
+    x,y: SInt32;
+    w,h: SInt32;
+    min_w, min_h: SInt32;
+    max_w, max_h: SInt32;
+    flags: UInt32;
+
+    {* Stored position and size for windowed mode * }
+    windowed: TSDL_Rect;
+
+    fullscreen_mode: TSDL_DisplayMode;
+
+    brightness: Float;
+    gamma: PUInt16;
+    saved_gamma: PUInt16;  {* (just offset into gamma) *}
+
+    surface: PSDL_Surface;
+    surface_valid: TSDL_Bool;
+
+    shaper: PSDL_WindowShaper;
+
+    data: PSDL_WindowUserData;
+
+    driverdata: Pointer;
+
+    prev: PSDL_Window;
+    next: PSDL_Window;
+  end;
+
+  {**
+   * Get the shape parameters of a shaped window.
+   *
+   *  window The shaped window whose parameters should be retrieved.
+   *  shape_mode An empty shape-mode structure to fill, or NULL to check whether the window has a shape.
+   *
+   *  0 if the window has a shape and, provided shape_mode was not NULL, shape_mode has been filled with the mode
+   *  data, SDL_NONSHAPEABLE_WINDOW if the SDL_Window given is not a shaped window, or SDL_WINDOW_LACKS_SHAPE if
+   *  the SDL_Window* given is a shapeable window currently lacking a shape.
+   *
+   *  SDL_WindowShapeMode
+   *  SDL_SetWindowShape
+   *}
+function SDL_GetShapedWindowMode(window: PSDL_Window; shape_mode: TSDL_WindowShapeMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetShapedWindowMode' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   * Set the shape and parameters of a shaped window.
+   *
+   *  window The shaped window whose parameters should be set.
+   *  shape A surface encoding the desired shape for the window.
+   *  shape_mode The parameters to set for the shaped window.
+   *
+   *  0 on success, SDL_INVALID_SHAPE_ARGUMENT on invalid an invalid shape argument, or SDL_NONSHAPEABLE_WINDOW
+   *  if the SDL_Window* given does not reference a valid shaped window.
+   *
+   *  SDL_WindowShapeMode
+   *  SDL_GetShapedWindowMode.
+   *}
+function SDL_SetWindowShape(window: PSDL_Window; shape: PSDL_Surface; shape_mode: PSDL_WindowShapeMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetWindowShape' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Create a window that can be shaped with the specified position, dimensions, and flags.
+   *
+   *   title The title of the window, in UTF-8 encoding.
+   *   x     The x position of the window, ::SDL_WINDOWPOS_CENTERED, or
+   *               ::SDL_WINDOWPOS_UNDEFINED.
+   *   y     The y position of the window, ::SDL_WINDOWPOS_CENTERED, or
+   *               ::SDL_WINDOWPOS_UNDEFINED.
+   *   w     The width of the window.
+   *   h     The height of the window.
+   *   flags The flags for the window, a mask of SDL_WINDOW_BORDERLESS with any of the following:
+   *         SDL_WINDOW_OPENGL,     SDL_WINDOW_INPUT_GRABBED,
+   *         SDL_WINDOW_SHOWN,      SDL_WINDOW_RESIZABLE,
+   *         SDL_WINDOW_MAXIMIZED,  SDL_WINDOW_MINIMIZED,
+   *         SDL_WINDOW_BORDERLESS is always set, and SDL_WINDOW_FULLSCREEN is always unset.
+   *
+   *   The window created, or NULL if window creation failed.
+   *
+   *  SDL_DestroyWindow()
+   *}
+function SDL_CreateShapedWindow(title: PAnsiChar; x: UInt32; y: UInt32; w: UInt32; h: UInt32; flags: UInt32): PSDL_Window cdecl; external {$IFDEF GPC} name 'SDL_CreateShapedWindow' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   * Return whether the given window is a shaped window.
+   *
+   *  window The window to query for being shaped.
+   *
+   *  SDL_TRUE if the window is a window that can be shaped, SDL_FALSE if the window is unshaped or NULL.
+   *  SDL_CreateShapedWindow
+   *}
+function SDL_IsShapedWindow(window: PSDL_Window): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_IsShapedWindow' {$ELSE} SDL_LibName {$ENDIF};
+
   {**
    *  The type used to identify a window
-   *  
+   *
    *   SDL_CreateWindow()
    *   SDL_CreateWindowFrom()
    *   SDL_DestroyWindow()
@@ -1699,12 +1862,10 @@ type
    *   SDL_ShowWindow()
    *}
 
-  //typedef struct SDL_Window SDL_Window;
-
 const
   {**
    *  The flags on a window
-   *  
+   *
    *   SDL_GetWindowFlags()
    *}
 
