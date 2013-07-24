@@ -38,7 +38,8 @@
 {
   Changelog:
   ----------
-  v. 1.0; 05.07.13: Initial Alpha-Release
+  v. 1.22; 24.07.13: fixed some bugs. special thanks to kotai from pascalgamedevelopment.com
+  v. 1.00; 05.07.13: Initial Alpha-Release
 }
 
 {.$define Debug}           { uncomment for debugging }
@@ -305,8 +306,8 @@
    {$DEFINE HAS_TYPES}
 {$ENDIF ver230}
 
-{$IFDEF ver230}
-   {$DEFINE Delphi}      {Delphi / C++ Builder XE3}
+{$IFDEF ver240}
+   {$DEFINE Delphi}      {Delphi / C++ Builder XE4}
    {$DEFINE Delphi4UP}
    {$DEFINE Delphi5UP}
    {$DEFINE Delphi6UP}
@@ -326,7 +327,7 @@
    {$DEFINE Has_UInt64}
    {$DEFINE Has_Native}
    {$DEFINE HAS_TYPES}
-{$ENDIF ver230}
+{$ENDIF ver240}
 
 {$IFDEF UNIX}
   {$ifdef VER140}    // Kylix 1 & 2
@@ -345,6 +346,23 @@
   {$endif}
 {$ENDIF UNIX}
 
+{*************** define 16/32/64 Bit ********************}
+
+{$IFDEF WINDOWS}
+  {$IFDEF WIN16}
+    {$DEFINE 16BIT}
+  {$ENDIF}
+  {$IFDEF WIN32}
+    {$DEFINE 32BIT}
+  {$ENDIF}
+  {$IFDEF WIN64}
+    {$DEFINE 64BIT}
+  {$ENDIF}
+  {$ELSE}
+    //TODO!!
+    {$DEFINE 32BIT}
+  {$ENDIF}
+
 {$IFDEF VirtualPascal} {  Virtual Pascal 2.x }
    {$DEFINE Delphi}    {  Use Delphi Syntax }
    {$DEFINE VP2}
@@ -352,12 +370,11 @@
 {$ENDIF VirtualPascal}
 
 {$IFDEF Delphi}
-  {$DEFINE Windows}
   {$DEFINE USE_STDCALL}
-  {$IFDEF WIN32}
+  {$IFDEF 32Bit}
     {$DEFINE DELPHI32}
   {$ELSE}
-    {$IFDEF WIN64}
+    {$IFDEF 64Bit}
 	  {$DEFINE DELPHI64}
 	{$ELSE}
 	  {$DEFINE DELPHI16}
@@ -491,20 +508,3 @@
 {$DEFINE IA32}
 {$ENDIF}
 {$ENDIF}
-
-{*************** define 16/32/64 Bit ********************}
-
-{$IFDEF WINDOWS}
-  {$IFDEF WIN16}
-    {$DEFINE 16BIT}
-  {$ENDIF}
-  {$IFDEF WIN32}
-    {$DEFINE 32BIT}
-  {$ENDIF}
-  {$IFDEF WIN64}
-    {$DEFINE 64BIT}
-  {$ENDIF}
-  {$ELSE}
-    //TODO!!
-    {$DEFINE 32BIT}
-  {$ENDIF}
