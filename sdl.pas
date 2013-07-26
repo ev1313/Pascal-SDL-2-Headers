@@ -376,13 +376,13 @@ type
      It is passed a void* user context parameter and returns an int.
    *}
   PSDL_ThreadFunction = ^TSDL_ThreadFunction;
-  TSDL_ThreadFunction = function(data: Pointer):Integer;
+  TSDL_ThreadFunction = function(data: Pointer): Integer;
 
   {* The SDL thread ID *}
   TSDL_ThreadID = LongWord;
-
+   {
   PSDL_Thread = Pointer;
-  {
+     }
 
   PSDL_Thread = ^TSDL_Thread;
   TSDL_Thread = record
@@ -392,7 +392,7 @@ type
     errbuf: TSDL_Error;
     name: PAnsiChar;
     data: Pointer;
-  end;              }
+  end;
 
 {$IFDEF WINDOWS}
   {**
@@ -451,7 +451,7 @@ function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointe
    *    it (truncate, etc), but the original string contents will be available
    *    from SDL_GetThreadName().
    *}
-function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread cdecl; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_CreateThread(fn: LongInt; name: PAnsiChar; data: Pointer): PSDL_Thread cdecl; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
 
 {$ENDIF}
 
