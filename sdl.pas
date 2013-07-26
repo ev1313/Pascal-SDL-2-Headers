@@ -87,8 +87,8 @@ unit SDL;
 
 interface
 
-uses
   {$IFDEF WINDOWS}
+  uses  //todo?
     Windows;
   {$ENDIF}
 
