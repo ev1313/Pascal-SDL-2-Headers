@@ -9,28 +9,30 @@ unit SDL;
 
   SDL.pas is based on the files:
   "sdl.h",
-  "sdl_main.h",
-  "sdltype_s.h",
-  "sdl_stdinc.h",
+  "sdl_blendmode.h",
   "sdl_events.h",
+  "sdl_error.h",
+  "sdl_gesture.h",
+  "sdl_joystick.h",
   "sdl_keyboard.h",
   "sdl_keycode.h",
-  "sdl_scancode.h",
-  "sdl_mouse.h",
-  "sdl_video.h",
   "sdl_pixels.h",
-  "sdl_surface.h",
-  "sdl_rwops.h",
-  "sdl_blendmode.h",
+  "sdl_main.h",
+  "sdl_mouse.h",
+  "sdl_mutex.h",
   "sdl_rect.h",
-  "sdl_joystick.h",
-  "sdl_touch.h",
-  "sdl_gesture.h",
-  "sdl_error.h",
-  "sdl_version.h",
   "sdl_render.h",
+  "sdl_rwops.h",
+  "sdl_scancode.h",
+  "sdl_shape.h",
+  "sdl_stdinc.h",
+  "sdl_surface.h",
   "sdl_thread.h",
-  "sdl_timer.h"
+  "sdl_timer.h",
+  "sdl_touch.h",
+  "sdl_version.h",
+  "sdl_video.h",
+  "sdltype_s.h"
 
   I will not translate:
   "sdl_opengl.h",
@@ -73,10 +75,13 @@ unit SDL;
 {
   Changelog:
   ----------
-  v.1.3-Alpha; 21.07.2013: Added "sdl_thread.h"
-  v.1.2-Alpha; 19.07.2013: Added "sdl_timer.h"
-  v.1.1-Alpha; 09.07.2013: Added "sdl_render.h"
-  v.1.0-Alpha; 05.07.2013: Initial Alpha-Release.
+  v.1.30-Alpha; 26.07.2013: Added "sdl_thread.h" and "sdl_mutex.h"
+  v.1.22-Alpha; 24.07.2013: Added "sdl_shape.h" and TSDL_Window
+                            (and ordered the translated header list ^^)
+  v.1.21-Alpha; 23.07.2013: Added TSDL_Error
+  v.1.20-Alpha; 19.07.2013: Added "sdl_timer.h"
+  v.1.10-Alpha; 09.07.2013: Added "sdl_render.h"
+  v.1.00-Alpha; 05.07.2013: Initial Alpha-Release.
 }
 
 {$DEFINE SDL}
@@ -85,10 +90,10 @@ unit SDL;
 
 interface
 
+{$IFDEF WINDOWS}
 uses
-  {$IFDEF WINDOWS}
-    Windows;
-  {$ENDIF}
+  Windows;
+{$ENDIF}
 
 const
 
@@ -163,11 +168,15 @@ type
   end;
   {$EXTERNALSYM UInt64}
 
-  PSInt64 = ^SInt64;
-  SInt64 = record
+  PInt64 = ^Int64;
+  Int64 = record
     hi: UInt32;
     lo: UInt32;
   end;
+  {$EXTERNALSYM Int64}
+
+  PSInt64 = ^SInt64;
+  SInt64 = Int64;
   {$EXTERNALSYM SInt64}
   {$ELSE}
   SInt64 = Int64;
@@ -294,6 +303,9 @@ function SDL_GetRevision: PAnsiChar cdecl; external {$IFDEF GPC} name 'SDL_GetRe
 function SDL_GetRevisionNumber: SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetRevisionNumber' {$ELSE} SDL_LibName {$ENDIF};
 
   //from "sdl_error.h"
+const
+  ERR_MAX_STRLEN = 128;
+  ERR_MAX_ARGS   = 5;
 
   {* Public functions *}
 
@@ -301,7 +313,7 @@ function SDL_GetRevisionNumber: SInt32 cdecl; external {$IFDEF GPC} name 'SDL_Ge
 function SDL_SetError(const fmt: PAnsiChar): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetError' {$ELSE} SDL_LibName {$ENDIF};
 function SDL_GetError: PAnsiChar cdecl; external {$IFDEF GPC} name 'SDL_GetError' {$ELSE} SDL_LibName {$ENDIF};
 procedure SDL_ClearError cdecl; external {$IFDEF GPC} name 'SDL_ClearError' {$ELSE} SDL_LibName {$ENDIF};
-
+  {*Internal error functions*}
   {**
    *  Internal error functions
    *
@@ -313,7 +325,6 @@ procedure SDL_ClearError cdecl; external {$IFDEF GPC} name 'SDL_ClearError' {$EL
 #define SDL_Unsupported()   SDL_Error(SDL_UNSUPPORTED)
 #define SDL_InvalidParamError(param)    SDL_SetError("Parameter '%s' is invalid", (param))
    }
-
 type
   TSDL_ErrorCode = (SDL_ENOMEM,
                     SDL_EFREAD,
@@ -322,9 +333,30 @@ type
                     SDL_UNSUPPORTED,
                     SDL_LASTERROR);
 
+  TSDL_Error = record
+    {* This is a numeric value corresponding to the current error *}
+    error: SInt32;
+
+    {* This is a key used to index into a language hashtable containing
+       internationalized versions of the SDL error messages.  If the key
+       is not in the hashtable, or no hashtable is available, the key is
+       used directly as an error message format string.
+     *}
+    key: String[ERR_MAX_STRLEN];
+
+    {* These are the arguments for the error functions *}
+    argc: SInt32;
+    case SInt32 of
+         {* What is a character anyway?  (UNICODE issues) *}
+      0: (value_c: Byte;);
+      1: (value_ptr: Pointer;);
+      2: (value_i: SInt32;);
+      3: (value_f: Double;);
+      4: (buf: String[ERR_MAX_STRLEN];);
+  end;
+
   {* SDL_Error() unconditionally returns -1. *}
 function SDL_Error(code: TSDL_ErrorCode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_Error' {$ELSE} SDL_LibName {$ENDIF};
-  {*Internal error functions*}
 
   //from "sdl_thread.h"
 
@@ -457,6 +489,201 @@ function SDL_SetThreadPriority(priority: TSDL_ThreadPriority): SInt32 cdecl; ext
    *}
 procedure SDL_WaitThread(thread: PSDL_Thread; status: PInt) cdecl; external {$IFDEF GPC} name 'SDL_WaitThread' {$ELSE} SDL_LibName {$ENDIF};
 
+  //from "sdl_mutex.h"
+
+  {**
+   *  Synchronization functions which can time out return this value
+   *  if they time out.
+   *}
+const
+  SDL_MUTEX_TIMEDOUT = 1;
+
+  {**
+   *  This is the timeout value which corresponds to never time out.
+   *}
+  //SDL_MUTEX_MAXWAIT   (~(Uint32)0)
+
+
+  {**
+   *  Mutex functions
+   *}
+type
+  {* The SDL mutex structure, defined in SDL_mutex.c *}
+  PSDL_Mutex = Pointer; //todo!
+
+  {**
+   *  Create a mutex, initialized unlocked.
+   *}
+function SDL_CreateMutex: PSDL_Mutex cdecl; external {$IFDEF GPC} name 'SDL_CreateMutex' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Lock the mutex.
+   *
+   *   0, or -1 on error.
+   *}
+//#define SDL_mutexP(m)   SDL_LockMutex(m)
+function SDL_LockMutex(mutex: PSDL_Mutex): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LockMutex' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Try to lock the mutex
+   *
+   *   0, SDL_MUTEX_TIMEDOUT, or -1 on error
+   *}
+function SDL_TryLockMutex(mutex: PSDL_Mutex): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_TryLockMutex' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Unlock the mutex.
+   *
+   *   0, or -1 on error.
+   *
+   *   It is an error to unlock a mutex that has not been locked by
+   *   the current thread, and doing so results in undefined behavior.
+   *}
+//#define SDL_mutexV(m)   SDL_UnlockMutex(m)
+function SDL_UnlockMutex(mutex: PSDL_Mutex): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_UnlockMutex' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Destroy a mutex.
+   *}
+procedure SDL_DestroyMutex(mutex: PSDL_Mutex) cdecl; external {$IFDEF GPC} name 'SDL_DestroyMutex' {$ELSE} SDL_LibName {$ENDIF};
+
+  {*Mutex functions*}
+
+  {**
+   *   Semaphore functions
+   *}
+type
+  {* The SDL semaphore structure, defined in SDL_sem.c *}
+  PSDL_Sem = Pointer; //todo!
+
+  {**
+   *  Create a semaphore, initialized with value, returns NULL on failure.
+   *}
+function SDL_CreateSemaphore(initial_value: UInt32): PSDL_sem cdecl; external {$IFDEF GPC} name 'SDL_CreateSemaphore' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Destroy a semaphore.
+   *}
+procedure SDL_DestroySemaphore(sem: PSDL_Sem) cdecl; external {$IFDEF GPC} name 'SDL_DestroySemaphore' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  This function suspends the calling thread until the semaphore pointed
+   *  to by sem has a positive count. It then atomically decreases the
+   *  semaphore count.
+   *}
+function SDL_SemWait(sem: PSDL_Sem): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SemWait' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Non-blocking variant of SDL_SemWait().
+   *
+   *   0 if the wait succeeds, SDL_MUTEX_TIMEDOUT if the wait would
+   *   block, and -1 on error.
+   *}
+function SDL_SemTryWait(sem: PSDL_Sem): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SemTryWait' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Variant of SDL_SemWait() with a timeout in milliseconds.
+   *
+   *   0 if the wait succeeds, ::SDL_MUTEX_TIMEDOUT if the wait does not
+   *   succeed in the allotted time, and -1 on error.
+   *
+   *   On some platforms this function is implemented by looping with a
+   *   delay of 1 ms, and so should be avoided if possible.
+   *}
+function SDL_SemWaitTimeout(sem: PSDL_Sem; ms: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SemWaitTimeout' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Atomically increases the semaphore's count (not blocking).
+   *
+   *   0, or -1 on error.
+   *}
+function SDL_SemPost(sem: PSDL_Sem): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SemPost' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Returns the current count of the semaphore.
+   *}
+function SDL_SemValue(sem: PSDL_Sem): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_SemValue' {$ELSE} SDL_LibName {$ENDIF};
+
+  {*Semaphore functions*}
+
+  {**
+   *  Condition variable functions
+   * }
+type
+  {* The SDL condition variable structure, defined in SDL_cond.c *}
+  PSDL_Cond = Pointer; //todo!!
+
+  {**
+   *  Create a condition variable.
+   *
+   *  Typical use of condition variables:
+   *
+   *  Thread A:
+   *    SDL_LockMutex(lock);
+   *    while ( not condition )
+   *    begin
+   *      SDL_CondWait(cond, lock);
+   *    end;
+   *    SDL_UnlockMutex(lock);
+   *
+   *  Thread B:
+   *    SDL_LockMutex(lock);
+   *    ...
+   *    condition := true;
+   *    ...
+   *    SDL_CondSignal(cond);
+   *    SDL_UnlockMutex(lock);
+   *
+   *  There is some discussion whether to signal the condition variable
+   *  with the mutex locked or not.  There is some potential performance
+   *  benefit to unlocking first on some platforms, but there are some
+   *  potential race conditions depending on how your code is structured.
+   *
+   *  In general it's safer to signal the condition variable while the
+   *  mutex is locked.
+   *}
+function SDL_CreateCond: PSDL_Cond cdecl; external {$IFDEF GPC} name 'SDL_CreateCond' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Destroy a condition variable.
+   *}
+procedure SDL_DestroyCond(cond: PSDL_Cond) cdecl; external {$IFDEF GPC} name 'SDL_DestroyCond' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Restart one of the threads that are waiting on the condition variable.
+   *
+   *   0 or -1 on error.
+   *}
+function SDL_CondSignal(cond: PSDL_Cond): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_CondSignal' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Restart all threads that are waiting on the condition variable.
+   *
+   *   0 or -1 on error.
+   *}
+function SDL_CondBroadcast(cond: PSDL_Cond): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_CondBroadcast' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Wait on the condition variable, unlocking the provided mutex.
+   *
+   *   The mutex must be locked before entering this function!
+   *
+   *  The mutex is re-locked once the condition variable is signaled.
+   *
+   *   0 when it is signaled, or -1 on error.
+   *}
+function SDL_CondWait(cond: PSDL_Cond; mutex: PSDL_Mutex): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_CondWait' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Waits for at most ms milliseconds, and returns 0 if the condition
+   *  variable is signaled, SDL_MUTEX_TIMEDOUT if the condition is not
+   *  signaled in the allotted time, and -1 on error.
+   *
+   *   On some platforms this function is implemented by looping with a
+   *   delay of 1 ms, and so should be avoided if possible.
+   *}
+function SDL_CondWaitTimeout(cond: PSDL_Cond; mutex: PSDL_Mutex; ms: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_CondWaitTimeout' {$ELSE} SDL_LibName {$ENDIF};
+
   //from "sdl_timer.h"
 
   {**
@@ -489,6 +716,7 @@ procedure SDL_Delay(ms: UInt32) cdecl; external {$IFDEF GPC} name 'SDL_Delay' {$
    *  passed in, the periodic alarm continues, otherwise a new alarm is
    *  scheduled.  If the callback returns 0, the periodic alarm is cancelled.
    *}
+
 type
   TSDL_TimerCallback = function(interval: UInt32; param: Pointer): UInt32;
 
@@ -1753,11 +1981,51 @@ function SDL_UpperBlitScaled(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: P
 
 function SDL_LowerBlitScaled(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_LowerBlitScaled' {$ELSE} SDL_LibName {$ENDIF};
 
-  //from "sdl_video.h"
-  
+  //from "sdl_shape.h"
+
+{**  SDL_shape.h
+ *
+ * Header file for the shaped window API.
+ *}
+const
+  SDL_NONSHAPEABLE_WINDOW = -1;
+  SDL_INVALID_SHAPE_ARGUMENT = -2;
+  SDL_WINDOW_LACKS_SHAPE = -3;
+
 type
   PPSDL_Window = ^PSDL_Window;
-  PSDL_Window = Pointer; //todo!!
+  PSDL_Window = ^TSDL_Window;
+
+  {** An enum denoting the specific type of contents present in an SDL_WindowShapeParams union. *}
+  TWindowShapeMode = ({** The default mode, a binarized alpha cutoff of 1. *}
+                      ShapeModeDefault,
+                      {** A binarized alpha cutoff with a given integer value. *}
+                      ShapeModeBinarizeAlpha,
+                      {** A binarized alpha cutoff with a given integer value, but with the opposite comparison. *}
+                      ShapeModeReverseBinarizeAlpha,
+                      {** A color key is applied. *}
+                      ShapeModeColorKey);
+
+//#define SDL_SHAPEMODEALPHA(mode) (mode == ShapeModeDefault || mode == ShapeModeBinarizeAlpha || mode == ShapeModeReverseBinarizeAlpha)
+
+  {** A union containing parameters for shaped windows. *}
+  TSDL_WindowShapeParams = record
+    case Integer of
+      {** a cutoff alpha value for binarization of the window shape's alpha channel. *}
+      0: (binarizationCutoff: UInt8;);
+      1: (colorKey: TSDL_Color;);
+  end;
+
+  {** A struct that tags the SDL_WindowShapeParams union with an enum describing the type of its contents. *}
+  PSDL_WindowShapeMode = ^TSDL_WindowShapeMode;
+  TSDL_WindowShapeMode = record
+    {** The mode of these window-shape parameters. *}
+    mode: TWindowShapeMode;
+    {** Window-shape parameters. *}
+    parameters: TSDL_WindowShapeParams;
+  end;
+
+  //from "sdl_video.h"
 
   {**
    *  The structure that defines a display mode
@@ -1780,9 +2048,129 @@ type
     driverdata: Pointer;         {**< driver-specific data, initialize to 0 *}
   end;
 
+  {* Define the SDL window-shaper structure *}
+  PSDL_WindowShaper = ^TSDL_WindowShaper;
+  TSDL_WindowShaper = record
+    {* The window associated with the shaper *}
+    window: PSDL_Window;
+
+    {* The user's specified coordinates for the window, for once we give it a shape. *}
+    userx,usery: UInt32;
+
+    {* The parameters for shape calculation. *}
+    mode: TSDL_WindowShapeMode;
+
+    {* Has this window been assigned a shape? *}
+    hasshape: TSDL_Bool;
+
+    driverdata: Pointer;
+  end;
+
+  PSDL_WindowUserData = ^TSDL_WindowUserData;
+  TSDL_WindowUserData = record
+    name: PAnsiChar;
+    data: Pointer;
+    next: PSDL_WindowUserData;
+  end;
+
+  {* Define the SDL window structure, corresponding to toplevel windows *}
+  TSDL_Window = record
+    magic: Pointer;
+    id: UInt32;
+    title: PAnsiChar;
+    x,y: SInt32;
+    w,h: SInt32;
+    min_w, min_h: SInt32;
+    max_w, max_h: SInt32;
+    flags: UInt32;
+
+    {* Stored position and size for windowed mode * }
+    windowed: TSDL_Rect;
+
+    fullscreen_mode: TSDL_DisplayMode;
+
+    brightness: Float;
+    gamma: PUInt16;
+    saved_gamma: PUInt16;  {* (just offset into gamma) *}
+
+    surface: PSDL_Surface;
+    surface_valid: TSDL_Bool;
+
+    shaper: PSDL_WindowShaper;
+
+    data: PSDL_WindowUserData;
+
+    driverdata: Pointer;
+
+    prev: PSDL_Window;
+    next: PSDL_Window;
+  end;
+
+  {**
+   * Get the shape parameters of a shaped window.
+   *
+   *  window The shaped window whose parameters should be retrieved.
+   *  shape_mode An empty shape-mode structure to fill, or NULL to check whether the window has a shape.
+   *
+   *  0 if the window has a shape and, provided shape_mode was not NULL, shape_mode has been filled with the mode
+   *  data, SDL_NONSHAPEABLE_WINDOW if the SDL_Window given is not a shaped window, or SDL_WINDOW_LACKS_SHAPE if
+   *  the SDL_Window* given is a shapeable window currently lacking a shape.
+   *
+   *  SDL_WindowShapeMode
+   *  SDL_SetWindowShape
+   *}
+function SDL_GetShapedWindowMode(window: PSDL_Window; shape_mode: TSDL_WindowShapeMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GetShapedWindowMode' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   * Set the shape and parameters of a shaped window.
+   *
+   *  window The shaped window whose parameters should be set.
+   *  shape A surface encoding the desired shape for the window.
+   *  shape_mode The parameters to set for the shaped window.
+   *
+   *  0 on success, SDL_INVALID_SHAPE_ARGUMENT on invalid an invalid shape argument, or SDL_NONSHAPEABLE_WINDOW
+   *  if the SDL_Window* given does not reference a valid shaped window.
+   *
+   *  SDL_WindowShapeMode
+   *  SDL_GetShapedWindowMode.
+   *}
+function SDL_SetWindowShape(window: PSDL_Window; shape: PSDL_Surface; shape_mode: PSDL_WindowShapeMode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetWindowShape' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Create a window that can be shaped with the specified position, dimensions, and flags.
+   *
+   *   title The title of the window, in UTF-8 encoding.
+   *   x     The x position of the window, ::SDL_WINDOWPOS_CENTERED, or
+   *               ::SDL_WINDOWPOS_UNDEFINED.
+   *   y     The y position of the window, ::SDL_WINDOWPOS_CENTERED, or
+   *               ::SDL_WINDOWPOS_UNDEFINED.
+   *   w     The width of the window.
+   *   h     The height of the window.
+   *   flags The flags for the window, a mask of SDL_WINDOW_BORDERLESS with any of the following:
+   *         SDL_WINDOW_OPENGL,     SDL_WINDOW_INPUT_GRABBED,
+   *         SDL_WINDOW_SHOWN,      SDL_WINDOW_RESIZABLE,
+   *         SDL_WINDOW_MAXIMIZED,  SDL_WINDOW_MINIMIZED,
+   *         SDL_WINDOW_BORDERLESS is always set, and SDL_WINDOW_FULLSCREEN is always unset.
+   *
+   *   The window created, or NULL if window creation failed.
+   *
+   *  SDL_DestroyWindow()
+   *}
+function SDL_CreateShapedWindow(title: PAnsiChar; x: UInt32; y: UInt32; w: UInt32; h: UInt32; flags: UInt32): PSDL_Window cdecl; external {$IFDEF GPC} name 'SDL_CreateShapedWindow' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   * Return whether the given window is a shaped window.
+   *
+   *  window The window to query for being shaped.
+   *
+   *  SDL_TRUE if the window is a window that can be shaped, SDL_FALSE if the window is unshaped or NULL.
+   *  SDL_CreateShapedWindow
+   *}
+function SDL_IsShapedWindow(window: PSDL_Window): TSDL_Bool cdecl; external {$IFDEF GPC} name 'SDL_IsShapedWindow' {$ELSE} SDL_LibName {$ENDIF};
+
   {**
    *  The type used to identify a window
-   *  
+   *
    *   SDL_CreateWindow()
    *   SDL_CreateWindowFrom()
    *   SDL_DestroyWindow()
@@ -1808,12 +2196,10 @@ type
    *   SDL_ShowWindow()
    *}
 
-  //typedef struct SDL_Window SDL_Window;
-
 const
   {**
    *  The flags on a window
-   *  
+   *
    *   SDL_GetWindowFlags()
    *}
 
