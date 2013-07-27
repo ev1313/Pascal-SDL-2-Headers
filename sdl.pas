@@ -73,6 +73,7 @@ unit SDL;
 {
   Changelog:
   ----------
+  v.1.23-Alpha; 27.07.2013: Fixed two bugs, thx to GrieferAtWork
   v.1.22-Alpha; 24.07.2013: Added "sdl_shape.h" and TSDL_Window
                             (and ordered the translated header list ^^)
   v.1.21-Alpha; 23.07.2013: Added TSDL_Error
@@ -1416,7 +1417,7 @@ function SDL_GetColorKey(surface: PSDL_Surface; key: PUInt32): SInt32 cdecl; ext
    *  SDL_GetSurfaceColorMod()
    *}
 
-function SDL_SetSurfaceColorMod(surface: PSDL_Surface; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceColorMod' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetSurfaceColorMod(surface: PSDL_Surface; r: PUInt8; g: PUInt8; b: PUInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceColorMod' {$ELSE} SDL_LibName {$ENDIF};
 
 
   {**
@@ -2470,7 +2471,7 @@ function SDL_SetWindowFullscreen(window: PSDL_Window; flags: UInt32): SInt32 cde
    *  SDL_UpdateWindowSurfaceRects()
    *}
 
-function SDL_GetWindowSurface(window: PSDL_Window): PSDL_Window cdecl; external {$IFDEF GPC} name 'SDL_GetWindowSurface' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_GetWindowSurface(window: PSDL_Window): PSDL_Surface cdecl; external {$IFDEF GPC} name 'SDL_GetWindowSurface' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Copy the window surface to the screen.
