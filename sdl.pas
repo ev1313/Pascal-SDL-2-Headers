@@ -376,7 +376,7 @@ type
      It is passed a void* user context parameter and returns an int.
    *}
   PSDL_ThreadFunction = ^TSDL_ThreadFunction;
-  TSDL_ThreadFunction = function(data: Pointer): Integer;
+  TSDL_ThreadFunction = function(data: Pointer): Integer cdecl;
 
   {* The SDL thread ID *}
   TSDL_ThreadID = LongWord;
@@ -1373,7 +1373,7 @@ type
    *}
 
    TRead = function(context: PSDL_RWops; ptr: Pointer; size: size_t; maxnum: size_t): size_t; {$IFNDEF GPC} cdecl; {$ENDIF}
-   
+
   {**
    *  Write exactly num objects each of size size from the area
    *  pointed at by ptr to data stream.
@@ -1389,8 +1389,8 @@ type
    *  0 if successful or -1 on write error when flushing data.
    *}
 
-  TClose =  function(context: PSDL_RWops): SInt32;  
-	
+  TClose =  function(context: PSDL_RWops): SInt32;{$IFNDEF GPC} cdecl; {$ENDIF}
+
   TStdio = record
     autoclose: TSDL_Bool;
 	fp: file;
