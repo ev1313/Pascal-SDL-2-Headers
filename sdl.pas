@@ -73,6 +73,7 @@ unit SDL;
 {
   Changelog:
   ----------
+  v.1.24-Alpha; 28.07.2013: Fixed bug with RWops and size_t
   v.1.23-Alpha; 27.07.2013: Fixed two bugs, thx to GrieferAtWork
   v.1.22-Alpha; 24.07.2013: Added "sdl_shape.h" and TSDL_Window
                             (and ordered the translated header list ^^)
@@ -179,9 +180,9 @@ type
   {$EXTERNALSYM SInt64}
 
   {$IFDEF WIN64}
-    size_t = UInt32;
-  {$ELSE}
     size_t = UInt64;
+  {$ELSE}
+    size_t = UInt32;
   {$ENDIF}
   {$EXTERNALSYM SIZE_T}
 
@@ -1056,7 +1057,7 @@ type
    *  0 if successful or -1 on write error when flushing data.
    *}
 
-  TClose =  function(context: PSDL_RWops): SInt32;  
+  TClose =  function(context: PSDL_RWops): SInt32; {$IFNDEF GPC} cdecl; {$ENDIF}
 	
   TStdio = record
     autoclose: TSDL_Bool;
