@@ -73,6 +73,7 @@ unit SDL;
 {
   Changelog:
   ----------
+  v.1.25-Alpha; 29.07.2013: Added Makros for SDL_RWops
   v.1.24-Alpha; 28.07.2013: Fixed bug with RWops and size_t
   v.1.23-Alpha; 27.07.2013: Fixed two bugs, thx to GrieferAtWork
   v.1.22-Alpha; 24.07.2013: Added "sdl_shape.h" and TSDL_Window
