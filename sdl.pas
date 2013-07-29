@@ -76,6 +76,8 @@ unit SDL;
   Changelog:
   ----------
   v.1.30-Alpha; 26.07.2013: Added "sdl_thread.h" and "sdl_mutex.h"
+  v.1.24-Alpha; 28.07.2013: Fixed bug with RWops and size_t
+  v.1.23-Alpha; 27.07.2013: Fixed two bugs, thx to GrieferAtWork
   v.1.22-Alpha; 24.07.2013: Added "sdl_shape.h" and TSDL_Window
                             (and ordered the translated header list ^^)
   v.1.21-Alpha; 23.07.2013: Added TSDL_Error
@@ -90,10 +92,10 @@ unit SDL;
 
 interface
 
-{$IFDEF WINDOWS}
-uses
-  Windows;
-{$ENDIF}
+  {$IFDEF WINDOWS}
+  uses  //todo?
+    Windows;
+  {$ENDIF}
 
 const
 
@@ -179,6 +181,7 @@ type
   SInt64 = Int64;
   {$EXTERNALSYM SInt64}
   {$ELSE}
+  PSInt64 = ^SInt64;
   SInt64 = Int64;
   {$ENDIF}
 
@@ -267,15 +270,19 @@ function SDL_VERSION_ATLEAST(X,Y,Z: Cardinal): Boolean;
    *  macro that tells you what version you compiled with.
    *
    *
-   *  SDL_version compiled;
-   *  SDL_version linked;
+   *  compiled: TSDL_Version;
+   *  linked: TSDL_Version;
    *
-   *  SDL_VERSION(&compiled);
-   *  SDL_GetVersion(&linked);
-   *  printf("We compiled against SDL version %d.%d.%d ...\n",
-   *         compiled.major, compiled.minor, compiled.patch);
-   *  printf("But we linked against SDL version %d.%d.%d.\n",
-   *         linked.major, linked.minor, linked.patch);
+   *  SDL_VERSION(@compiled);
+   *  SDL_GetVersion(@linked);
+   *  WriteLn('We compiled against SDL version: ' +
+   *           IntToStr(compiled.major) +
+   *           IntToStr(compiled.minor) +
+   *           IntToStr(compiled.patch));
+   *  WriteLn('But we linked against SDL version:' +
+   *           IntToStr(compiled.major) +
+   *           IntToStr(compiled.minor) +
+   *           IntToStr(compiled.patch));
    *
    *
    *  This function may be called safely at any time, even before SDL_Init().
@@ -376,7 +383,7 @@ type
      It is passed a void* user context parameter and returns an int.
    *}
   PSDL_ThreadFunction = ^TSDL_ThreadFunction;
-  TSDL_ThreadFunction = function(data: Pointer): Integer cdecl;
+  TSDL_ThreadFunction = function(data: Pointer): Integer; cdecl;
 
   {* The SDL thread ID *}
   TSDL_ThreadID = LongWord;
@@ -424,12 +431,12 @@ type
   {**
    *  Create a thread.
    *}
-function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer; pfnBeginThread: TpfnSDL_CurrentBeginThread; pfnEndThread: TpfnSDL_CurrentEndThread): PSDL_Thread overload; cdecl; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer; pfnBeginThread: TpfnSDL_CurrentBeginThread; pfnEndThread: TpfnSDL_CurrentEndThread): PSDL_Thread; overload; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a thread.
    *}
-function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread overload;
+function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread; overload;
 
 {$ELSE}
 
@@ -451,7 +458,7 @@ function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointe
    *    it (truncate, etc), but the original string contents will be available
    *    from SDL_GetThreadName().
    *}
-function SDL_CreateThread(fn: LongInt; name: PAnsiChar; data: Pointer): PSDL_Thread cdecl; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread; cdecl; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
 
 {$ENDIF}
 
@@ -1389,7 +1396,7 @@ type
    *  0 if successful or -1 on write error when flushing data.
    *}
 
-  TClose =  function(context: PSDL_RWops): SInt32;{$IFNDEF GPC} cdecl; {$ENDIF}
+  TClose =  function(context: PSDL_RWops): SInt32; {$IFNDEF GPC} cdecl; {$ENDIF}
 
   TStdio = record
     autoclose: TSDL_Bool;
@@ -1750,7 +1757,7 @@ function SDL_GetColorKey(surface: PSDL_Surface; key: PUInt32): SInt32 cdecl; ext
    *  SDL_GetSurfaceColorMod()
    *}
 
-function SDL_SetSurfaceColorMod(surface: PSDL_Surface; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceColorMod' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_SetSurfaceColorMod(surface: PSDL_Surface; r: PUInt8; g: PUInt8; b: PUInt8): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_SetSurfaceColorMod' {$ELSE} SDL_LibName {$ENDIF};
 
 
   {**
@@ -2804,7 +2811,7 @@ function SDL_SetWindowFullscreen(window: PSDL_Window; flags: UInt32): SInt32 cde
    *  SDL_UpdateWindowSurfaceRects()
    *}
 
-function SDL_GetWindowSurface(window: PSDL_Window): PSDL_Window cdecl; external {$IFDEF GPC} name 'SDL_GetWindowSurface' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_GetWindowSurface(window: PSDL_Window): PSDL_Surface cdecl; external {$IFDEF GPC} name 'SDL_GetWindowSurface' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Copy the window surface to the screen.

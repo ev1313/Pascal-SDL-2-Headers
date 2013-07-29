@@ -3,8 +3,8 @@
   Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
 
   Pascal-Header-Conversion
-  Copyright (c) 2012/13 Tim Blume aka End 
- 
+  Copyright (c) 2012/13 Tim Blume aka End
+
   sdl.inc is based on the files:
     "begin_code.h",
     "close_code.h",
@@ -12,12 +12,12 @@
 	"sdl_config_windows.h",
 	...
   it defines some variables for several Pascal-Compilers and OS-versions.
-  
+
   It is based on mine updated version of jedi-sdl.inc from the SDL 1.2 Headers,
   they can be found at delphigl.com or on my github-repository:
-  
+
   https://github.com/ev1313/
- 
+
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
   arising from the use of this software.
