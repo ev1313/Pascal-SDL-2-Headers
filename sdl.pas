@@ -76,6 +76,7 @@ unit SDL;
   Changelog:
   ----------
   v.1.30-Alpha; 26.07.2013: Added "sdl_thread.h" and "sdl_mutex.h"
+  v.1.25-Alpha; 29.07.2013: Added Makros for SDL_RWops
   v.1.24-Alpha; 28.07.2013: Fixed bug with RWops and size_t
   v.1.23-Alpha; 27.07.2013: Fixed two bugs, thx to GrieferAtWork
   v.1.22-Alpha; 24.07.2013: Added "sdl_shape.h" and TSDL_Window
@@ -1489,13 +1490,13 @@ const
    *
    *  Macros to easily read and write from an SDL_RWops structure.
    *}
-  {
-  #define SDL_RWsize(ctx)	        (ctx)->size(ctx)
-  #define SDL_RWseek(ctx, offset, whence)	(ctx)->seek(ctx, offset, whence)
-  #define SDL_RWtell(ctx)			(ctx)->seek(ctx, 0, RW_SEEK_CUR)
-  #define SDL_RWread(ctx, ptr, size, n)	(ctx)->read(ctx, ptr, size, n)
-  #define SDL_RWwrite(ctx, ptr, size, n)	(ctx)->write(ctx, ptr, size, n)
-  #define SDL_RWclose(ctx)		(ctx)->close(ctx)
+
+  function SDL_RWsize(ctx: PSDL_RWops): SInt64;
+  function SDL_RWseek(ctx: PSDL_RWops; offset: SInt64; whence: SInt32): SInt64;
+  function SDL_RWtell(ctx: PSDL_RWops): SInt64;
+  function SDL_RWread(ctx: PSDL_RWops; ptr: Pointer; size: size_t; n: size_t): size_t;
+  function SDL_RWwrite(ctx: PSDL_RWops; ptr: Pointer; size: size_t; n: size_t): size_t;
+  function SDL_RWclose(ctx: PSDL_RWops): SInt32;
   { Read/write macros }
 
 
@@ -5939,6 +5940,38 @@ end;
 function SDL_RectEquals(A: TSDL_Rect; B: TSDL_Rect): Boolean;
 begin
   Result := (A.x = B.x) and (A.y = B.y) and (A.w = B.w) and (A.h = B.h);
+end;
+
+//from "sdl_rwops.h"
+
+function SDL_RWsize(ctx: PSDL_RWops): SInt64;
+begin
+  Result := ctx^.size(ctx);
+end;
+
+function SDL_RWseek(ctx: PSDL_RWops; offset: SInt64; whence: SInt32): SInt64;
+begin
+  Result := ctx^.seek(ctx,offset,whence);
+end;
+
+function SDL_RWtell(ctx: PSDL_RWops): SInt64;
+begin
+  Result := ctx^.seek(ctx, 0, RW_SEEK_CUR);
+end;
+
+function SDL_RWread(ctx: PSDL_RWops; ptr: Pointer; size: size_t; n: size_t): size_t;
+begin
+  Result := ctx^.read(ctx, ptr, size, n);
+end;
+
+function SDL_RWwrite(ctx: PSDL_RWops; ptr: Pointer; size: size_t; n: size_t): size_t;
+begin
+  Result := ctx^.write(ctx, ptr, size, n);
+end;
+
+function SDL_RWclose(ctx: PSDL_RWops): SInt32;
+begin
+  Result := ctx^.close(ctx);
 end;
 
 //from "sdl_pixels.h"
