@@ -432,7 +432,7 @@ type
   {**
    *  Create a thread.
    *}
-function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer; pfnBeginThread: TpfnSDL_CurrentBeginThread; pfnEndThread: TpfnSDL_CurrentEndThread): PSDL_Thread; overload; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer; pfnBeginThread: TpfnSDL_CurrentBeginThread; pfnEndThread: TpfnSDL_CurrentEndThread): PSDL_Thread; cdecl; overload; external {$IFDEF GPC} name 'SDL_CreateThread' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Create a thread.
@@ -5926,7 +5926,7 @@ end;
 
 function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread;
 begin
-  Result := SDL_CreateThread(fn,name,data,BeginThread,EndThread);
+  Result := SDL_CreateThread(fn,name,data,nil,nil);
 end;
 
 {$ENDIF}
