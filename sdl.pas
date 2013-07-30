@@ -17,6 +17,7 @@ unit SDL;
   "sdl_keyboard.h",
   "sdl_keycode.h",
   "sdl_pixels.h",
+  "sdl_power.h",
   "sdl_main.h",
   "sdl_mouse.h",
   "sdl_mutex.h",
@@ -75,6 +76,7 @@ unit SDL;
 {
   Changelog:
   ----------
+  v.1.31-Alpha; 30.07.2013: Added "sdl_power.h"
   v.1.30-Alpha; 26.07.2013: Added "sdl_thread.h" and "sdl_mutex.h"
   v.1.25-Alpha; 29.07.2013: Added Makros for SDL_RWops
   v.1.24-Alpha; 28.07.2013: Fixed bug with RWops and size_t
@@ -365,6 +367,33 @@ type
 
   {* SDL_Error() unconditionally returns -1. *}
 function SDL_Error(code: TSDL_ErrorCode): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_Error' {$ELSE} SDL_LibName {$ENDIF};
+
+  //from "sdl_power.h"
+
+  {**
+   *  The basic state for the system's power supply.
+   *}
+type
+  TSDL_PowerState = (SDL_POWERSTATE_UNKNOWN,      {**< cannot determine power status *}
+                     SDL_POWERSTATE_ON_BATTERY,   {**< Not plugged in, running on the battery *}
+                     SDL_POWERSTATE_NO_BATTERY,   {**< Plugged in, no battery available *}
+                     SDL_POWERSTATE_CHARGING,     {**< Plugged in, charging battery *}
+                     SDL_POWERSTATE_CHARGED);     {**< Plugged in, battery charged *}
+
+  {**
+   *  Get the current power supply details.
+   *
+   *   secs Seconds of battery life left. You can pass a NULL here if
+   *        you don't care. Will return -1 if we can't determine a
+   *        value, or we're not running on a battery.
+   *
+   *   pct Percentage of battery life left, between 0 and 100. You can
+   *       pass a NULL here if you don't care. Will return -1 if we
+   *       can't determine a value, or we're not running on a battery.
+   *
+   *  The state of the battery (if any).
+   *}
+function SDL_GetPowerInfo(secs: PInt; pct: PInt): TSDL_PowerState cdecl; external {$IFDEF GPC} name 'SDL_GetPowerInfo' {$ELSE} SDL_LibName {$ENDIF};
 
   //from "sdl_thread.h"
 
