@@ -1,4 +1,4 @@
-unit SDL;
+﻿unit SDL;
 
 {
   Simple DirectMedia Layer
@@ -76,6 +76,7 @@ unit SDL;
 {
   Changelog:
   ----------
+  v.1.33-Alpha; 31.07.2013: Added missing units for Linux. thx to Cybermonkey
   v.1.32-Alpha; 31.07.2013: Fixed three bugs, thx to grieferatwork
   v.1.31-Alpha; 30.07.2013: Added "sdl_power.h"
   v.1.30-Alpha; 26.07.2013: Added "sdl_thread.h" and "sdl_mutex.h"
@@ -97,8 +98,14 @@ unit SDL;
 interface
 
   {$IFDEF WINDOWS}
-    uses  //todo?
+    uses
       Windows;
+  {$ENDIF}
+
+  {$IFDEF LINUX}
+    uses
+      X,
+      XLib;
   {$ENDIF}
 
 const
