@@ -125,9 +125,7 @@ const
 
   {$IFDEF MACOS}
     SDL_LibName = 'SDL2';
-    {$IFDEF FPC}
-      {$linklib libSDL2}
-    {$ENDIF}
+    {$linklib libSDL2}
   {$ENDIF}
 
   //types from SDLtype_s.h / SDL_stdinc.h
