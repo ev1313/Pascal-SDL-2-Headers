@@ -458,7 +458,7 @@ type
 {$DEFINE SDL_PASSED_BEGINTHREAD_ENDTHREAD}
 
 type
-  {$IFNDEF DELPHI18UP}
+  {$IFNDEF DELPHI16UP}
     TThreadID = Cardinal;
   {$ENDIF}
 
@@ -1331,7 +1331,7 @@ type
    *  Returns true if the rectangle has no area.
    *}
 
-  //changed from variant(bäääääh!) to TSDL_Rect
+  //changed from variant(bï¿½ï¿½ï¿½ï¿½ï¿½h!) to TSDL_Rect
   //maybe PSDL_Rect?
 function SDL_RectEmpty(X: TSDL_Rect): Boolean;
 
