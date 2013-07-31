@@ -76,6 +76,7 @@ unit SDL;
 {
   Changelog:
   ----------
+  v.1.32-Alpha; 31.07.2013: Fixed three bugs, thx to grieferatwork
   v.1.31-Alpha; 30.07.2013: Added "sdl_power.h"
   v.1.30-Alpha; 26.07.2013: Added "sdl_thread.h" and "sdl_mutex.h"
   v.1.25-Alpha; 29.07.2013: Added Makros for SDL_RWops
@@ -455,7 +456,12 @@ type
    *  library!
    *}
 {$DEFINE SDL_PASSED_BEGINTHREAD_ENDTHREAD}
+
 type
+  {$IFNDEF DELPHI18UP}
+    TThreadID = Cardinal;
+  {$ENDIF}
+
   TpfnSDL_CurrentBeginThread = function(SecurityAttributes: Pointer; StackSize: LongWord; ThreadFunc: TThreadFunc; Parameter: Pointer; CreationFlags: LongWord; var ThreadId: TThreadID): Integer;
 
   TpfnSDL_CurrentEndThread = procedure(ExitCode: Integer);
