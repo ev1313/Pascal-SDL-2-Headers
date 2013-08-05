@@ -76,6 +76,7 @@
 {
   Changelog:
   ----------
+  v.1.34-Alpha; 05.08.2013: Added missing functions from sdl_thread.h
   v.1.33-Alpha; 31.07.2013: Added missing units for Linux. thx to Cybermonkey
   v.1.32-Alpha; 31.07.2013: Fixed three bugs, thx to grieferatwork
   v.1.31-Alpha; 30.07.2013: Added "sdl_power.h"
@@ -441,6 +442,8 @@ type
     data: Pointer;
   end;
 
+  TSDL_TLSID = Cardinal;
+
 {$IFDEF WINDOWS}
   {**
    *  SDL_thread.h
@@ -540,6 +543,62 @@ function SDL_SetThreadPriority(priority: TSDL_ThreadPriority): SInt32 cdecl; ext
    *  pointed to by status, if status is not NULL.
    *}
 procedure SDL_WaitThread(thread: PSDL_Thread; status: PInt) cdecl; external {$IFDEF GPC} name 'SDL_WaitThread' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Create an identifier that is globally visible to all threads but refers to data that is thread-specific.
+   *
+   *   The newly created thread local storage identifier, or 0 on error
+   *
+   *  static SDL_SpinLock tls_lock;
+   *  static SDL_TLSID thread_local_storage;
+   *
+   *  void SetMyThreadData(void *value)
+   *  {
+   *      if (!thread_local_storage) {
+   *          SDL_AtomicLock(&tls_lock);
+   *          if (!thread_local_storage) {
+   *              thread_local_storage = SDL_TLSCreate();
+   *          }   {
+   *          SDL_AtomicUnLock(&tls_lock);
+   *      } {
+   *      SDL_TLSSet(thread_local_storage, value);
+   *  } {
+   *
+   *  void *GetMyThreadData(void)
+   *  {
+   *      return SDL_TLSGet(thread_local_storage);
+   *  }{
+   *
+   *   SDL_TLSGet()
+   *   SDL_TLSSet()
+   *}
+function SDL_TLSCreate: TSDL_TLSID cdecl; external {$IFDEF GPC} name 'SDL_TLSCreate' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Get the value associated with a thread local storage ID for the current thread.
+   *
+   *   id The thread local storage ID
+   *
+   *   The value associated with the ID for the current thread, or NULL if no value has been set.
+   *
+   *   SDL_TLSCreate()
+   *   SDL_TLSSet()
+   *}
+function SDL_TLSGet(id: TSDL_TLSID): Pointer cdecl; external {$IFDEF GPC} name 'SDL_TLSGet' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Set the value associated with a thread local storage ID for the current thread.
+   *
+   *   id The thread local storage ID
+   *   value The value to associate with the ID for the current thread
+   *   destructor_ A function called when the thread exits, to free the value.
+   *
+   *   0 on success, -1 on error
+   *
+   *   SDL_TLSCreate()
+   *   SDL_TLSGet()
+   *}
+function SDL_TLSSet(id: TSDL_TLSID; value: Pointer; destructor_: Pointer): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_TLSSet' {$ELSE} SDL_LibName {$ENDIF};
 
   //from "sdl_mutex.h"
 
@@ -3064,6 +3123,16 @@ function SDL_GL_CreateContext(window: PSDL_Window): TSDL_GLContext cdecl; extern
    *}
 
 function SDL_GL_MakeCurrent(window: PSDL_Window; context: TSDL_GLContext): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_GL_MakeCurrent' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Get the currently active OpenGL window.
+   *}
+function SDL_GL_GetCurrentWindow: PSDL_Window cdecl; external {$IFDEF GPC} name 'SDL_GL_GetCurrentWindow' {$ELSE} SDL_LibName {$ENDIF};
+
+  {**
+   *  Get the currently active OpenGL context.
+   *}
+function SDL_GL_GetCurrentContext: TSDL_GLContext cdecl; external {$IFDEF GPC} name 'SDL_GL_GetCurrentContext' {$ELSE} SDL_LibName {$ENDIF};
 
   {**
    *  Set the swap interval for the current OpenGL context.
