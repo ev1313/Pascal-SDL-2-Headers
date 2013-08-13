@@ -1,4 +1,4 @@
-﻿unit SDL;
+unit SDL;
 
 {
   Simple DirectMedia Layer
@@ -5634,7 +5634,9 @@ type
         version : TSDL_Version;
         subsystem : TSDL_SysWm;
         {$IFDEF FPC}
+          {$IFNDEF DARWIN}
           event : TXEvent;
+          {$ENDIF}
         {$ELSE}
           event : XEvent;
         {$ENDIF}
@@ -5660,6 +5662,7 @@ type
   {$ELSE}
     // The Linux custom window manager information structure
     {$IFDEF Unix}
+      {$IFNDEF DARWIN}
       TX11 = record
         display : PDisplay;	// The X11 display
         window : TWindow;		// The X11 display window */
@@ -5675,12 +5678,15 @@ type
         fswindow : TWindow;	// The X11 fullscreen window */
         wmwindow : TWindow;	// The X11 managed input window */
       end;
+      {$ENDIF}
 
       PSDL_SysWMinfo = ^TSDL_SysWMinfo;
       TSDL_SysWMinfo = record
          version : TSDL_Version;
          subsystem : TSDL_SysWm;
+         {$IFNDEF DARWIN}
          X11 : TX11;
+         {$ENDIF}
       end;
     {$ELSE}
       // The generic custom window manager information structure
