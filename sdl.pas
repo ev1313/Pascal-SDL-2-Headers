@@ -1,4 +1,4 @@
-unit SDL;
+﻿unit SDL;
 
 {
   Simple DirectMedia Layer
@@ -76,6 +76,7 @@ unit SDL;
 {
   Changelog:
   ----------
+  v.1.40-Alpha; 13.08.2013: Added MacOS compatibility (thx to stoney-fd)
   v.1.34-Alpha; 05.08.2013: Added missing functions from sdl_thread.h
   v.1.33-Alpha; 31.07.2013: Added missing units for Linux. thx to Cybermonkey
   v.1.32-Alpha; 31.07.2013: Fixed three bugs, thx to grieferatwork
