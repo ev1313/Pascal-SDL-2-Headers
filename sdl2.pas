@@ -77,6 +77,7 @@
 {
   Changelog:
   ----------
+  v.1.55-Alpha; 24.08.2013: fixed bug with SDL_GetEventState thx to d.l.i.w.
   v.1.54-Alpha; 24.08.2013: added sdl_loadso.h
   v.1.53-Alpha; 24.08.2013: renamed *really* and fixed linux comp.
   v.1.52-Alpha; 24.08.2013: renamed sdl.pas to sdl2.pas
@@ -303,9 +304,9 @@ end;
 
 //from "sdl_events.h"
 
-procedure SDL_GetEventState(type_: UInt32);
+function SDL_GetEventState(type_: UInt32): UInt8;
 begin
-  SDL_EventState(type_, SDL_QUERY);
+  Result := SDL_EventState(type_, SDL_QUERY);
 end;
 
 end.

@@ -750,7 +750,7 @@ const
 
   function SDL_EventState(type_: UInt32; state: SInt32): UInt8 cdecl; external {$IFDEF GPC} name 'SDL_EventState' {$ELSE} SDL_LibName {$ENDIF};
 
-  procedure SDL_GetEventState(type_: UInt32);
+  function SDL_GetEventState(type_: UInt32): UInt8;
 
   {**
    *  This function allocates a set of user-defined events, and returns
