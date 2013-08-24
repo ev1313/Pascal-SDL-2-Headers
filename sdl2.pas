@@ -76,6 +76,7 @@
 {
   Changelog:
   ----------
+  v.1.53-Alpha; 24.08.2013: renamed *really* and fixed linux comp.
   v.1.52-Alpha; 24.08.2013: renamed sdl.pas to sdl2.pas
   v.1.51-Alpha; 24.08.2013: added sdl_platform.h
   v.1.50-Alpha; 24.08.2013: the header is now modular. thx for the hint from d.l.i.w.
@@ -126,12 +127,12 @@ const
 
   {$IFDEF UNIX}
     {$IFDEF DARWIN}
-      SDL_LibName = 'libSDL-2.dylib';
+      SDL_LibName = 'libSDL2.dylib';
     {$ELSE}
       {$IFDEF FPC}
-        SDL_LibName = 'libSDL-2.so';
+        SDL_LibName = 'libSDL2.so';
       {$ELSE}
-        SDL_LibName = 'libSDL-2.so.0';
+        SDL_LibName = 'libSDL2.so.0';
       {$ENDIF}
     {$ENDIF}
   {$ENDIF}
