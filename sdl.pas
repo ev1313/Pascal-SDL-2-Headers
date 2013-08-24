@@ -76,6 +76,7 @@
 {
   Changelog:
   ----------
+  v.1.51-Alpha; 24.08.2013: added sdl_platform.h
   v.1.50-Alpha; 24.08.2013: the header is now modular. thx for the hint from d.l.i.w.
   v.1.40-Alpha; 13.08.2013: Added MacOS compatibility (thx to stoney-fd)
   v.1.34-Alpha; 05.08.2013: Added missing functions from sdl_thread.h
@@ -144,6 +145,7 @@ const
 {$I sdltype.inc}
 {$I sdlversion.inc}
 {$I sdlerror.inc}
+{$I sdlplatform.inc}
 {$I sdlpower.inc}
 {$I sdlthread.inc}
 {$I sdlmutex.inc}
