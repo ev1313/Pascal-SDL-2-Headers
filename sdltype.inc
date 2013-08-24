@@ -1,6 +1,4 @@
-
-
-  //types from SDLtype_s.h / SDL_stdinc.h
+//types from SDLtype_s.h / SDL_stdinc.h
 type
 
   TSDL_Bool = (SDL_FALSE,SDL_TRUE);

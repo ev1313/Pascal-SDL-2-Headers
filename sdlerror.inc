@@ -1,5 +1,4 @@
-
-  //from "sdl_error.h"
+//from "sdl_error.h"
 const
   ERR_MAX_STRLEN = 128;
   ERR_MAX_ARGS   = 5;

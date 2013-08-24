@@ -1,5 +1,4 @@
-
-  //from "sdl_mutex.h"
+//from "sdl_mutex.h"
 
   {**
    *  Synchronization functions which can time out return this value

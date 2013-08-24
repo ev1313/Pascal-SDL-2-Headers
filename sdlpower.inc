@@ -1,5 +1,4 @@
-
-  //from "sdl_power.h"
+//from "sdl_power.h"
 
   {**
    *  The basic state for the system's power supply.

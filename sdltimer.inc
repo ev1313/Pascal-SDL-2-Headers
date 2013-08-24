@@ -1,5 +1,4 @@
-
-  //from "sdl_timer.h"
+//from "sdl_timer.h"
 
   {**
    *  Get the number of milliseconds since the SDL library initialization.

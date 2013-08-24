@@ -1,5 +1,4 @@
-
-  //from "sdl_thread.h"
+//from "sdl_thread.h"
 
 {* The SDL thread structure, defined in SDL_thread.c *}
 //todo!

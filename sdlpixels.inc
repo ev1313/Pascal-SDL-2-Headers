@@ -1,5 +1,4 @@
-
-  //from "sdl_pixels.h"
+//from "sdl_pixels.h"
 
   {**
    *  Transparency definitions
@@ -12,7 +11,6 @@
     SDL_ALPHA_TRANSPARENT = 0;
 
     {** Pixel type. *}
-
     SDL_PIXELTYPE_UNKNOWN = 0;
     SDL_PIXELTYPE_INDEX1 = 1;
     SDL_PIXELTYPE_INDEX4 = 2;
@@ -27,7 +25,6 @@
     SDL_PIXELTYPE_ARRAYF32 = 11;
 
     {** Bitmap pixel order, high bit -> low bit. *}
-
     SDL_BITMAPORDER_NONE = 0;
     SDL_BITMAPORDER_4321 = 1;
     SDL_BITMAPORDER_1234 = 2;
@@ -45,23 +42,21 @@
     SDL_PACKEDORDER_BGRA = 8;
 
     {** Array component order, low byte -> high byte. *}
-
     SDL_ARRAYORDER_NONE = 0;
-    SDL_ARRAYORDER_RGB = 1;
+    SDL_ARRAYORDER_RGB  = 1;
     SDL_ARRAYORDER_RGBA = 2;
     SDL_ARRAYORDER_ARGB = 3;
-    SDL_ARRAYORDER_BGR = 4;
+    SDL_ARRAYORDER_BGR  = 4;
     SDL_ARRAYORDER_BGRA = 5;
     SDL_ARRAYORDER_ABGR = 6;
 
     {** Packed component layout. *}
-
     SDL_PACKEDLAYOUT_NONE = 0;
-    SDL_PACKEDLAYOUT_332 = 1;
+    SDL_PACKEDLAYOUT_332  = 1;
     SDL_PACKEDLAYOUT_4444 = 2;
     SDL_PACKEDLAYOUT_1555 = 3;
     SDL_PACKEDLAYOUT_5551 = 4;
-    SDL_PACKEDLAYOUT_565 = 5;
+    SDL_PACKEDLAYOUT_565  = 5;
     SDL_PACKEDLAYOUT_8888 = 6;
     SDL_PACKEDLAYOUT_2101010 = 7;
     SDL_PACKEDLAYOUT_1010102 = 8;
@@ -345,8 +340,6 @@ const
                            (Integer('U') shl 24);
 
 type
-  TSDL_PixelFormatEnum = UInt32;
-
   PSDL_Color = ^TSDL_Color;
   TSDL_Color = record
     r: UInt8;

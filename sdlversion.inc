@@ -1,5 +1,4 @@
-
-  //from "sdl_version.h"
+//from "sdl_version.h"
 
   {**
    *  Information the version of SDL in use.

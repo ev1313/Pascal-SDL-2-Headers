@@ -1,4 +1,4 @@
-﻿unit SDL;
+﻿unit SDL2;
 
 {
   Simple DirectMedia Layer
@@ -76,6 +76,7 @@
 {
   Changelog:
   ----------
+  v.1.52-Alpha; 24.08.2013: renamed sdl.pas to sdl2.pas
   v.1.51-Alpha; 24.08.2013: added sdl_platform.h
   v.1.50-Alpha; 24.08.2013: the header is now modular. thx for the hint from d.l.i.w.
   v.1.40-Alpha; 13.08.2013: Added MacOS compatibility (thx to stoney-fd)
