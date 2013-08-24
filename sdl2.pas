@@ -5,7 +5,7 @@
   Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
 
   Pascal-Header-Conversion
-  Copyright (C) 2012/13 Tim Blume aka End
+  Copyright (C) 2012/13 Tim Blume aka End/EV1313
 
   SDL.pas is based on the files:
   "sdl.h",
@@ -16,6 +16,7 @@
   "sdl_joystick.h",
   "sdl_keyboard.h",
   "sdl_keycode.h",
+  "sdl_loadso.h"
   "sdl_pixels.h",
   "sdl_power.h",
   "sdl_main.h",
@@ -76,6 +77,7 @@
 {
   Changelog:
   ----------
+  v.1.54-Alpha; 24.08.2013: added sdl_loadso.h
   v.1.53-Alpha; 24.08.2013: renamed *really* and fixed linux comp.
   v.1.52-Alpha; 24.08.2013: renamed sdl.pas to sdl2.pas
   v.1.51-Alpha; 24.08.2013: added sdl_platform.h
