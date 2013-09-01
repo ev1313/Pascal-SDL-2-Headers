@@ -30,19 +30,19 @@ const
  *  signal handlers for some commonly ignored fatal signals (like SIGSEGV).
  *}
 
-function SDL_Init(flags: UInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_Init' {$ENDIF} {$ENDIF};
+function SDL_Init(flags: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_Init' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  This function initializes specific SDL subsystems
  *}
 
-function SDL_InitSubSystem(flags: UInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_InitSubSystem' {$ENDIF} {$ENDIF};
+function SDL_InitSubSystem(flags: UInt32): SInt32 cdecl; external {$IFDEF GPC} name 'SDL_InitSubSystem' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  This function cleans up specific SDL subsystems
  *}
  
-procedure SDL_QuitSubSystem(flags: UInt32) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_QuitSubSystem' {$ENDIF} {$ENDIF};
+procedure SDL_QuitSubSystem(flags: UInt32) cdecl; external {$IFDEF GPC} name 'SDL_QuitSubSystem' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  This function returns a mask of the specified subsystems which have
@@ -51,12 +51,12 @@ procedure SDL_QuitSubSystem(flags: UInt32) cdecl; external SDL_LibName {$IFDEF D
  *  If flags is 0, it returns a mask of all initialized subsystems.
  *}
  
-function SDL_WasInit(flags: UInt32): UInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_WasInit' {$ENDIF} {$ENDIF};
+function SDL_WasInit(flags: UInt32): UInt32 cdecl; external {$IFDEF GPC} name 'SDL_WasInit' {$ELSE} SDL_LibName {$ENDIF};
 
 {**
  *  This function cleans up all initialized subsystems. You should
  *  call it upon all exit conditions.
  *}
  
-procedure SDL_Quit cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_Quit' {$ENDIF} {$ENDIF};
+procedure SDL_Quit cdecl; external {$IFDEF GPC} name 'SDL_Quit' {$ELSE} SDL_LibName {$ENDIF};
 
