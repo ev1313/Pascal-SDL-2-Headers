@@ -6,9 +6,9 @@ const
   {* Public functions *}
 
   {* SDL_SetError() unconditionally returns -1. *}
-function SDL_SetError(const fmt: PAnsiChar): SInt32 cdecl; external {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_SetError' {$ENDIF} {$ENDIF};
-function SDL_GetError: PAnsiChar cdecl; external {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_GetError' {$ENDIF} {$ENDIF};
-procedure SDL_ClearError cdecl; external {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_ClearError' {$ENDIF} {$ENDIF};
+function SDL_SetError(const fmt: PAnsiChar): SInt32 cdecl; external {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetError' {$ENDIF} {$ENDIF};
+function SDL_GetError: PAnsiChar cdecl; external {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetError' {$ENDIF} {$ENDIF};
+procedure SDL_ClearError cdecl; external {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_ClearError' {$ENDIF} {$ENDIF};
   {*Internal error functions*}
   {**
    *  Internal error functions
@@ -52,4 +52,4 @@ type
   end;
 
   {* SDL_Error() unconditionally returns -1. *}
-function SDL_Error(code: TSDL_ErrorCode): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_Error' {$ENDIF} {$ENDIF};
+function SDL_Error(code: TSDL_ErrorCode): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_Error' {$ENDIF} {$ENDIF};

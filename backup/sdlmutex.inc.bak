@@ -23,7 +23,7 @@ type
   {**
    *  Create a mutex, initialized unlocked.
    *}
-function SDL_CreateMutex: PSDL_Mutex cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_CreateMutex' {$ELSE} SDL_LibName {$ENDIF};
+function SDL_CreateMutex: PSDL_Mutex cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_CreateMutex' {$ENDIF} {$ENDIF};
 
   {**
    *  Lock the mutex.

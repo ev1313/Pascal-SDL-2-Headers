@@ -77,7 +77,8 @@ unit SDL2;
 {
   Changelog:
   ----------
-  v.1.60-Alpha; 01.09.2013: now it should work with Delphi XE4 for Windows and
+  v.1.61-stable; 02.09.2013: now it should REALLY work with Mac...
+  v.1.60-stable; 01.09.2013: now it should work with Delphi XE4 for Windows and
                             MacOS and of course Lazarus. thx to kotai :D
   v.1.55-Alpha; 24.08.2013: fixed bug with SDL_GetEventState thx to d.l.i.w.
   v.1.54-Alpha; 24.08.2013: added sdl_loadso.h

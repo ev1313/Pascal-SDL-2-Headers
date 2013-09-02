@@ -78,9 +78,9 @@ type
    *  flags The flags are obsolete and should be set to 0.
    *}
 
-function SDL_CreateRGBSurface(flags: UInt32; width: SInt32; height: SInt32; depth: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): PSDL_Surface cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_CreateRGBSurface' {$ENDIF} {$ENDIF};
-function SDL_CreateRGBSurfaceFrom(pixels: Pointer; width: SInt32; height: SInt32; depth: SInt32; pitch: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): PSDL_Surface cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_CreateRGBSurfaceFrom' {$ENDIF} {$ENDIF};
-procedure SDL_FreeSurface(surface: PSDL_Surface) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_FreeSurface' {$ENDIF} {$ENDIF};
+function SDL_CreateRGBSurface(flags: UInt32; width: SInt32; height: SInt32; depth: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): PSDL_Surface cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_CreateRGBSurface' {$ENDIF} {$ENDIF};
+function SDL_CreateRGBSurfaceFrom(pixels: Pointer; width: SInt32; height: SInt32; depth: SInt32; pitch: SInt32; Rmask: UInt32; Gmask: UInt32; Bmask: UInt32; Amask: UInt32): PSDL_Surface cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_CreateRGBSurfaceFrom' {$ENDIF} {$ENDIF};
+procedure SDL_FreeSurface(surface: PSDL_Surface) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_FreeSurface' {$ENDIF} {$ENDIF};
 
   {**
    *  Set the palette used by a surface.
@@ -90,7 +90,7 @@ procedure SDL_FreeSurface(surface: PSDL_Surface) cdecl; external SDL_LibName {$I
    *  A single palette can be shared with many surfaces.
    *}
 
-function SDL_SetSurfacePalette(surface: PSDL_Surface; palette: PSDL_Palette): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_SetSurfacePalette' {$ENDIF} {$ENDIF};
+function SDL_SetSurfacePalette(surface: PSDL_Surface; palette: PSDL_Palette): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetSurfacePalette' {$ENDIF} {$ENDIF};
 
   {**
    *  Sets up a surface for directly accessing the pixels.
@@ -112,11 +112,11 @@ function SDL_SetSurfacePalette(surface: PSDL_Surface; palette: PSDL_Palette): SI
    *  SDL_UnlockSurface()
    *}
 
-function SDL_LockSurface(surface: PSDL_Surface): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_LockSurface' {$ENDIF} {$ENDIF};
+function SDL_LockSurface(surface: PSDL_Surface): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_LockSurface' {$ENDIF} {$ENDIF};
 
   {** SDL_LockSurface() *}
 
-procedure SDL_UnlockSurface(surface: PSDL_Surface) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_UnlockSurface' {$ENDIF} {$ENDIF};
+procedure SDL_UnlockSurface(surface: PSDL_Surface) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_UnlockSurface' {$ENDIF} {$ENDIF};
 
   {**
    *  Load a surface from a seekable SDL data stream (memory or file).
@@ -128,7 +128,7 @@ procedure SDL_UnlockSurface(surface: PSDL_Surface) cdecl; external SDL_LibName {
    *  the new surface, or NULL if there was an error.
    *}
 
-function SDL_LoadBMP_RW(src: PSDL_RWops; freesrc: SInt32): PSDL_Surface cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_LoadBMP_RW' {$ENDIF} {$ENDIF};
+function SDL_LoadBMP_RW(src: PSDL_RWops; freesrc: SInt32): PSDL_Surface cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_LoadBMP_RW' {$ENDIF} {$ENDIF};
 
   {**
    *  Load a surface from a file.
@@ -146,7 +146,7 @@ function SDL_LoadBMP(_file: PAnsiChar): PSDL_Surface;
    *  0 if successful or -1 if there was an error.
    *}
 
-function SDL_SaveBMP_RW(surface: PSDL_Surface; dst: PSDL_RWops; freedst: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_LoadBMP_RW' {$ENDIF} {$ENDIF};
+function SDL_SaveBMP_RW(surface: PSDL_Surface; dst: PSDL_RWops; freedst: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_LoadBMP_RW' {$ENDIF} {$ENDIF};
 
     {**
      *  Save a surface to a file.
@@ -167,7 +167,7 @@ function SDL_SaveBMP_RW(surface: PSDL_Surface; dst: PSDL_RWops; freedst: SInt32)
    *  but the surface must be locked before directly accessing the pixels.
    *}
 
-function SDL_SetSurfaceRLE(surface: PSDL_Surface; flag: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_SetSurfaceRLE' {$ENDIF} {$ENDIF};
+function SDL_SetSurfaceRLE(surface: PSDL_Surface; flag: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetSurfaceRLE' {$ENDIF} {$ENDIF};
 
   {**
    *  Sets the color key (transparent pixel) in a blittable surface.
@@ -181,7 +181,7 @@ function SDL_SetSurfaceRLE(surface: PSDL_Surface; flag: SInt32): SInt32 cdecl; e
    *  You can pass SDL_RLEACCEL to enable RLE accelerated blits.
    *}
 
-function SDL_SetColorKey(surface: PSDL_Surface; flag: SInt32; key: UInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_SetColorKey' {$ENDIF} {$ENDIF};
+function SDL_SetColorKey(surface: PSDL_Surface; flag: SInt32; key: UInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetColorKey' {$ENDIF} {$ENDIF};
 
   {**
    *  Gets the color key (transparent pixel) in a blittable surface.
@@ -194,7 +194,7 @@ function SDL_SetColorKey(surface: PSDL_Surface; flag: SInt32; key: UInt32): SInt
    *  enabled.
    *}
 
-function SDL_GetColorKey(surface: PSDL_Surface; key: PUInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_GetColorKey' {$ENDIF} {$ENDIF};
+function SDL_GetColorKey(surface: PSDL_Surface; key: PUInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetColorKey' {$ENDIF} {$ENDIF};
 
   {**
    *  Set an additional color value used in blit operations.
@@ -209,7 +209,7 @@ function SDL_GetColorKey(surface: PSDL_Surface; key: PUInt32): SInt32 cdecl; ext
    *  SDL_GetSurfaceColorMod()
    *}
 
-function SDL_SetSurfaceColorMod(surface: PSDL_Surface; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_SetSurfaceColorMod' {$ENDIF} {$ENDIF};
+function SDL_SetSurfaceColorMod(surface: PSDL_Surface; r: UInt8; g: UInt8; b: UInt8): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetSurfaceColorMod' {$ENDIF} {$ENDIF};
 
  {**
    *  Get the additional color value used in blit operations.
@@ -224,7 +224,7 @@ function SDL_SetSurfaceColorMod(surface: PSDL_Surface; r: UInt8; g: UInt8; b: UI
    *  SDL_SetSurfaceColorMod()
    *}
 
-function SDL_GetSurfaceColorMod(surface: PSDL_Surface; r: PUInt8; g: PUInt8; b: PUInt8): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_GetSurfaceColorMod' {$ENDIF} {$ENDIF};
+function SDL_GetSurfaceColorMod(surface: PSDL_Surface; r: PUInt8; g: PUInt8; b: PUInt8): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetSurfaceColorMod' {$ENDIF} {$ENDIF};
 
   {**
    *  Set an additional alpha value used in blit operations.
@@ -237,7 +237,7 @@ function SDL_GetSurfaceColorMod(surface: PSDL_Surface; r: PUInt8; g: PUInt8; b: 
    *  SDL_GetSurfaceAlphaMod()
    *}
 
-function SDL_SetSurfaceAlphaMod(surface: PSDL_Surface; alpha: UInt8): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_SetSurfaceAlphaMod' {$ENDIF} {$ENDIF};
+function SDL_SetSurfaceAlphaMod(surface: PSDL_Surface; alpha: UInt8): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetSurfaceAlphaMod' {$ENDIF} {$ENDIF};
 
   {**
    *  Get the additional alpha value used in blit operations.
@@ -250,7 +250,7 @@ function SDL_SetSurfaceAlphaMod(surface: PSDL_Surface; alpha: UInt8): SInt32 cde
    *  SDL_SetSurfaceAlphaMod()
    *}
 
-function SDL_GetSurfaceAlphaMod(surface: PSDL_Surface; alpha: PUInt8): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_GetSurfaceAlphaMod' {$ENDIF} {$ENDIF};
+function SDL_GetSurfaceAlphaMod(surface: PSDL_Surface; alpha: PUInt8): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetSurfaceAlphaMod' {$ENDIF} {$ENDIF};
 
   {**
    *  Set the blend mode used for blit operations.
@@ -263,7 +263,7 @@ function SDL_GetSurfaceAlphaMod(surface: PSDL_Surface; alpha: PUInt8): SInt32 cd
    *  SDL_GetSurfaceBlendMode()
    *}
 
-function SDL_SetSurfaceBlendMode(surface: PSDL_Surface; blendMode: TSDL_BlendMode): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_SetSurfaceBlendMode' {$ENDIF} {$ENDIF};
+function SDL_SetSurfaceBlendMode(surface: PSDL_Surface; blendMode: TSDL_BlendMode): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetSurfaceBlendMode' {$ENDIF} {$ENDIF};
 
   {**
    *  Get the blend mode used for blit operations.
@@ -276,7 +276,7 @@ function SDL_SetSurfaceBlendMode(surface: PSDL_Surface; blendMode: TSDL_BlendMod
    *  SDL_SetSurfaceBlendMode()
    *}
 
-function SDL_GetSurfaceBlendMode(surface: PSDL_Surface; blendMode: PSDL_BlendMode): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_GetSurfaceBlendMode' {$ENDIF} {$ENDIF};
+function SDL_GetSurfaceBlendMode(surface: PSDL_Surface; blendMode: PSDL_BlendMode): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetSurfaceBlendMode' {$ENDIF} {$ENDIF};
 
   {**
    *  Sets the clipping rectangle for the destination surface in a blit.
@@ -292,7 +292,7 @@ function SDL_GetSurfaceBlendMode(surface: PSDL_Surface; blendMode: PSDL_BlendMod
    *  and destination surfaces.
    *}
 
-function SDL_SetClipRect(surface: PSDL_Surface; const rect: PSDL_Rect): TSDL_Bool cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_SetClipRect' {$ENDIF} {$ENDIF};
+function SDL_SetClipRect(surface: PSDL_Surface; const rect: PSDL_Rect): TSDL_Bool cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetClipRect' {$ENDIF} {$ENDIF};
 
   {**
    *  Gets the clipping rectangle for the destination surface in a blit.
@@ -301,7 +301,7 @@ function SDL_SetClipRect(surface: PSDL_Surface; const rect: PSDL_Rect): TSDL_Boo
    *  with the correct values.
    *}
 
-procedure SDL_GetClipRect(surface: PSDL_Surface; rect: PSDL_Rect) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_GetClipRect' {$ENDIF} {$ENDIF};
+procedure SDL_GetClipRect(surface: PSDL_Surface; rect: PSDL_Rect) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetClipRect' {$ENDIF} {$ENDIF};
 
   {**
    *  Creates a new surface of the specified format, and then copies and maps
@@ -314,8 +314,8 @@ procedure SDL_GetClipRect(surface: PSDL_Surface; rect: PSDL_Rect) cdecl; externa
    *  surface.
    *}
 
-function SDL_ConvertSurface(src: PSDL_Surface; fmt: PSDL_PixelFormat; flags: UInt32): PSDL_Surface cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_ConvertSurface' {$ENDIF} {$ENDIF};
-function SDL_ConvertSurfaceFormat(src: PSDL_Surface; pixel_format: UInt32; flags: UInt32): PSDL_Surface cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_ConvertSurfaceFormat' {$ENDIF} {$ENDIF};
+function SDL_ConvertSurface(src: PSDL_Surface; fmt: PSDL_PixelFormat; flags: UInt32): PSDL_Surface cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_ConvertSurface' {$ENDIF} {$ENDIF};
+function SDL_ConvertSurfaceFormat(src: PSDL_Surface; pixel_format: UInt32; flags: UInt32): PSDL_Surface cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_ConvertSurfaceFormat' {$ENDIF} {$ENDIF};
 
   {**
    *  Copy a block of pixels of one format to another format
@@ -323,7 +323,7 @@ function SDL_ConvertSurfaceFormat(src: PSDL_Surface; pixel_format: UInt32; flags
    *  0 on success, or -1 if there was an error
    *}
 
-function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; const src: Pointer; src_pitch: SInt32; dst_format: UInt32; dst: Pointer; dst_pitch: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_ConvertPixels' {$ENDIF} {$ENDIF};
+function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; const src: Pointer; src_pitch: SInt32; dst_format: UInt32; dst: Pointer; dst_pitch: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_ConvertPixels' {$ENDIF} {$ENDIF};
 
   {**
    *  Performs a fast fill of the given rectangle with color.
@@ -336,8 +336,8 @@ function SDL_ConvertPixels(width: SInt32; height: SInt32; src_format: UInt32; co
    *  0 on success, or -1 on error.
    *}
 
-function SDL_FillRect(dst: PSDL_Surface; const rect: PSDL_Rect; color: UInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_FillRect' {$ENDIF} {$ENDIF};
-function SDL_FillRects(dst: PSDL_Surface; const rects: PSDL_Rect; count: SInt32; color: UInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_FillRects' {$ENDIF} {$ENDIF};
+function SDL_FillRect(dst: PSDL_Surface; const rect: PSDL_Rect; color: UInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_FillRect' {$ENDIF} {$ENDIF};
+function SDL_FillRects(dst: PSDL_Surface; const rects: PSDL_Rect; count: SInt32; color: UInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_FillRects' {$ENDIF} {$ENDIF};
 
   {**
    *  Performs a fast blit from the source surface to the destination surface.
@@ -403,7 +403,7 @@ function SDL_FillRects(dst: PSDL_Surface; const rects: PSDL_Rect; count: SInt32;
    *  rectangle validation and clipping before passing it to SDL_LowerBlit()
    *}
 
-function SDL_UpperBlit(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_UpperBlit' {$ENDIF} {$ENDIF};
+function SDL_UpperBlit(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_UpperBlit' {$ENDIF} {$ENDIF};
 
   //SDL_BlitSurface = SDL_UpperBlit;
 
@@ -412,7 +412,7 @@ function SDL_UpperBlit(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Su
    *  blitting only.
    *}
 
-function SDL_LowerBlit(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_LowerBlit' {$ENDIF} {$ENDIF};
+function SDL_LowerBlit(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_LowerBlit' {$ENDIF} {$ENDIF};
 
   {**
    *  Perform a fast, low quality, stretch blit between two surfaces of the
@@ -421,7 +421,7 @@ function SDL_LowerBlit(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface;
    *  This function uses a static buffer, and is not thread-safe.
    *}
 
-function SDL_SoftStretch(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; const dstrect: PSDL_Surface): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_SoftStretch' {$ENDIF} {$ENDIF};
+function SDL_SoftStretch(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; const dstrect: PSDL_Surface): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SoftStretch' {$ENDIF} {$ENDIF};
 
   //SDL_BlitScaled = SDL_UpperBlitScaled;
 
@@ -430,11 +430,11 @@ function SDL_SoftStretch(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_
    *  rectangle validation and clipping before passing it to SDL_LowerBlitScaled()
    *}
 
-function SDL_UpperBlitScaled(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_UpperBlitScaled' {$ENDIF} {$ENDIF};
+function SDL_UpperBlitScaled(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_UpperBlitScaled' {$ENDIF} {$ENDIF};
 
   {**
    *  This is a semi-private blit function and it performs low-level surface
    *  scaled blitting only.
    *}
 
-function SDL_LowerBlitScaled(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name 'SDL_LowerBlitScaled' {$ENDIF} {$ENDIF};
+function SDL_LowerBlitScaled(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_LowerBlitScaled' {$ENDIF} {$ENDIF};
