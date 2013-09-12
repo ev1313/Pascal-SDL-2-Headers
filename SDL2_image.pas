@@ -28,6 +28,7 @@ unit sdl2_image;
   -------------------------------
 
   v.1.33-Alpha; 31.07.2013: Initial Commit
+  v.1.70-stable; 11.09.2013: MacOS compatibility (with Delphi)
 
 *}
 
@@ -44,10 +45,10 @@ const
   {$IFDEF WINDOWS}
     {$IFDEF WIN32}
       IMG_LibName = 'SDL2_image_x86.dll';
-	  {$ENDIF}
-	  {$IFDEF WIN64}
-	    IMG_LibName = 'SDL2_image_x86_x64.dll';
-   	{$ENDIF}
+    {$ENDIF}
+    {$IFDEF WIN64}
+      IMG_LibName = 'SDL2_image_x86_x64.dll';
+    {$ENDIF}
   {$ENDIF}
 
   {$IFDEF UNIX}

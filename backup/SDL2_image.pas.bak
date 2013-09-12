@@ -38,7 +38,7 @@ unit sdl2_image;
 interface
 
 uses
-  SDL;
+  SDL2;
 
 const
   {$IFDEF WINDOWS}
