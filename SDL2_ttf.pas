@@ -42,12 +42,7 @@ uses
 
 const
   {$IFDEF WINDOWS}
-    {$IFDEF WIN32}
-      TTF_LibName = 'SDL2_ttf_x86.dll';
-    {$ENDIF}
-    {$IFDEF WIN64}
-      TTF_LibName = 'SDL2_ttf_x86_x64.dll';
-    {$ENDIF}
+    TTF_LibName = 'SDL2_ttf.dll';
   {$ENDIF}
 
   {$IFDEF UNIX}

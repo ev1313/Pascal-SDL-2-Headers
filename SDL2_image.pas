@@ -43,12 +43,7 @@ uses
 
 const
   {$IFDEF WINDOWS}
-    {$IFDEF WIN32}
-      IMG_LibName = 'SDL2_image_x86.dll';
-    {$ENDIF}
-    {$IFDEF WIN64}
-      IMG_LibName = 'SDL2_image_x86_x64.dll';
-    {$ENDIF}
+    IMG_LibName = 'SDL2_image.dll';
   {$ENDIF}
 
   {$IFDEF UNIX}
