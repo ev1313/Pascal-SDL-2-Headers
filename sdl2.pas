@@ -9,6 +9,7 @@ unit SDL2;
 
   SDL.pas is based on the files:
   "sdl.h",
+  "sdl_audio.h",
   "sdl_blendmode.h",
   "sdl_events.h",
   "sdl_error.h",
@@ -77,6 +78,7 @@ unit SDL2;
 {
   Changelog:
   ----------
+  v.1.63-stable; 16.09.2013: added libs sdl2_image and sdl2_ttf and added sdl_audio.h
   v.1.62-stable; 03.09.2013: fixed.
   v.1.61-stable; 02.09.2013: now it should REALLY work with Mac...
   v.1.60-stable; 01.09.2013: now it should work with Delphi XE4 for Windows and
@@ -157,6 +159,7 @@ const
 {$I sdlpixels.inc}
 {$I sdlrect.inc}
 {$I sdlrwops.inc}
+{$I sdlaudio.inc}
 {$I sdlblendmode.inc}
 {$I sdlsurface.inc}
 {$I sdlshape.inc}
@@ -249,6 +252,48 @@ end;
 function SDL_RWclose(ctx: PSDL_RWops): SInt32;
 begin
   Result := ctx^.close(ctx);
+end;
+
+//from "sdl_audio.h"
+
+function SDL_LoadWAV(_file: PAnsiChar; spec: PSDL_AudioSpec; audio_buf: PPUInt8; audio_len: PUInt32): PSDL_AudioSpec;
+begin
+  Result := SDL_LoadWAV_RW(SDL_RWFromFile(_file, 'rb'), 1, spec, audio_buf, audio_len);
+end;
+  
+function SDL_AUDIO_BITSIZE(x: Cardinal): Cardinal;
+begin
+  Result := x and SDL_AUDIO_MASK_BITSIZE;
+end;
+
+function SDL_AUDIO_ISFLOAT(x: Cardinal): Cardinal;
+begin
+  Result := x and SDL_AUDIO_MASK_DATATYPE;
+end;
+
+function SDL_AUDIO_ISBIGENDIAN(x: Cardinal): Cardinal;
+begin
+  Result := x and SDL_AUDIO_MASK_ENDIAN;
+end;
+
+function SDL_AUDIO_ISSIGNED(x: Cardinal): Cardinal;
+begin
+  Result := x and SDL_AUDIO_MASK_SIGNED;
+end;
+
+function SDL_AUDIO_ISINT(x: Cardinal): Cardinal;
+begin
+  Result := not SDL_AUDIO_ISFLOAT(x);
+end;
+
+function SDL_AUDIO_ISLITTLEENDIAN(x: Cardinal): Cardinal;
+begin
+  Result := not SDL_AUDIO_ISLITTLEENDIAN(x);
+end;
+
+function SDL_AUDIO_ISUNSIGNED(x: Cardinal): Cardinal;
+begin
+  Result := not SDL_AUDIO_ISSIGNED(x);
 end;
 
 //from "sdl_pixels.h"

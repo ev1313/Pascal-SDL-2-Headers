@@ -8,9 +8,9 @@
   sdl.inc is based on the files:
     "begin_code.h",
     "close_code.h",
-	  "sdl_config.h",
-	  "sdl_config_windows.h",
-   	...
+	"sdl_config.h",
+	"sdl_config_windows.h",
+	...
   it defines some variables for several Pascal-Compilers and OS-versions.
 
   It is based on mine updated version of jedi-sdl.inc from the SDL 1.2 Headers,
@@ -38,19 +38,26 @@
 {
   Changelog:
   ----------
-  v. 1.63-stable; 16.09.13: since GPC isn't supported anymore, i've deleted it from here, too.
-  v. 1.22-alpha; 24.07.13: fixed some bugs. special thanks to kotai from pascalgamedevelopment.com
-  v. 1.00-alpha; 05.07.13: Initial Alpha-Release
+  v. 1.22; 24.07.13: fixed some bugs. special thanks to kotai from pascalgamedevelopment.com
+  v. 1.00; 05.07.13: Initial Alpha-Release
 }
 
 {.$define Debug}           { uncomment for debugging }
 
 {$IFNDEF FPC}
-  {$IFDEF Debug}
-    {$F+,D+,Q-,L+,R+,I-,S+,Y+,A+}
-  {$ELSE}
-    {$F+,Q-,R-,S-,I-,A+}
-  {$ENDIF}
+  {$IFDEF __GPC__}
+    {$I-}
+    {$W-} // turn off GPC warnings
+    {$X+}
+  {$ELSE} {__GPC__}
+    {$IFDEF Debug}
+      {$F+,D+,Q-,L+,R+,I-,S+,Y+,A+}
+    {$ELSE}
+      {$F+,Q-,R-,S-,I-,A+}
+    {$ENDIF}
+  {$ENDIF} {__GPC__}
+{$ELSE}  {FPC}
+  //{$M+}
 {$ENDIF} {FPC}
 
 {$IFDEF LINUX}
