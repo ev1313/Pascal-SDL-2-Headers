@@ -14,6 +14,7 @@ unit SDL2;
   "sdl_events.h",
   "sdl_error.h",
   "sdl_gesture.h",
+  "sdl_haptic.h",
   "sdl_joystick.h",
   "sdl_keyboard.h",
   "sdl_keycode.h",
@@ -21,6 +22,7 @@ unit SDL2;
   "sdl_pixels.h",
   "sdl_power.h",
   "sdl_main.h",
+  "sdl_messagebox.h",
   "sdl_mouse.h",
   "sdl_mutex.h",
   "sdl_rect.h",
@@ -78,6 +80,7 @@ unit SDL2;
 {
   Changelog:
   ----------
+  v.1.70-stable; 17.09.2013: added "sdl_messagebox.h" and "sdl_haptic.h"
   v.1.63-stable; 16.09.2013: added libs sdl2_image and sdl2_ttf and added sdl_audio.h
   v.1.62-stable; 03.09.2013: fixed.
   v.1.61-stable; 02.09.2013: now it should REALLY work with Mac...
@@ -164,11 +167,13 @@ const
 {$I sdlsurface.inc}
 {$I sdlshape.inc}
 {$I sdlvideo.inc}
+{$I sdlmessagebox.inc}
 {$I sdlrenderer.inc}
 {$I sdlscancode.inc}
 {$I sdlkeyboard.inc}
 {$I sdlmouse.inc}
 {$I sdljoystick.inc}
+{$I sdlhaptic.inc}
 {$I sdltouch.inc}
 {$I sdlgesture.inc}
 {$I sdlevents.inc}
