@@ -27,3 +27,5 @@ Win32/*
 Win64/*
 *.a
 compile/*
+*.~inc
+backup/*
