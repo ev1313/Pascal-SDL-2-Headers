@@ -29,6 +29,8 @@ unit sdl2_ttf;
 {* ChangeLog: (Header Translation)
    ----------
 
+   v.1.71-stable; 29.09.2013: fixed bug with procedures without parameters
+                              (they must have brackets)
    v.1.70-stable; 11.09.2013: Initial Commit
 
 *}
@@ -102,7 +104,7 @@ type
   TTTF_Font = record  end; //todo?
 
 {* Initialize the TTF engine - returns 0 if successful, -1 on error *}
-function TTF_Init: Integer cdecl; external TTF_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_TTF_Init' {$ENDIF} {$ENDIF};
+function TTF_Init(): Integer cdecl; external TTF_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_TTF_Init' {$ENDIF} {$ENDIF};
 
 {* Open a font file and create a font of the specified point size.
  * Some .fon fonts will have several sizes embedded in the file, so the
@@ -252,7 +254,7 @@ function TTF_RenderUNICODE(font: PTTF_Font; text: PUInt16; fg, bg: TSDL_Color): 
 procedure TTF_CloseFont(font: PTTF_Font) cdecl; external TTF_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_TTF_CloseFont' {$ENDIF} {$ENDIF};
 
 {* De-initialize the TTF engine *}
-procedure TTF_Quit cdecl; external TTF_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_TTF_Quit' {$ENDIF} {$ENDIF};
+procedure TTF_Quit() cdecl; external TTF_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_TTF_Quit' {$ENDIF} {$ENDIF};
 
 {* Check if the TTF engine is initialized *}
 function TTF_WasInit: Boolean cdecl; external TTF_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_TTF_WasInit' {$ENDIF} {$ENDIF};

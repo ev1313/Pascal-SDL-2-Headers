@@ -24,6 +24,8 @@ unit SDL2_mixer;
 {* ChangeLog: (Header Translation)
    ----------
 
+   v.1.71-stable; 29.09.2013: fixed bug with procedures without parameters
+                              (they must have brackets)  
    v.1.70-stable; 16.09.2013: Initial Commit
 
 *}
@@ -101,7 +103,7 @@ type
 function Mix_Init(flags: Integer): Integer cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_Init' {$ENDIF} {$ENDIF};
 
   {* Unloads libraries loaded with Mix_Init *}
-procedure Mix_Quit cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_Quit' {$ENDIF} {$ENDIF};
+procedure Mix_Quit() cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_Quit' {$ENDIF} {$ENDIF};
 
 
   {* The default mixer has 8 simultaneous mixing channels *}

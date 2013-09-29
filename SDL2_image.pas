@@ -27,8 +27,10 @@ unit sdl2_image;
   ChangeLog (Header-Translation):
   -------------------------------
 
-  v.1.33-Alpha; 31.07.2013: Initial Commit
+  v.1.71-stable; 29.09.2013: fixed bug with procedure without parameters 
+                             (they must have brackets)
   v.1.70-stable; 11.09.2013: MacOS compatibility (with Delphi)
+  v.1.33-Alpha; 31.07.2013: Initial Commit
 
 *}
 
@@ -98,7 +100,7 @@ type
 function IMG_Init(flags: SInt32): SInt32 cdecl; external IMG_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_IMG_Init' {$ENDIF} {$ENDIF};
 
   {* Unloads libraries loaded with IMG_Init *}
-procedure IMG_Quit cdecl; external IMG_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_IMG_Quit' {$ENDIF} {$ENDIF};
+procedure IMG_Quit() cdecl; external IMG_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_IMG_Quit' {$ENDIF} {$ENDIF};
 
   {* Load an image from an SDL data source.
      The 'type' may be one of: "BMP", "GIF", "PNG", etc.

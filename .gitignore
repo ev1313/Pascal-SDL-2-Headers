@@ -29,3 +29,4 @@ Win64/*
 compile/*
 *.~inc
 backup/*
+*.res

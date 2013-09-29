@@ -58,5 +58,5 @@ function SDL_WasInit(flags: UInt32): UInt32 cdecl; external SDL_LibName {$IFDEF 
  *  call it upon all exit conditions.
  *}
  
-procedure SDL_Quit cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_Quit' {$ENDIF} {$ENDIF};
+procedure SDL_Quit() cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_Quit' {$ENDIF} {$ENDIF};
 

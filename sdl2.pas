@@ -80,6 +80,8 @@ unit SDL2;
 {
   Changelog:
   ----------
+  v.1.71-stable; 23.09.2013: fixed bug with procedures without parameters
+                             (they must have brakets)
   v.1.70-stable; 17.09.2013: added "sdl_messagebox.h" and "sdl_haptic.h"
   v.1.63-stable; 16.09.2013: added libs sdl2_image and sdl2_ttf and added sdl_audio.h
   v.1.62-stable; 03.09.2013: fixed.
