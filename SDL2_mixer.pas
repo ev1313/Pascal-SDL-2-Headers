@@ -24,7 +24,7 @@ unit SDL2_mixer;
 {* ChangeLog: (Header Translation)
    ----------
 
-   v.1.71-stable; 29.09.2013: fixed bug with procedures without parameters
+   v.1.72-stable; 29.09.2013: fixed bug with procedures without parameters
                               (they must have brackets)  
    v.1.70-stable; 16.09.2013: Initial Commit
 

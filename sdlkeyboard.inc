@@ -1,6 +1,9 @@
 //from "sdl_keyboard.h"
 
 type
+  PKeyStateArr = ^TKeyStateArr;
+  TKeyStateArr = array[0..65000] of UInt8;
+
   {**
    *  The SDL keysym structure, used in key events.
    *}
