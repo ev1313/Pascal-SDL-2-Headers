@@ -13,6 +13,7 @@ unit SDL2;
   "sdl_blendmode.h",
   "sdl_events.h",
   "sdl_error.h",
+  "sdl_gamecontroller.h",
   "sdl_gesture.h",
   "sdl_haptic.h",
   "sdl_hints.h",
@@ -81,6 +82,7 @@ unit SDL2;
 {
   Changelog:
   ----------
+  v.1.74-stable; 10.11.2013: added sdl_gamecontroller.h
   v.1.73-stable; 08.11.2013: added sdl_hints.h and some keystate helpers
                              thx to Cybermonkey!
   v.1.72-stable; 23.09.2013: fixed bug with procedures without parameters
@@ -179,6 +181,7 @@ const
 {$I sdlkeyboard.inc}
 {$I sdlmouse.inc}
 {$I sdljoystick.inc}
+{$I sdlgamecontroller.inc}
 {$I sdlhaptic.inc}
 {$I sdltouch.inc}
 {$I sdlgesture.inc}
