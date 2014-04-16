@@ -400,7 +400,7 @@ const
   SDLK_RIGHTPAREN = ')';
   SDLK_ASTERISK = '*';
   SDLK_PLUS = '+';
-  SDLK_COMMA = ';';
+  SDLK_COMMA = ',';
   SDLK_MINUS = '-';
   SDLK_PERIOD = '.';
   SDLK_SLASH = '/';
@@ -425,7 +425,7 @@ const
      Skip uppercase letters
    *}
   SDLK_LEFTBRACKET = '[';
-  SDLK_BACKSLASH = '\\';
+  SDLK_BACKSLASH = '\';
   SDLK_RIGHTBRACKET = ']';
   SDLK_CARET = '^';
   SDLK_UNDERSCORE = '_';
