@@ -21,7 +21,10 @@
 *}
 unit SDL2_net;
 
+
 interface
+
+uses SDL2;
 
 const
   {$IFDEF WINDOWS}
@@ -47,7 +50,6 @@ const
     {$ENDIF}
   {$ENDIF}
 
-uses SDL2;
 
 type
   TSDLNet_Version = TSDL_Version; 
@@ -98,7 +100,7 @@ const
   INADDR_LOOPBACK  = 0x7f000001;
   INADDR_BROADCAST = 0xFFFFFFFF;
 
-function SDLNet_ResolveHost(IPaddress *address, const char *host, Uint16 port): Integer cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_ResolveHost' {$ENDIF} {$ENDIF};
+function SDLNet_ResolveHost(address: PIPaddress; const host: PAnsiChar; port: UInt16): Integer cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_ResolveHost' {$ENDIF} {$ENDIF};
 
   {* Resolve an ip address to a host name in canonical form.
      If the ip couldn't be resolved, this function returns NULL,
@@ -205,7 +207,7 @@ procedure SDLNet_FreePacketV(packetV: PPUDPPacket) cdecl; external SDLNet_LibNam
      internally in network (big endian) byte order, in addresses, etc.
      This allows other systems to send to this socket via a known port.
   *}
-function TUDPSocket SDLNet_UDP_Open(port: UInt16) cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_UDP_Open' {$ENDIF} {$ENDIF};
+function SDLNet_UDP_Open(port: UInt16): TUDPSocket cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_UDP_Open' {$ENDIF} {$ENDIF};
 
   {* Set the percentage of simulated packet loss for packets sent on the socket. *}
 procedure SDLNet_UDP_SetPacketLoss(sock: TUDPSocket; percent: Integer) cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_UDP_SetPacketLoss' {$ENDIF} {$ENDIF};
@@ -240,7 +242,7 @@ function SDLNet_UDP_GetPeerAddress(sock: TUDPSocket; channel: Integer): PIPaddre
      been sent, -1 if the packet send failed.
      This function returns the number of packets sent.
   *}
-function SDLNet_UDP_SendV(UDPsocket sock, UDPpacket **packets, int npackets): Integer cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_UDP_SendV' {$ENDIF} {$ENDIF};
+function SDLNet_UDP_SendV(sock: TUDPSocket; packets: PPUDPPacket; npackets: Integer): Integer cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_UDP_SendV' {$ENDIF} {$ENDIF};
 
   {* Send a single packet to the specified channel.
      If the channel specified in the packet is -1, the packet will be sent to
@@ -306,13 +308,13 @@ function SDLNet_AllocSocketSet(maxsockets: Integer): TSDLNet_GenericSocket cdecl
 
   {* Add a socket to a set of sockets to be checked for available data *}
 function SDLNet_AddSocket(set_: TSDLNet_SocketSet; sock: TSDLNet_GenericSocket): Integer cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_AddSocket' {$ENDIF} {$ENDIF};
-function SDLNet_TCP_AddSocket(set_: TSDLNet_SocketSet; sock: TTCPSocket): Integer;
-function SDLNet_UDP_AddSocket(set_: TSDLNet_SocketSet; sock: TUDPSocket): Integer;
+function SDLNet_TCP_AddSocket(set_: TSDLNet_SocketSet; sock: TTCPSocket): Integer; inline;
+function SDLNet_UDP_AddSocket(set_: TSDLNet_SocketSet; sock: TUDPSocket): Integer; inline;
 
   {* Remove a socket from a set of sockets to be checked for available data *}
 function SDLNet_DelSocket(set_: TSDLNet_SocketSet; sock: TSDLNet_GenericSocket): Integer cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_DelSocket' {$ENDIF} {$ENDIF};
-function SDLNet_TCP_DelSocket(set_: TSDLNet_SocketSet; sock: TTCPSocket): Integer;
-function SDLNet_UDP_DelSocket(set_: TSDLNet_SocketSet; sock: TUDPSocket): Integer;
+function SDLNet_TCP_DelSocket(set_: TSDLNet_SocketSet; sock: TTCPSocket): Integer; inline;
+function SDLNet_UDP_DelSocket(set_: TSDLNet_SocketSet; sock: TUDPSocket): Integer; inline;
 
   {* This function checks to see if data is available for reading on the
      given set of sockets.  If 'timeout' is 0, it performs a quick poll,
@@ -327,10 +329,7 @@ function SDLNet_CheckSockets(set_: TSDLNet_SocketSet; timeout: UInt32): Integer 
      socket that was in the socket set, to find out if data is available
      for reading.
    *} 
-function SDLNet_SocketReady(SDLNet_GenericSocket sock): Integer;
-{
-    return (sock != NULL) && (sock->ready);
-}
+function SDLNet_SocketReady(sock: TSDLNet_GenericSocket): Integer; inline;
 
   {* Free a set of sockets allocated by SDL_NetAllocSocketSet() *}
 procedure SDLNet_FreeSocketSet(set_: TSDLNet_SocketSet) cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_FreeSocketSet' {$ENDIF} {$ENDIF};
@@ -339,8 +338,8 @@ procedure SDLNet_FreeSocketSet(set_: TSDLNet_SocketSet) cdecl; external SDLNet_L
 {* Error reporting functions                                           *}
 {***********************************************************************}
 
-procedure SDLNet_SetError(const fmt: PAnsiChar);
-function SDLNet_GetError(): PAnsiChar;
+procedure SDLNet_SetError(const fmt: PAnsiChar); inline;
+function SDLNet_GetError(): PAnsiChar; inline;
 
 {***********************************************************************}
 {* Inline functions to read/write network data                         *}
@@ -348,26 +347,12 @@ function SDLNet_GetError(): PAnsiChar;
 
 {* Write a 16/32-bit value to network packet buffer *}
 
-static __inline__ void _SDLNet_Write16(Uint16 value, void *areap)
-{
-    *(Uint16 *)areap = SDL_SwapBE16(value);
-}
-
-static __inline__ void _SDLNet_Write32(Uint32 value, void *areap)
-{
-    *(Uint32 *)areap = SDL_SwapBE32(value);
-}
+procedure SDLNet_Write16(value: UInt16; areap: Pointer); inline;
+procedure SDLNet_Write32(value: UInt32; areap: Pointer); inline;
 
 {* Read a 16/32-bit value from network packet buffer *}
-static __inline__ Uint16 _SDLNet_Read16(const void *areap)
-{
-    return SDL_SwapBE16(*(const Uint16 *)areap);
-}
-
-static __inline__ Uint32 _SDLNet_Read32(const void *areap)
-{
-    return SDL_SwapBE32(*(const Uint32 *)areap);
-}
+function SDLNet_Read16(const areap: Pointer): UInt16; inline;
+function SDLNet_Read32(const areap: Pointer): UInt32; inline;
 
 implementation
 
@@ -376,6 +361,62 @@ begin
   X.major := SDL_NET_MAJOR_VERSION;
   X.minor := SDL_NET_MINOR_VERSION;
   X.patch := SDL_NET_PATCHLEVEL;
+end;
+
+function SDLNet_TCP_AddSocket(set_: TSDLNet_SocketSet; sock: TTCPSocket): Integer;
+begin
+  Result := SDLNet_AddSocket(set_, TSDLNet_GenericSocket(sock));
+end;
+
+function SDLNet_UDP_AddSocket(set_: TSDLNet_SocketSet; sock: TUDPSocket): Integer;
+begin
+  Result := SDLNet_AddSocket(set_, TSDLNet_GenericSocket(sock));
+end;
+
+function SDLNet_TCP_DelSocket(set_: TSDLNet_SocketSet; sock: TTCPSocket): Integer;
+begin
+  Result := SDLNet_DelSocket(set_, TSDLNet_GenericSocket(sock));
+end;
+
+function SDLNet_UDP_DelSocket(set_: TSDLNet_SocketSet; sock: TUDPSocket): Integer;
+begin
+  Result := SDLNet_DelSocket(set_, TSDLNet_GenericSocket(sock));
+end;
+
+function SDLNet_SocketReady(sock: TSDLNet_GenericSocket): Integer;
+begin
+  Result := (sock != nil) and (sock.ready);
+end;
+
+procedure SDLNet_SetError(const fmt: PAnsiChar);
+begin
+  SDL_SetError(fmt);
+end;
+
+function SDLNet_GetError(): PAnsiChar;
+begin
+  Result := SDL_GetError;
+end;
+
+procedure SDLNet_Write16(value: UInt16; areap: Pointer);
+begin
+  PUInt16(areap) := SDL_SwapBE16(value);
+end;
+
+procedure SDLNet_Write32(value: UInt32; areap: Pointer);
+begin
+  PUInt32(areap) := SDL_SwapBE32(value);
+end;
+
+{* Read a 16/32-bit value from network packet buffer *}
+function SDLNet_Read16(const areap: Pointer): UInt16;
+begin
+  Result := SDL_SwapBE16(PUInt16(areap));
+end;
+
+function SDLNet_Read32(const areap: Pointer): UInt32;
+begin
+  Result := SDL_SwapBE32(PUInt32(areap));
 end;
 
 end.
