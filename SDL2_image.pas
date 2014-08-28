@@ -50,12 +50,12 @@ const
 
   {$IFDEF UNIX}
     {$IFDEF DARWIN}
-      IMG_LibName = 'libSDL_image-2.dylib';
+      IMG_LibName = 'libSDL2_image.dylib';
     {$ELSE}
       {$IFDEF FPC}
-        IMG_LibName = 'libSDL_image-2.so';
+        IMG_LibName = 'libSDL2_image.so';
       {$ELSE}
-        IMG_LibName = 'libSDL_image-2.so.0';
+        IMG_LibName = 'libSDL2_image.so.0';
       {$ENDIF}
     {$ENDIF}
   {$ENDIF}
