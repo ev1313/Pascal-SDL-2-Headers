@@ -51,6 +51,7 @@
     magic: Pointer;
     id: UInt32;
     title: PAnsiChar;
+    icon: PSDL_Surface;
     x,y: SInt32;
     w,h: SInt32;
     min_w, min_h: SInt32;
