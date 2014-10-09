@@ -380,7 +380,6 @@
 {$ENDIF Delphi}
 
 {$IFDEF FPC}
-  {$MODE Delphi}          { use Delphi compatibility mode }
   {$H+}
   {$PACKRECORDS C}        // Added for record
   {$MACRO ON}             // Added For OpenGL

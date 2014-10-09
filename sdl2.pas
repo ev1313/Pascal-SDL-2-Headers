@@ -15,6 +15,7 @@ unit SDL2;
   "sdl_cpuinfo.h",
   "sdl_events.h",
   "sdl_error.h",
+  "sdl_filesystem.h",
   "sdl_gamecontroller.h",
   "sdl_gesture.h",
   "sdl_haptic.h",
@@ -22,7 +23,8 @@ unit SDL2;
   "sdl_joystick.h",
   "sdl_keyboard.h",
   "sdl_keycode.h",
-  "sdl_loadso.h"
+  "sdl_loadso.h",
+  "sdl_log.h",
   "sdl_pixels.h",
   "sdl_power.h",
   "sdl_main.h",
@@ -191,6 +193,8 @@ const
 {$I sdlevents.inc}
 {$I sdlclipboard.inc}
 {$I sdlcpuinfo.inc}
+{$I sdlfilesystem.inc}
+{$I sdllog.inc}
 {$I sdl.inc}
 
 implementation
