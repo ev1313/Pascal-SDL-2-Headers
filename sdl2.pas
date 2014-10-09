@@ -5,12 +5,14 @@ unit SDL2;
   Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
 
   Pascal-Header-Conversion
-  Copyright (C) 2012/13 Tim Blume aka End/EV1313
+  Copyright (C) 2012-2014 Tim Blume aka End/EV1313
 
   SDL.pas is based on the files:
   "sdl.h",
   "sdl_audio.h",
   "sdl_blendmode.h",
+  "sdl_clipboard.h",
+  "sdl_cpuinfo.h",
   "sdl_events.h",
   "sdl_error.h",
   "sdl_gamecontroller.h",
@@ -82,6 +84,7 @@ unit SDL2;
 {
   Changelog:
   ----------
+  v.1.80-stable; 09.10.2014: added sdl_cpuinfo.h and sdl_clipboard.h
   v.1.74-stable; 10.11.2013: added sdl_gamecontroller.h
   v.1.73-stable; 08.11.2013: added sdl_hints.h and some keystate helpers
                              thx to Cybermonkey!
@@ -186,6 +189,8 @@ const
 {$I sdltouch.inc}
 {$I sdlgesture.inc}
 {$I sdlevents.inc}
+{$I sdlclipboard.inc}
+{$I sdlcpuinfo.inc}
 {$I sdl.inc}
 
 implementation
