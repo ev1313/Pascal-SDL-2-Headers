@@ -51,7 +51,9 @@
   {$ELSE}
     {$F+,Q-,R-,S-,I-,A+}
   {$ENDIF}
-{$ENDIF} {FPC}
+{$ELSE}
+  {$MODE DELPHI}
+{$ENDIF}
 
 {$IFDEF LINUX}
 {$DEFINE UNIX}
@@ -322,22 +324,30 @@
    {$DEFINE HAS_TYPES}
 {$ENDIF ver240}
 
-{$IFDEF UNIX}
-  {$ifdef VER140}    // Kylix 1 & 2
-    {$DEFINE KYLIX}
-    {$DEFINE KYLIX1UP}
-    {$DEFINE KYLIX2UP}
-    {$DEFINE HAS_TYPES}
-  {$endif}
-
-  {$ifdef VER150}   // Kylix 3
-    {$DEFINE KYLIX}
-    {$DEFINE KYLIX1UP}
-    {$DEFINE KYLIX2UP}
-    {$DEFINE KYLIX3UP}
-    {$DEFINE HAS_TYPES}
-  {$endif}
-{$ENDIF UNIX}
+{$IFDEF DELPHI}
+  {$IF RTLVersion >= 26}
+     {$DEFINE Delphi}      {Delphi / C++ Builder XE5 and up}
+     {$DEFINE Delphi4UP}
+     {$DEFINE Delphi5UP}
+     {$DEFINE Delphi6UP}
+     {$DEFINE Delphi7UP}
+     {$DEFINE Delphi8UP}
+     {$DEFINE Delphi9UP}
+     {$DEFINE Delphi10UP}
+     {$DEFINE Delphi11UP}
+     {$DEFINE Delphi12UP}
+     {$DEFINE Delphi13UP}
+     {$DEFINE Delphi14UP}
+     {$DEFINE Delphi15UP}
+     {$DEFINE Delphi16UP}
+     {$DEFINE Delphi17UP}
+     {$WARN UNSAFE_TYPE OFF} {Disable warning for unsafe types}
+     {$DEFINE Has_Int64}
+     {$DEFINE Has_UInt64}
+     {$DEFINE Has_Native}
+     {$DEFINE HAS_TYPES}
+  {$IFEND}
+{$ENDIF}
 
 {*************** define 16/32/64 Bit ********************}
 
@@ -358,12 +368,6 @@
     {$ENDIF}
   {$ENDIF}
 {$ENDIF}
-
-{$IFDEF VirtualPascal} {  Virtual Pascal 2.x }
-   {$DEFINE Delphi}    {  Use Delphi Syntax }
-   {$DEFINE VP2}
-   {&Delphi+}
-{$ENDIF VirtualPascal}
 
 {$IFDEF Delphi}
   {$DEFINE USE_STDCALL}
@@ -407,50 +411,8 @@
   {$K+}   {smart callbacks}
 {$ENDIF Win16}
 
- {$IFDEF OS2}
-    {$UNDEF Windows}
-    {$DEFINE UseWin}
-    {$DEFINE OS_BigMem}
- {$ENDIF OS2}
-
-{$IFDEF __GPC__}
-  {$UNDEF UseWin}
-  {$UNDEF USE_STDCALL}
-  {$DEFINE OS_BigMem}
-  {$DEFINE NO_EXPORTS}
-  {$DEFINE NOCRT}
-  {$DEFINE cdecl attribute(cdecl)}
-{$ENDIF}
-
-{$IFDEF __TMT__}
-  {$DEFINE OS_BigMem}
-  {$DEFINE NO_EXPORTS}
-  {$DEFINE __OS_DOS__}
-  {$DEFINE UseAT}
-  {$IFNDEF MSDOS}
-    {$DEFINE USE_STDCALL}
-  {$ENDIF}
-
-  {$IFDEF __WIN32__}
-    {$DEFINE Win32}
-    {$DEFINE UseWin}
-    {$DEFINE NOCRT}
-    {$DEFINE Win32}
-    {$IFNDEF __CON__}
-      {$DEFINE Windows}
-    {$ENDIF}
-  {$ENDIF}
-
-  {$A+}  // Word alignment data
-  {$OA+} // Objects and structures align
-{$ENDIF}
-
 {$IFDEF Win32}
   {$DEFINE OS_BigMem}
-{$ELSE Win32}
-  {$IFDEF ver70}
-    {$DEFINE assembler}
-  {$ENDIF} { use 16-bit assembler! }
 {$ENDIF Win32}
 
 { ************************** dos/dos-like platforms **************}
@@ -478,28 +440,18 @@
 {$ENDIF}
 
 {$IFDEF USE_STDCALL}
-   {$IFNDEF __TMT__}
-     {$DEFINE BY_NAME}
-   {$ENDIF}
-{$ENDIF}
-
-{$IFNDEF ver70}
-  {$UNDEF assembler}
+  {$DEFINE BY_NAME}
 {$ENDIF}
 
 {*************** define LITTLE ENDIAN platforms ********************}
 
 
 {$IFDEF Delphi}
-{$DEFINE IA32}
-{$ENDIF}
-
-{$IFDEF KYLIX}
-{$DEFINE IA32}
+  {$DEFINE IA32}
 {$ENDIF}
 
 {$IFDEF FPC}
-{$IFDEF FPC_LITTLE_ENDIAN}
-{$DEFINE IA32}
-{$ENDIF}
+  {$IFDEF FPC_LITTLE_ENDIAN}
+    {$DEFINE IA32}
+  {$ENDIF}
 {$ENDIF}

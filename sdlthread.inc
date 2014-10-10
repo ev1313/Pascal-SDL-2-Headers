@@ -141,25 +141,26 @@ procedure SDL_WaitThread(thread: PSDL_Thread; status: PInt) cdecl; external SDL_
    *
    *   The newly created thread local storage identifier, or 0 on error
    *
-   *  static SDL_SpinLock tls_lock;
-   *  static SDL_TLSID thread_local_storage;
+   *  var tls_lock: TSDL_SpinLock;
+   *    thread_local_storage: TSDL_TLSID;
    *
-   *  void SetMyThreadData(void *value)
-   *  {
-   *      if (!thread_local_storage) {
-   *          SDL_AtomicLock(&tls_lock);
-   *          if (!thread_local_storage) {
+   *  procedure SetMyThreadData(value: Pointer)
+   *
+   *      if not (thread_local_storage) then
+   *      begin
+   *        SDL_AtomicLock(@tls_lock);
+   *        if (!thread_local_storage)
    *              thread_local_storage = SDL_TLSCreate();
-   *          }   {
-   *          SDL_AtomicUnLock(&tls_lock);
-   *      } {
-   *      SDL_TLSSet(thread_local_storage, value);
-   *  } {
    *
-   *  void *GetMyThreadData(void)
-   *  {
-   *      return SDL_TLSGet(thread_local_storage);
-   *  }{
+   *        SDL_AtomicUnLock(@tls_lock);
+   *
+   *        SDL_TLSSet(thread_local_storage, value);
+   *      end;
+   *
+   *  function GetMyThreadData(): Pointer;
+   *  begin
+   *     Result := SDL_TLSGet(thread_local_storage);
+   *  end;
    *
    *   SDL_TLSGet()
    *   SDL_TLSSet()
