@@ -1,6 +1,6 @@
 
 //since the array of const in delphi is not C compatible:
-{$IFNDEF DELPHI}
+{$IFDEF FPC}
 
 {**
  *  \brief The maximum size of a log message
@@ -124,8 +124,7 @@ procedure SDL_LogMessage(category: Integer; priority: TSDL_LogPriority; const fm
 {**
  *  \brief Log a message with the specified category and priority.
  *}
-procedure SDL_LogMessageV(category: Integer; priority: TSDL_LogPriority;
-                                             const fmt: PAnsiChar; va_list ap);
+procedure SDL_LogMessageV(category: Integer; priority: TSDL_LogPriority; const fmt: PAnsiChar; ap: array of const) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_LogMessageV' {$ENDIF} {$ENDIF};
 
 {**
  *  \brief The prototype for the log output function
