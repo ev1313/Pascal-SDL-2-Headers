@@ -324,30 +324,74 @@
    {$DEFINE HAS_TYPES}
 {$ENDIF ver240}
 
-{$IFDEF DELPHI}
-  {$IF RTLVersion >= 26}
-     {$DEFINE Delphi}      {Delphi / C++ Builder XE5 and up}
-     {$DEFINE Delphi4UP}
-     {$DEFINE Delphi5UP}
-     {$DEFINE Delphi6UP}
-     {$DEFINE Delphi7UP}
-     {$DEFINE Delphi8UP}
-     {$DEFINE Delphi9UP}
-     {$DEFINE Delphi10UP}
-     {$DEFINE Delphi11UP}
-     {$DEFINE Delphi12UP}
-     {$DEFINE Delphi13UP}
-     {$DEFINE Delphi14UP}
-     {$DEFINE Delphi15UP}
-     {$DEFINE Delphi16UP}
-     {$DEFINE Delphi17UP}
-     {$WARN UNSAFE_TYPE OFF} {Disable warning for unsafe types}
-     {$DEFINE Has_Int64}
-     {$DEFINE Has_UInt64}
-     {$DEFINE Has_Native}
-     {$DEFINE HAS_TYPES}
-  {$IFEND}
-{$ENDIF}
+{$IFDEF ver250}
+   {$DEFINE Delphi}      {Delphi / C++ Builder XE5}
+   {$DEFINE Delphi4UP}
+   {$DEFINE Delphi5UP}
+   {$DEFINE Delphi6UP}
+   {$DEFINE Delphi7UP}
+   {$DEFINE Delphi8UP}
+   {$DEFINE Delphi9UP}
+   {$DEFINE Delphi10UP}
+   {$DEFINE Delphi11UP}
+   {$DEFINE Delphi12UP}
+   {$DEFINE Delphi13UP}
+   {$DEFINE Delphi14UP}
+   {$DEFINE Delphi15UP}
+   {$DEFINE Delphi16UP}
+   {$DEFINE Delphi17UP}
+   {$WARN UNSAFE_TYPE OFF} {Disable warning for unsafe types}
+   {$DEFINE Has_Int64}
+   {$DEFINE Has_UInt64}
+   {$DEFINE Has_Native}
+   {$DEFINE HAS_TYPES}
+{$ENDIF ver250}
+
+{$IFDEF ver260}
+   {$DEFINE Delphi}      {Delphi / C++ Builder XE6}
+   {$DEFINE Delphi4UP}
+   {$DEFINE Delphi5UP}
+   {$DEFINE Delphi6UP}
+   {$DEFINE Delphi7UP}
+   {$DEFINE Delphi8UP}
+   {$DEFINE Delphi9UP}
+   {$DEFINE Delphi10UP}
+   {$DEFINE Delphi11UP}
+   {$DEFINE Delphi12UP}
+   {$DEFINE Delphi13UP}
+   {$DEFINE Delphi14UP}
+   {$DEFINE Delphi15UP}
+   {$DEFINE Delphi16UP}
+   {$DEFINE Delphi17UP}
+   {$WARN UNSAFE_TYPE OFF} {Disable warning for unsafe types}
+   {$DEFINE Has_Int64}
+   {$DEFINE Has_UInt64}
+   {$DEFINE Has_Native}
+   {$DEFINE HAS_TYPES}
+{$ENDIF ver260}
+
+{$IFDEF ver270}
+   {$DEFINE Delphi}      {Delphi / C++ Builder XE7}
+   {$DEFINE Delphi4UP}
+   {$DEFINE Delphi5UP}
+   {$DEFINE Delphi6UP}
+   {$DEFINE Delphi7UP}
+   {$DEFINE Delphi8UP}
+   {$DEFINE Delphi9UP}
+   {$DEFINE Delphi10UP}
+   {$DEFINE Delphi11UP}
+   {$DEFINE Delphi12UP}
+   {$DEFINE Delphi13UP}
+   {$DEFINE Delphi14UP}
+   {$DEFINE Delphi15UP}
+   {$DEFINE Delphi16UP}
+   {$DEFINE Delphi17UP}
+   {$WARN UNSAFE_TYPE OFF} {Disable warning for unsafe types}
+   {$DEFINE Has_Int64}
+   {$DEFINE Has_UInt64}
+   {$DEFINE Has_Native}
+   {$DEFINE HAS_TYPES}
+{$ENDIF ver270}
 
 {*************** define 16/32/64 Bit ********************}
 
