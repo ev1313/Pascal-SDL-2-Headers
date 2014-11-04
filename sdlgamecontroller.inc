@@ -72,6 +72,17 @@ type
 function SDL_GameControllerAddMapping( mappingString: PAnsiChar ): Integer cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GameControllerAddMapping' {$ENDIF} {$ENDIF};
 
   {**
+   *  Load a set of mappings from a seekable SDL data stream (memory or file), filtered by the current SDL_GetPlatform()
+   *  A community sourced database of controllers is available at https://raw.github.com/gabomdq/SDL_GameControllerDB/master/gamecontrollerdb.txt
+   *
+   *  If freerw is non-zero, the stream will be closed after being read.
+   * 
+   *  Returns number of mappings added, -1 on error
+   *}
+function SDL_GameControllerAddMappingsFromRW(rw: PSDL_RWops; freerw: SInt32):SInt32;
+   cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GameControllerAddMappingsFromRW' {$ENDIF} {$ENDIF};
+
+  {**
    *  Get a mapping string for a GUID
    *
    *   the mapping string.  Must be freed with SDL_free.  Returns NULL if no mapping is available
@@ -235,4 +246,4 @@ function SDL_GameControllerGetButton(gamecontroller: PSDL_GameController; button
 procedure SDL_GameControllerClose(gamecontroller: PSDL_GameController) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GameControllerClose' {$ENDIF} {$ENDIF};
 
 
-
+function SDL_GameControllerAddMappingsFromFile(Const FilePath:PAnsiChar):SInt32;

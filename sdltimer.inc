@@ -58,4 +58,4 @@ function SDL_RemoveTimer(id: TSDL_TimerID): Boolean cdecl; external SDL_LibName 
   {**
   *   Compare SDL ticks values, and return true if A has passed B.
   *}
-function SDL_TICKS_PASSED(A, B:UInt32):Boolean;
+function SDL_TICKS_PASSED(Const A, B:UInt32):Boolean;

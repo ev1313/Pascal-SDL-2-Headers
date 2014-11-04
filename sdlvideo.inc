@@ -962,6 +962,11 @@ procedure SDL_GL_UnloadLibrary cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFD
 function SDL_GL_ExtensionSupported(const extension: PAnsiChar): TSDL_Bool cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GL_ExtensionSupported' {$ENDIF} {$ENDIF};
 
   {**
+   *  Reset all previously set OpenGL context attributes to their default values
+   *}
+procedure SDL_GL_ResetAttributes(); cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GL_ResetAttributes' {$ENDIF} {$ENDIF};
+
+  {**
    *  Set an OpenGL window attribute before window creation.
    *}
 

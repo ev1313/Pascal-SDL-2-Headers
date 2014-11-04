@@ -377,9 +377,18 @@ begin
 end;
 
 // from "sdl_timer.h"
-function SDL_TICKS_PASSED(A, B:UInt32):Boolean;
+function SDL_TICKS_PASSED(Const A, B:UInt32):Boolean;
 begin
    Result := ((Int64(B) - Int64(A)) <= 0)
+end;
+
+// from "sdl_gamecontroller.h"
+  {**
+   *  Load a set of mappings from a file, filtered by the current SDL_GetPlatform()
+   *}
+function SDL_GameControllerAddMappingsFromFile(Const FilePath:PAnsiChar):SInt32;
+begin
+  Result := SDL_GameControllerAddMappingsFromRW(SDL_RWFromFile(FilePath, 'rb'), 1)
 end;
 
 end.

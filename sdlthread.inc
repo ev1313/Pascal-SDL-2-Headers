@@ -137,6 +137,34 @@ function SDL_SetThreadPriority(priority: TSDL_ThreadPriority): SInt32 cdecl; ext
 procedure SDL_WaitThread(thread: PSDL_Thread; status: PInt) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_WaitThread' {$ENDIF}{$ENDIF};
 
   {**
+   *  A thread may be "detached" to signify that it should not remain until
+   *  another thread has called SDL_WaitThread() on it. Detaching a thread
+   *  is useful for long-running threads that nothing needs to synchronize
+   *  with or further manage. When a detached thread is done, it simply
+   *  goes away.
+   *
+   *  There is no way to recover the return code of a detached thread. If you
+   *  need this, don't detach the thread and instead use SDL_WaitThread().
+   *
+   *  Once a thread is detached, you should usually assume the SDL_Thread isn't
+   *  safe to reference again, as it will become invalid immediately upon
+   *  the detached thread's exit, instead of remaining until someone has called
+   *  SDL_WaitThread() to finally clean it up. As such, don't detach the same
+   *  thread more than once.
+   *
+   *  If a thread has already exited when passed to SDL_DetachThread(), it will
+   *  stop waiting for a call to SDL_WaitThread() and clean up immediately.
+   *  It is not safe to detach a thread that might be used with SDL_WaitThread().
+   *
+   *  You may not call SDL_WaitThread() on a thread that has been detached.
+   *  Use either that function or this one, but not both, or behavior is
+   *  undefined.
+   *
+   *  It is safe to pass NIL to this function; it is a no-op.
+   *}
+procedure SDL_DetachThread(thread:TSDL_Thread); cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_DetachThread' {$ENDIF}{$ENDIF};
+
+  {**
    *  Create an identifier that is globally visible to all threads but refers to data that is thread-specific.
    *
    *   The newly created thread local storage identifier, or 0 on error
