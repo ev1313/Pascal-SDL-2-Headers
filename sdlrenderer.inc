@@ -714,3 +714,24 @@ function SDL_GL_BindTexture(texture: PSDL_Texture; texw: PFloat; texh: PFloat): 
    *   0 on success, or -1 if the operation is not supported
    *}
 function SDL_GL_UnbindTexture(texture: PSDL_Texture): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GL_UnbindTexture' {$ENDIF} {$ENDIF};
+
+  {**
+   *  Update a rectangle within a planar YV12 or IYUV texture with new pixel data.
+   *
+   *  texture   The texture to update
+   *  rect      A pointer to the rectangle of pixels to update, or NULL to update the entire texture.
+   *  Yplane    The raw pixel data for the Y plane.
+   *  Ypitch    The number of bytes between rows of pixel data for the Y plane.
+   *  Uplane    The raw pixel data for the U plane.
+   *  Upitch    The number of bytes between rows of pixel data for the U plane.
+   *  Vplane    The raw pixel data for the V plane.
+   *  Vpitch    The number of bytes between rows of pixel data for the V plane.
+   *
+   *  0 on success, or -1 if the texture is not valid.
+   *
+   *  You can use SDL_UpdateTexture() as long as your pixel data is
+   *  a contiguous block of Y and U/V planes in the proper order, but
+   *  this function is available if your pixel data is not contiguous.
+   *}
+function SDL_UpdateYUVTexture(texture: PSDL_Texture; rect: PSDL_Rect; Yplane: PUInt8; Ypitch: SInt32; Uplane: PUInt8; UPitch: SInt32; Vplane: UInt8; VPitch: SInt32):SInt32;
+   cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_UpdateYUVTexture' {$ENDIF} {$ENDIF};
