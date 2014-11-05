@@ -79,10 +79,13 @@ const
 procedure SDL_IMAGE_VERSION(var X: TSDL_Version);
 
   {* This function gets the version of the dynamically linked SDL_image library.
-     it should NOT be used to fill a version structure, instead you should
-     use the SDL_IMAGE_VERSION() macro.
+   * 
+   * Note that this function does NOT allocate a new TSDL_Version and fill it with info,
+   * but returns a pointer to a TSDL_Version residing inside dynlinked file.
+   * 
+   * As such, attempting to Dispose() of this memory will result in access violation.
    *}
-function IMG_Linked_Version: TSDL_Version cdecl; external IMG_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_IMG_Linked_Version' {$ENDIF} {$ENDIF};
+function IMG_Linked_Version: PSDL_Version cdecl; external IMG_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_IMG_Linked_Version' {$ENDIF} {$ENDIF};
 
 const
   IMG_INIT_JPG  = $00000001;

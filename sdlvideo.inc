@@ -190,6 +190,7 @@ const
   SDL_WINDOW_MOUSE_FOCUS = $00000400;        {**< window has mouse focus *}
   SDL_WINDOW_FULLSCREEN_DESKTOP = SDL_WINDOW_FULLSCREEN or $00001000;
   SDL_WINDOW_FOREIGN = $00000800;            {**< window not created by SDL *}
+  SDL_WINDOW_ALLOW_HIGHDPI = $00002000;      {**< window should be created in high-DPI mode if supported *}
 
 type
   TSDL_WindowFlags = DWord;
@@ -270,6 +271,7 @@ const
   SDL_GL_CONTEXT_FLAGS = 20;
   SDL_GL_CONTEXT_PROFILE_MASK = 21;
   SDL_GL_SHARE_WITH_CURRENT_CONTEXT = 22;
+  SDL_GL_FRAMEBUFFER_SRGB_CAPABLE = 23;
 
 type
   TSDL_GLattr = DWord;
@@ -958,6 +960,11 @@ procedure SDL_GL_UnloadLibrary cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFD
    *}
 
 function SDL_GL_ExtensionSupported(const extension: PAnsiChar): TSDL_Bool cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GL_ExtensionSupported' {$ENDIF} {$ENDIF};
+
+  {**
+   *  Reset all previously set OpenGL context attributes to their default values
+   *}
+procedure SDL_GL_ResetAttributes(); cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GL_ResetAttributes' {$ENDIF} {$ENDIF};
 
   {**
    *  Set an OpenGL window attribute before window creation.

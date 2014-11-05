@@ -202,9 +202,9 @@ implementation
 //from "sdl_version.h"
 procedure SDL_VERSION(x: PSDL_Version);
 begin
-  x.major := SDL_MAJOR_VERSION;
-  x.minor := SDL_MINOR_VERSION;
-  x.patch := SDL_PATCHLEVEL;
+  x^.major := SDL_MAJOR_VERSION;
+  x^.minor := SDL_MINOR_VERSION;
+  x^.patch := SDL_PATCHLEVEL;
 end;
 
 function SDL_VERSIONNUM(X,Y,Z: UInt32): Cardinal;
@@ -374,6 +374,21 @@ end;
 function SDL_GetEventState(type_: UInt32): UInt8;
 begin
   Result := SDL_EventState(type_, SDL_QUERY);
+end;
+
+// from "sdl_timer.h"
+function SDL_TICKS_PASSED(Const A, B:UInt32):Boolean;
+begin
+   Result := ((Int64(B) - Int64(A)) <= 0)
+end;
+
+// from "sdl_gamecontroller.h"
+  {**
+   *  Load a set of mappings from a file, filtered by the current SDL_GetPlatform()
+   *}
+function SDL_GameControllerAddMappingsFromFile(Const FilePath:PAnsiChar):SInt32;
+begin
+  Result := SDL_GameControllerAddMappingsFromRW(SDL_RWFromFile(FilePath, 'rb'), 1)
 end;
 
 end.

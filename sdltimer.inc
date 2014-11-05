@@ -54,3 +54,8 @@ function SDL_AddTimer(interval: UInt32; callback: TSDL_TimerCallback; param: Poi
    *  It is not safe to remove a timer multiple times.
    *}
 function SDL_RemoveTimer(id: TSDL_TimerID): Boolean cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RemoveTimer' {$ENDIF} {$ENDIF};
+
+  {**
+  *   Compare SDL ticks values, and return true if A has passed B.
+  *}
+function SDL_TICKS_PASSED(Const A, B:UInt32):Boolean;

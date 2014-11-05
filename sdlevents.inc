@@ -72,7 +72,7 @@ const
   SDL_CONTROLLERDEVICEADDED    = $653;  // A new Game controller has been inserted into the system 
   SDL_CONTROLLERDEVICEREMOVED  = $654;  // An opened Game controller has been removed 
   SDL_CONTROLLERDEVICEREMAPPED = $655;  // The controller mapping was updated 
-
+   
   { Touch events }
   SDL_FINGERDOWN      = $700;
   SDL_FINGERUP        = $701;
@@ -88,7 +88,10 @@ const
 
   { Drag and drop events }
   SDL_DROPFILE        = $1000; // The system requests a file open
-
+  
+  { Render events }
+  SDL_RENDER_TARGETS_RESET = $2000; // The render targets have been reset
+  
   {** Events SDL_USEREVENT through SDL_LASTEVENT are for your use,
    *  and should be allocated with SDL_RegisterEvents()
    *}
@@ -206,8 +209,8 @@ type
     which: UInt32;       // The mouse instance id, or SDL_TOUCH_MOUSEID 
     button: UInt8;       // The mouse button index
     state: UInt8;        // SDL_PRESSED or SDL_RELEASED
+    clicks: UInt8;       // 1 for single-click, 2 for double-click, etc.
     padding1: UInt8;
-    padding2: UInt8;
     x: SInt32;           // X coordinate, relative to window
     y: SInt32;           // Y coordinate, relative to window 
   end;
@@ -468,15 +471,15 @@ type
     PSDL_SysWMinfo = ^TSDL_SysWMinfo;
     TSDL_SysWMinfo = record
       version : TSDL_Version;
-      window : HWnd;	// The display window
+      window : HWnd; // The display window
     end;
   {$ELSE}
     // The Linux custom window manager information structure
     {$IFDEF Unix}
       {$IFNDEF DARWIN}
       TX11 = record
-        display : PDisplay;	// The X11 display
-        window : TWindow;		// The X11 display window */
+        display : PDisplay;   // The X11 display
+        window : TWindow;     // The X11 display window */
         {* These locking functions should be called around
            any X11 functions using the display variable.
            They lock the event thread, so should not be
@@ -486,8 +489,8 @@ type
         unlock_func : Pointer;
 
         // Introduced in SDL 1.0.2
-        fswindow : TWindow;	// The X11 fullscreen window */
-        wmwindow : TWindow;	// The X11 managed input window */
+        fswindow : TWindow;   // The X11 fullscreen window */
+        wmwindow : TWindow;   // The X11 managed input window */
       end;
       {$ENDIF}
 
@@ -545,7 +548,7 @@ type
       SDL_MOUSEBUTTONUP,
       SDL_MOUSEBUTTONDOWN:  (button: TSDL_MouseButtonEvent);
       SDL_MOUSEWHEEL:  (wheel: TSDL_MouseWheelEvent);
-	  
+     
       SDL_JOYAXISMOTION:  (jaxis: TSDL_JoyAxisEvent);
       SDL_JOYBALLMOTION: (jball: TSDL_JoyBallEvent);
       SDL_JOYHATMOTION: (jhat: TSDL_JoyHatEvent);
@@ -732,9 +735,9 @@ type
 
 const
 
-  SDL_QUERY   =	-1;
-  SDL_IGNORE  =	 0;
-  SDL_DISABLE =	 0;
+  SDL_QUERY   =   -1;
+  SDL_IGNORE  =    0;
+  SDL_DISABLE =    0;
   SDL_ENABLE  =  1;
 
   {**

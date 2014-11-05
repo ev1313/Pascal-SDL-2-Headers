@@ -87,6 +87,17 @@ SDL_HINT_RENDER_DRIVER = 'SDL_RENDER_DRIVER';
  */}
 SDL_HINT_RENDER_OPENGL_SHADERS = 'SDL_RENDER_OPENGL_SHADERS';
 
+  {**
+   *  \brief  A variable controlling whether the Direct3D device is initialized for thread-safe operations.
+   *
+   *  This variable can be set to the following values:
+   *    "0"       - Thread-safety is not enabled (faster)
+   *    "1"       - Thread-safety is enabled
+   *
+   *  By default the Direct3D device is created with thread-safety disabled.
+   *}
+SDL_HINT_RENDER_DIRECT3D_THREADSAFE = 'SDL_RENDER_DIRECT3D_THREADSAFE';
+
 {/**
  *  \brief  A variable controlling the scaling quality
  *
@@ -109,6 +120,17 @@ SDL_HINT_RENDER_SCALE_QUALITY = 'SDL_RENDER_SCALE_QUALITY';
  *  By default SDL does not sync screen surface updates with vertical refresh.
  */}
 SDL_HINT_RENDER_VSYNC = 'SDL_RENDER_VSYNC';
+
+{/**
+ *  \brief  A variable controlling whether the screensaver is enabled. 
+ *
+ *  This variable can be set to the following values:
+ *    "0"       - Disable screensaver
+ *    "1"       - Enable screensaver
+ *
+ *  By default SDL will disable the screensaver.
+ */}
+SDL_HINT_VIDEO_ALLOW_SCREENSAVER = 'SDL_VIDEO_ALLOW_SCREENSAVER';
 
 {/**
  *  \brief  A variable controlling whether the X11 VidMode extension should be used.
@@ -155,6 +177,17 @@ SDL_HINT_VIDEO_X11_XRANDR = 'SDL_VIDEO_X11_XRANDR';
 SDL_HINT_GRAB_KEYBOARD = 'SDL_GRAB_KEYBOARD';
 
 {/**
+ *  \brief  A variable controlling whether relative mouse mode is implemented using mouse warping
+ *
+ *  This variable can be set to the following values:
+ *    "0"       - Relative mouse mode uses raw input
+ *    "1"       - Relative mouse mode uses mouse warping
+ *
+ *  By default SDL will use raw input for relative mouse mode
+ */}
+SDL_HINT_MOUSE_RELATIVE_MODE_WARP = 'SDL_MOUSE_RELATIVE_MODE_WARP';
+
+{/**
  *  \brief Minimize your SDL_Window if it loses key focus when in Fullscreen mode. Defaults to true.
  *
  */}
@@ -186,6 +219,15 @@ SDL_HINT_IDLE_TIMER_DISABLED = 'SDL_IOS_IDLE_TIMER_DISABLED';
  */}
 SDL_HINT_ORIENTATIONS = 'SDL_IOS_ORIENTATIONS';
 
+{/**
+ *  \brief  A variable controlling whether an Android built-in accelerometer should be
+ *  listed as a joystick device, rather than listing actual joysticks only.
+ *
+ *  This variable can be set to the following values:
+ *    "0"       - List only real joysticks and accept input from them
+ *    "1"       - List real joysticks along with the accelerometer as if it were a 3 axis joystick (the default).
+ */}
+SDL_HINT_ACCELEROMETER_AS_JOYSTICK = 'SDL_ACCELEROMETER_AS_JOYSTICK';
 
 {/**
  *  \brief  A variable that lets you disable the detection and use of Xinput gamepad devices
@@ -249,6 +291,53 @@ SDL_HINT_ALLOW_TOPMOST = 'SDL_ALLOW_TOPMOST';
  */}
 SDL_HINT_TIMER_RESOLUTION = 'SDL_TIMER_RESOLUTION';
 
+{**
+ *  \brief If set to 1, then do not allow high-DPI windows. ("Retina" on Mac)
+ *}
+SDL_HINT_VIDEO_HIGHDPI_DISABLED = 'SDL_VIDEO_HIGHDPI_DISABLED';
+
+{**
+ *  \brief A variable that determines whether ctrl+click should generate a right-click event on Mac
+ *  
+ *  If present, holding ctrl while left clicking will generate a right click
+ *  event when on Mac.
+ *}
+SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK = 'SDL_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK';
+
+{**
+ *  \brief  A variable specifying which shader compiler to preload when using the Chrome ANGLE binaries
+ *
+ *  SDL has EGL and OpenGL ES2 support on Windows via the ANGLE project. It
+ *  can use two different sets of binaries, those compiled by the user from source
+ *  or those provided by the Chrome browser. In the later case, these binaries require
+ *  that SDL loads a DLL providing the shader compiler.
+ *
+ *  This variable can be set to the following values:
+ *    "d3dcompiler_46.dll" - default, best for Vista or later.
+ *    "d3dcompiler_43.dll" - for XP support.
+ *    "none" - do not load any library, useful if you compiled ANGLE from source and included the compiler in your binaries.
+ *
+ *}
+SDL_HINT_VIDEO_WIN_D3DCOMPILER = 'SDL_VIDEO_WIN_D3DCOMPILER';
+
+{/**
+ *  \brief  A variable that is the address of another SDL_Window* (as a hex string formatted with "%p").
+ *  
+ *  If this hint is set before SDL_CreateWindowFrom() and the SDL_Window* it is set to has
+ *  SDL_WINDOW_OPENGL set (and running on WGL only, currently), then two things will occur on the newly 
+ *  created SDL_Window:
+ *
+ *  1. Its pixel format will be set to the same pixel format as this SDL_Window.  This is
+ *  needed for example when sharing an OpenGL context across multiple windows.
+ *
+ *  2. The flag SDL_WINDOW_OPENGL will be set on the new window so it can be used for
+ *  OpenGL rendering.
+ *
+ *  This variable can be set to the following values:
+ *    The address (as a string "%p") of the SDL_Window* that new windows created with SDL_CreateWindowFrom() should
+ *    share a pixel format with.
+ */}
+SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT = 'SDL_VIDEO_WINDOW_SHARE_PIXEL_FORMAT';
 
 
 {/**
