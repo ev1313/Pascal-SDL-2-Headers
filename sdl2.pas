@@ -195,6 +195,7 @@ const
 {$I sdlcpuinfo.inc}
 {$I sdlfilesystem.inc}
 {$I sdllog.inc}
+{$I sdlsystem.inc}
 {$I sdl.inc}
 
 implementation
