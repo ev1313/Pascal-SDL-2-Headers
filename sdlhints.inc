@@ -98,6 +98,19 @@ SDL_HINT_RENDER_OPENGL_SHADERS = 'SDL_RENDER_OPENGL_SHADERS';
    *}
 SDL_HINT_RENDER_DIRECT3D_THREADSAFE = 'SDL_RENDER_DIRECT3D_THREADSAFE';
 
+  {**
+   *  \brief  A variable controlling whether to enable Direct3D 11+'s Debug Layer.
+   *
+   *  This variable does not have any effect on the Direct3D 9 based renderer.
+   *
+   *  This variable can be set to the following values:
+   *    "0"       - Disable Debug Layer use
+   *    "1"       - Enable Debug Layer use
+   *
+   *  By default, SDL does not use Direct3D Debug Layer.
+   *}
+SDL_HINT_RENDER_DIRECT3D11_DEBUG = 'SDL_HINT_RENDER_DIRECT3D11_DEBUG';
+
 {/**
  *  \brief  A variable controlling the scaling quality
  *
@@ -338,6 +351,83 @@ SDL_HINT_VIDEO_WIN_D3DCOMPILER = 'SDL_VIDEO_WIN_D3DCOMPILER';
  *    share a pixel format with.
  */}
 SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT = 'SDL_VIDEO_WINDOW_SHARE_PIXEL_FORMAT';
+
+  {**
+   *  \brief A URL to a WinRT app's privacy policy
+   *
+   *  All network-enabled WinRT apps must make a privacy policy available to its
+   *  users.  On Windows 8, 8.1, and RT, Microsoft mandates that this policy be
+   *  be available in the Windows Settings charm, as accessed from within the app.
+   *  SDL provides code to add a URL-based link there, which can point to the app's
+   *  privacy policy.
+   *
+   *  To setup a URL to an app's privacy policy, set SDL_HINT_WINRT_PRIVACY_POLICY_URL
+   *  before calling any SDL_Init functions.  The contents of the hint should
+   *  be a valid URL.  For example, "http://www.example.com".
+   *
+   *  The default value is "", which will prevent SDL from adding a privacy policy
+   *  link to the Settings charm.  This hint should only be set during app init.
+   *
+   *  The label text of an app's "Privacy Policy" link may be customized via another
+   *  hint, SDL_HINT_WINRT_PRIVACY_POLICY_LABEL.
+   *
+   *  Please note that on Windows Phone, Microsoft does not provide standard UI
+   *  for displaying a privacy policy link, and as such, SDL_HINT_WINRT_PRIVACY_POLICY_URL
+   *  will not get used on that platform.  Network-enabled phone apps should display
+   *  their privacy policy through some other, in-app means.
+   *}
+SDL_HINT_WINRT_PRIVACY_POLICY_URL = 'SDL_HINT_WINRT_PRIVACY_POLICY_URL';
+
+  {**
+   *  \brief Label text for a WinRT app's privacy policy link
+   *
+   *  Network-enabled WinRT apps must include a privacy policy.  On Windows 8, 8.1, and RT,
+   *  Microsoft mandates that this policy be available via the Windows Settings charm.
+   *  SDL provides code to add a link there, with it's label text being set via the
+   *  optional hint, SDL_HINT_WINRT_PRIVACY_POLICY_LABEL.
+   *
+   *  Please note that a privacy policy's contents are not set via this hint.  A separate
+   *  hint, SDL_HINT_WINRT_PRIVACY_POLICY_URL, is used to link to the actual text of the
+   *  policy.
+   *
+   *  The contents of this hint should be encoded as a UTF8 string.
+   *
+   *  The default value is "Privacy Policy".  This hint should only be set during app
+   *  initialization, preferably before any calls to SDL_Init.
+   *
+   *  For additional information on linking to a privacy policy, see the documentation for
+   *  SDL_HINT_WINRT_PRIVACY_POLICY_URL.
+   *}
+SDL_HINT_WINRT_PRIVACY_POLICY_LABEL = 'SDL_HINT_WINRT_PRIVACY_POLICY_LABEL';
+
+  {**
+   *  \brief If set to 1, back button press events on Windows Phone 8+ will be marked as handled.
+   *
+   *  TODO, WinRT: document SDL_HINT_WINRT_HANDLE_BACK_BUTTON need and use
+   *  For now, more details on why this is needed can be found at the
+   *  beginning of the following web page:
+   *  http://msdn.microsoft.com/en-us/library/windowsphone/develop/jj247550(v=vs.105).aspx
+   *}
+SDL_HINT_WINRT_HANDLE_BACK_BUTTON = 'SDL_HINT_WINRT_HANDLE_BACK_BUTTON';
+
+  {**
+   *  \brief  A variable that dictates policy for fullscreen Spaces on Mac OS X.
+   *
+   *  This hint only applies to Mac OS X.
+   *
+   *  The variable can be set to the following values:
+   *    "0"       - Disable Spaces support (FULLSCREEN_DESKTOP won't use them and
+   *                SDL_WINDOW_RESIZABLE windows won't offer the "fullscreen"
+   *                button on their titlebars).
+   *    "1"       - Enable Spaces support (FULLSCREEN_DESKTOP will use them and
+   *                SDL_WINDOW_RESIZABLE windows will offer the "fullscreen"
+   *                button on their titlebars.
+   *
+   *  The default value is "1". Spaces are disabled regardless of this hint if
+   *   the OS isn't at least Mac OS X Lion (10.7). This hint must be set before
+   *   any windows are created.
+   *}
+SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES = 'SDL_VIDEO_MAC_FULLSCREEN_SPACES';
 
 
 {/**

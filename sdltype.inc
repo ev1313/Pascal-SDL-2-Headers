@@ -28,6 +28,7 @@ type
   UInt32 = Cardinal;
   {$EXTERNALSYM UInt32}
 
+  PSInt32 = ^SInt32;
   SInt32 = LongInt;
   {$EXTERNALSYM SInt32}
 
