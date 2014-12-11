@@ -351,8 +351,8 @@ const
   SDL_SCANCODE_EJECT = 281;
   SDL_SCANCODE_SLEEP = 282;
 
-	SDL_SCANCODE_APP1 = 283;
-	SDL_SCANCODE_APP2 = 284;
+  SDL_SCANCODE_APP1 = 283;
+  SDL_SCANCODE_APP2 = 284;
 
   {*Walther keys*}
 
@@ -366,7 +366,6 @@ type
   TSDL_ScanCode = DWord;
 
   //from "sdl_keycode.h"
-
 
   {**
    *  The SDL virtual key representation.
@@ -384,78 +383,78 @@ const
 
   SDLK_UNKNOWN = 0;
 
-  SDLK_RETURN = '\r';
-  SDLK_ESCAPE = '\033';
-  SDLK_BACKSPACE = '\b';
-  SDLK_TAB = '\t';
-  SDLK_SPACE = ' ';
-  SDLK_EXCLAIM = '!';
-  SDLK_QUOTEDBL = '"';
-  SDLK_HASH = '#';
-  SDLK_PERCENT = '%';
-  SDLK_DOLLAR = '$';
-  SDLK_AMPERSAND = '&';
-  SDLK_QUOTE = '\';
-  SDLK_LEFTPAREN = '(';
-  SDLK_RIGHTPAREN = ')';
-  SDLK_ASTERISK = '*';
-  SDLK_PLUS = '+';
-  SDLK_COMMA = ',';
-  SDLK_MINUS = '-';
-  SDLK_PERIOD = '.';
-  SDLK_SLASH = '/';
-  SDLK_0 = '0';
-  SDLK_1 = '1';
-  SDLK_2 = '2';
-  SDLK_3 = '3';
-  SDLK_4 = '4';
-  SDLK_5 = '5';
-  SDLK_6 = '6';
-  SDLK_7 = '7';
-  SDLK_8 = '8';
-  SDLK_9 = '9';
-  SDLK_COLON = ':';
-  SDLK_SEMICOLON = ';';
-  SDLK_LESS = '<';
-  SDLK_EQUALS = '=';
-  SDLK_GREATER = '>';
-  SDLK_QUESTION = '?';
-  SDLK_AT = '@';
+  SDLK_RETURN = SInt32(#13);   // C: '\r'
+  SDLK_ESCAPE = SInt32(#27);   // C: '\033'
+  SDLK_BACKSPACE = SInt32(#8); // C: '\b'
+  SDLK_TAB = SInt32(#9);       // C: '\t'
+  SDLK_SPACE = SInt32(' ');
+  SDLK_EXCLAIM = SInt32('!');
+  SDLK_QUOTEDBL = SInt32('"');
+  SDLK_HASH = SInt32('#');
+  SDLK_PERCENT = SInt32('%');
+  SDLK_DOLLAR = SInt32('$');
+  SDLK_AMPERSAND = SInt32('&');
+  SDLK_QUOTE = SInt32('\');
+  SDLK_LEFTPAREN = SInt32('(');
+  SDLK_RIGHTPAREN = SInt32(')');
+  SDLK_ASTERISK = SInt32('*');
+  SDLK_PLUS = SInt32('+');
+  SDLK_COMMA = SInt32(',');
+  SDLK_MINUS = SInt32('-');
+  SDLK_PERIOD = SInt32('.');
+  SDLK_SLASH = SInt32('/');
+  SDLK_0 = SInt32('0');
+  SDLK_1 = SInt32('1');
+  SDLK_2 = SInt32('2');
+  SDLK_3 = SInt32('3');
+  SDLK_4 = SInt32('4');
+  SDLK_5 = SInt32('5');
+  SDLK_6 = SInt32('6');
+  SDLK_7 = SInt32('7');
+  SDLK_8 = SInt32('8');
+  SDLK_9 = SInt32('9');
+  SDLK_COLON = SInt32(':');
+  SDLK_SEMICOLON = SInt32(';');
+  SDLK_LESS = SInt32('<');
+  SDLK_EQUALS = SInt32('=');
+  SDLK_GREATER = SInt32('>');
+  SDLK_QUESTION = SInt32('?');
+  SDLK_AT = SInt32('@');
   {*
      Skip uppercase letters
    *}
-  SDLK_LEFTBRACKET = '[';
-  SDLK_BACKSLASH = '\';
-  SDLK_RIGHTBRACKET = ']';
-  SDLK_CARET = '^';
-  SDLK_UNDERSCORE = '_';
-  SDLK_BACKQUOTE = '`';
-  SDLK_a = 'a';
-  SDLK_b = 'b';
-  SDLK_c = 'c';
-  SDLK_d = 'd';
-  SDLK_e = 'e';
-  SDLK_f = 'f';
-  SDLK_g = 'g';
-  SDLK_h = 'h';
-  SDLK_i = 'i';
-  SDLK_j = 'j';
-  SDLK_k = 'k';
-  SDLK_l = 'l';
-  SDLK_m = 'm';
-  SDLK_n = 'n';
-  SDLK_o = 'o';
-  SDLK_p = 'p';
-  SDLK_q = 'q';
-  SDLK_r = 'r';
-  SDLK_s = 's';
-  SDLK_t = 't';
-  SDLK_u = 'u';
-  SDLK_v = 'v';
-  SDLK_w = 'w';
-  SDLK_x = 'x';
-  SDLK_y = 'y';
-  SDLK_z = 'z';
+  SDLK_LEFTBRACKET = SInt32('[');
+  SDLK_BACKSLASH = SInt32('\');
+  SDLK_RIGHTBRACKET = SInt32(']');
+  SDLK_CARET = SInt32('^');
+  SDLK_UNDERSCORE = SInt32('_');
+  SDLK_BACKQUOTE = SInt32('`');
+  SDLK_a = SInt32('a');
+  SDLK_b = SInt32('b');
+  SDLK_c = SInt32('c');
+  SDLK_d = SInt32('d');
+  SDLK_e = SInt32('e');
+  SDLK_f = SInt32('f');
+  SDLK_g = SInt32('g');
+  SDLK_h = SInt32('h');
+  SDLK_i = SInt32('i');
+  SDLK_j = SInt32('j');
+  SDLK_k = SInt32('k');
+  SDLK_l = SInt32('l');
+  SDLK_m = SInt32('m');
+  SDLK_n = SInt32('n');
+  SDLK_o = SInt32('o');
+  SDLK_p = SInt32('p');
+  SDLK_q = SInt32('q');
+  SDLK_r = SInt32('r');
+  SDLK_s = SInt32('s');
+  SDLK_t = SInt32('t');
+  SDLK_u = SInt32('u');
+  SDLK_v = SInt32('v');
+  SDLK_w = SInt32('w');
+  SDLK_x = SInt32('x');
+  SDLK_y = SInt32('y');
+  SDLK_z = SInt32('z');
 
   SDLK_CAPSLOCK = SDL_SCANCODE_CAPSLOCK or SDLK_SCANCODE_MASK;
 
@@ -478,7 +477,7 @@ const
   SDLK_INSERT = SDL_SCANCODE_INSERT or SDLK_SCANCODE_MASK;
   SDLK_HOME = SDL_SCANCODE_HOME or SDLK_SCANCODE_MASK;
   SDLK_PAGEUP = SDL_SCANCODE_PAGEUP or SDLK_SCANCODE_MASK;
-  SDLK_DELETE = '\177';
+  SDLK_DELETE = SInt32(#127); // C: '\177'
   SDLK_END = SDL_SCANCODE_END or SDLK_SCANCODE_MASK;
   SDLK_PAGEDOWN = SDL_SCANCODE_PAGEDOWN or SDLK_SCANCODE_MASK;
   SDLK_RIGHT = SDL_SCANCODE_RIGHT or SDLK_SCANCODE_MASK;
@@ -657,7 +656,7 @@ type
   TSDL_KeyMod = Word;
 
 const
-  KMOD_CTRL	 = KMOD_LCTRL  or KMOD_RCTRL;
+  KMOD_CTRL  = KMOD_LCTRL  or KMOD_RCTRL;
   KMOD_SHIFT = KMOD_LSHIFT or KMOD_RSHIFT;
-  KMOD_ALT	 = KMOD_LALT   or KMOD_RALT;
-  KMOD_GUI	 = KMOD_LGUI   or KMOD_RGUI;
+  KMOD_ALT   = KMOD_LALT   or KMOD_RALT;
+  KMOD_GUI   = KMOD_LGUI   or KMOD_RGUI;
