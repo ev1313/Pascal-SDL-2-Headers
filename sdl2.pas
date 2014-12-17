@@ -225,6 +225,12 @@ begin
   Result := SDL_COMPILEDVERSION >= SDL_VERSIONNUM(X,Y,Z);
 end;
 
+//from "sdl_mouse.h"
+function SDL_Button(button: SInt32): SInt32;
+begin
+  Result := 1 shl (button - 1); 
+end;
+
 {$IFDEF WINDOWS}
 //from "sdl_thread.h"
 
