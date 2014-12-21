@@ -14,14 +14,6 @@ const
   SDL_RLEACCEL  = $00000002;  {**< Surface is RLE encoded *}
   SDL_DONTFREE  = $00000004;  {**< Surface is referenced internally *}
 
-  {*Surface flags*}
-
-  {**
-   *  Evaluates to true if the surface needs to be locked before access.
-   *}
-
-  //SDL_MUSTLOCK(S)	(((S)->flags & SDL_RLEACCEL) != 0)
-
 type
   {**
    *  A collection of pixels used in software blitting.
@@ -65,6 +57,9 @@ type
    *}
 
    TSDL_Blit = function(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32;
+
+// Evaluates to true if the surface needs to be locked before access.
+function SDL_MUSTLOCK(Const S:PSDL_Surface):Boolean;
 
   {**
    *  Allocate and free an RGB surface.
@@ -398,14 +393,18 @@ function SDL_FillRects(dst: PSDL_Surface; const rects: PSDL_Rect; count: SInt32;
    *  blitting works internally and how to use the other blit functions.
    *}
 
+(* SDL_surface.h uses #define to change all SDL_BlitSurface() calls into SDL_UpperBlit() calls.                         *
+ * Since Pascal macro support is very limited, we workaround by outright pointing SDL_BlitSurface() to SDL_UpperBlit(). *)
+function SDL_BlitSurface(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; 
+   external SDL_LibName name {$IF DEFINED(DELPHI) AND DEFINED(MACOS)} '_SDL_UpperBlit' {$ELSE} 'SDL_UpperBlit' {$ENDIF};
+
+
   {**
    *  This is the public blit function, SDL_BlitSurface(), and it performs
    *  rectangle validation and clipping before passing it to SDL_LowerBlit()
    *}
 
 function SDL_UpperBlit(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_UpperBlit' {$ENDIF} {$ENDIF};
-
-  //SDL_BlitSurface = SDL_UpperBlit;
 
   {**
    *  This is a semi-private blit function and it performs low-level surface
@@ -423,7 +422,10 @@ function SDL_LowerBlit(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface;
 
 function SDL_SoftStretch(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; const dstrect: PSDL_Surface): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SoftStretch' {$ENDIF} {$ENDIF};
 
-  //SDL_BlitScaled = SDL_UpperBlitScaled;
+(* SDL_surface.h uses #define to change all SDL_BlitSurfaceScaled() calls into SDL_UpperBlitScaled() calls.                         *
+ * Since Pascal macro support is very limited, we workaround by outright pointing SDL_BlitSurfaceScaled() to SDL_UpperBlitScaled(). *)
+function SDL_BlitSurfaceScaled(src: PSDL_Surface; const srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): SInt32 cdecl; 
+   external SDL_LibName name {$IF DEFINED(DELPHI) AND DEFINED(MACOS)} '_SDL_UpperBlitScaled' {$ELSE} 'SDL_UpperBlitScaled' {$ENDIF};
 
   {**
    *  This is the public scaled blit function, SDL_BlitScaled(), and it performs

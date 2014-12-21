@@ -34,12 +34,14 @@ type
    *}
 type
   PSDL_TextureAccess = ^TSDL_TextureAccess;
-  TSDL_TextureAccess = (
-                        SDL_TEXTUREACCESS_STATIC,    {**< Changes rarely, not lockable *}
-                        SDL_TEXTUREACCESS_STREAMING, {**< Changes frequently, lockable *}
-                        SDL_TEXTUREACCESS_TARGET     {**< Texture can be used as a render target *}
-                        );
+  TSDL_TextureAccess = SInt32;
 
+const
+  SDL_TEXTUREACCESS_STATIC    = 0; {**< Changes rarely, not lockable *}
+  SDL_TEXTUREACCESS_STREAMING = 1; {**< Changes frequently, lockable *}
+  SDL_TEXTUREACCESS_TARGET    = 2; {**< Texture can be used as a render target *}
+
+type
   {**
    *  The texture channel modulation used in SDL_RenderCopy().
    *}
