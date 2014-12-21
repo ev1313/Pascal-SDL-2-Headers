@@ -165,6 +165,8 @@ type
 
   function SDL_ShowCursor(toggle: SInt32): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_ShowCursor' {$ENDIF}{$ENDIF};
 
+  function SDL_Button(button: SInt32): SInt32; inline;
+
 const
   {**
    *  Used as a mask when testing buttons in buttonstate.
