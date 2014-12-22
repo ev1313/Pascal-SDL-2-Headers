@@ -365,6 +365,14 @@ begin
   Result := SDL_LoadBMP_RW(SDL_RWFromFile(_file, 'rb'), 1);
 end;
 
+{**
+ *  Evaluates to true if the surface needs to be locked before access.
+ *}
+function SDL_MUSTLOCK(Const S:PSDL_Surface):Boolean;
+begin
+  Result := ((S^.flags and SDL_RLEACCEL) <> 0)
+end;
+
 //from "sdl_video.h"
 function SDL_WindowPos_IsUndefined(X: Variant): Variant;
 begin
