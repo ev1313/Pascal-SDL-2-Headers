@@ -72,18 +72,21 @@ const
   {**
    *   Native audio byte ordering
    *}
-         {
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
-#define AUDIO_U16SYS    AUDIO_U16LSB
-#define AUDIO_S16SYS    AUDIO_S16LSB
-#define AUDIO_S32SYS    AUDIO_S32LSB
-#define AUDIO_F32SYS    AUDIO_F32LSB
-#else
-#define AUDIO_U16SYS    AUDIO_U16MSB
-#define AUDIO_S16SYS    AUDIO_S16MSB
-#define AUDIO_S32SYS    AUDIO_S32MSB
-#define AUDIO_F32SYS    AUDIO_F32MSB
-#endif}
+{$IFDEF FPC}
+   {$IF DEFINED(ENDIAN_LITTLE)}
+      AUDIO_U16SYS = AUDIO_U16LSB;
+      AUDIO_S16SYS = AUDIO_S16LSB;
+      AUDIO_S32SYS = AUDIO_S32LSB;
+      AUDIO_F32SYS = AUDIO_F32LSB;
+   {$ELSEIF DEFINED(ENDIAN_BIG)}
+      AUDIO_U16SYS = AUDIO_U16MSB;
+      AUDIO_S16SYS = AUDIO_S16MSB;
+      AUDIO_S32SYS = AUDIO_S32MSB;
+      AUDIO_F32SYS = AUDIO_F32MSB;
+   {$ELSE}
+      {$FATAL Cannot determine endianness.}
+   {$ENDIF}
+{$ENDIF}
 
   {**
    *   Allow change flags
@@ -96,7 +99,7 @@ const
   SDL_AUDIO_ALLOW_CHANNELS_CHANGE   = $00000004;
   SDL_AUDIO_ALLOW_ANY_CHANGE        = (SDL_AUDIO_ALLOW_FREQUENCY_CHANGE or
                                        SDL_AUDIO_ALLOW_FORMAT_CHANGE or
-									                     SDL_AUDIO_ALLOW_CHANNELS_CHANGE);
+                                                SDL_AUDIO_ALLOW_CHANNELS_CHANGE);
 
   {*Audio flags*}
 
@@ -138,17 +141,17 @@ type
    *  A structure to hold a set of audio conversion filters and buffers.
    *}
   TSDL_AudioCVT = record
-    needed: Integer;                    		  {**< Set to 1 if conversion possible *}
-    src_format: TSDL_AudioFormat; 		        {**< Source audio format *}
-    dst_format: TSDL_AudioFormat;		          {**< Target audio format *}
-    rate_incr: Double;          		          {**< Rate conversion increment *}
-    buf: PUInt8;                	    	      {**< Buffer to hold entire audio data *}
-    len: Integer;                    		      {**< Length of original audio buffer *}
-    len_cvt: Integer;               		      {**< Length of converted audio buffer *}
-    len_mult: Integer;              		      {**< buffer must be len*len_mult big *}
-    len_ratio: Double;          		          {**< Given len, final size is len*len_ratio *}
+    needed: Integer;                           {**< Set to 1 if conversion possible *}
+    src_format: TSDL_AudioFormat;              {**< Source audio format *}
+    dst_format: TSDL_AudioFormat;                {**< Target audio format *}
+    rate_incr: Double;                        {**< Rate conversion increment *}
+    buf: PUInt8;                             {**< Buffer to hold entire audio data *}
+    len: Integer;                               {**< Length of original audio buffer *}
+    len_cvt: Integer;                           {**< Length of converted audio buffer *}
+    len_mult: Integer;                          {**< buffer must be len*len_mult big *}
+    len_ratio: Double;                        {**< Given len, final size is len*len_ratio *}
     filters: array[0..9] of TSDL_AudioFilter; {**< Filter list *}
-    filter_index: Integer;           		      {**< Current audio conversion function *}
+    filter_index: Integer;                      {**< Current audio conversion function *}
   end;
 
 
@@ -283,7 +286,7 @@ function SDL_OpenAudioDevice(device: PAnsiChar;
                              iscapture: Integer;
                              desired: PSDL_AudioSpec;
                              obtained: PSDL_AudioSpec;
-						              	 allowed_changes: Integer): TSDL_AudioDeviceID cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_OpenAudioDevice' {$ENDIF} {$ENDIF};
+                                  allowed_changes: Integer): TSDL_AudioDeviceID cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_OpenAudioDevice' {$ENDIF} {$ENDIF};
 
   {**
    *   Audio state
