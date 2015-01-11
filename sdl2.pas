@@ -38,12 +38,14 @@ unit SDL2;
   "sdl_shape.h",
   "sdl_stdinc.h",
   "sdl_surface.h",
+  "sdl_system.h",
+  "sdl_syswm.h",
   "sdl_thread.h",
   "sdl_timer.h",
   "sdl_touch.h",
   "sdl_version.h",
   "sdl_video.h",
-  "sdltype_s.h"
+  "sdl_types.h"
 
   I will not translate:
   "sdl_opengl.h",
@@ -180,6 +182,7 @@ const
 {$I sdlshape.inc}
 {$I sdlvideo.inc}
 {$I sdlhints.inc}
+{$I sdlloadso.inc}
 {$I sdlmessagebox.inc}
 {$I sdlrenderer.inc}
 {$I sdlscancode.inc}
@@ -190,6 +193,7 @@ const
 {$I sdlhaptic.inc}
 {$I sdltouch.inc}
 {$I sdlgesture.inc}
+{$I sdlsyswm.inc}
 {$I sdlevents.inc}
 {$I sdlclipboard.inc}
 {$I sdlcpuinfo.inc}
@@ -363,6 +367,11 @@ end;
 function SDL_LoadBMP(_file: PAnsiChar): PSDL_Surface;
 begin
   Result := SDL_LoadBMP_RW(SDL_RWFromFile(_file, 'rb'), 1);
+end;
+
+function SDL_SaveBMP(Const surface:PSDL_Surface; Const filename:AnsiString):sInt32;
+begin
+   Result := SDL_SaveBMP_RW(surface, SDL_RWFromFile(PAnsiChar(filename), 'wb'), 1)
 end;
 
 {**
