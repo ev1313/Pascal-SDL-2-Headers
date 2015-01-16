@@ -114,14 +114,19 @@ const
 
   {* Good default values for a PC soundcard *}
 const
-  MIX_DEFAULT_FREQUENCY = 22050; {
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
-  MIX_DEFAULT_FORMAT = AUDIO_S16LSB;
-#else
-  MIX_DEFAULT_FORMAT = AUDIO_S16MSB
-#endif                            }
+  MIX_DEFAULT_FREQUENCY = 22050;
   MIX_DEFAULT_CHANNELS = 2;
   MIX_MAX_VOLUME       = 128; {* Volume of a chunk *}
+
+{$IFDEF FPC}
+   {$IF DEFINED(ENDIAN_LITTLE)}
+      MIX_DEFAULT_FORMAT = AUDIO_S16LSB;
+   {$ELSEIF DEFINED(ENDIAN_BIG)}
+      MIX_DEFAULT_FORMAT = AUDIO_S16MSB;
+   {$ELSE}
+      {$FATAL Unable to determine endianness.}
+   {$ENDIF}
+{$ENDIF}
 
   {* The internal format for an audio chunk *}
 type

@@ -148,10 +148,7 @@ function SDL_SaveBMP_RW(surface: PSDL_Surface; dst: PSDL_RWops; freedst: SInt32)
      *
      *  Convenience macro.
      *}
-  {
-  #define SDL_SaveBMP(surface, file) \
-      SDL_SaveBMP_RW(surface, SDL_RWFromFile(file, "wb"), 1)
-  }
+function SDL_SaveBMP(Const surface:PSDL_Surface; Const filename:AnsiString):sInt32;
 
   {**
    *  Sets the RLE acceleration hint for a surface.
