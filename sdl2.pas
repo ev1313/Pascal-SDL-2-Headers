@@ -139,6 +139,13 @@ interface
       X,
       XLib;
   {$ENDIF}
+  
+  {$IFDEF DARWIN}
+    uses
+      X,
+      XLib,
+      CocoaAll;
+  {$ENDIF}
 
 const
 
