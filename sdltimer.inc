@@ -32,7 +32,7 @@ procedure SDL_Delay(ms: UInt32) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IF
    *}
 
 type
-  TSDL_TimerCallback = function(interval: UInt32; param: Pointer): UInt32;
+  TSDL_TimerCallback = function(interval: UInt32; param: Pointer): UInt32; cdecl;
 
   {**
    * Definition of the timer ID type.
