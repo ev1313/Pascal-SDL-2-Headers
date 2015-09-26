@@ -37,12 +37,12 @@ const
  *  determined with SDL_GetVersion(), which, unlike SDL_VERSION(),
  *  is not a macro.
  *
- *   x A pointer to a SDL_version struct to initialize.
+ *  x   An instance on TSDL_Version to fill with version data.
  *
  *  SDL_version
  *  SDL_GetVersion
  *}
-procedure SDL_VERSION(x: PSDL_Version);
+procedure SDL_VERSION(Out x: TSDL_Version);
 
 {**
  *  This macro turns the version numbers into a numeric value:

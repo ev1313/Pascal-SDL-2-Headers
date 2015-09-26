@@ -67,12 +67,14 @@ type
    *}
 
   PPSDL_Renderer = ^PSDL_Renderer;
-  PSDL_Renderer = Pointer; //todo!
+  PSDL_Renderer = ^TSDL_Renderer;
+  TSDL_Renderer = record;
 
   {**
    *  An efficient driver-specific representation of pixel data
    *}
-  PSDL_Texture = Pointer; //todo!
+  PSDL_Texture = ^TSDL_Texture;
+  TSDL_Texture = record;
 
   {* Function prototypes *}
 

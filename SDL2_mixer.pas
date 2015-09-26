@@ -70,7 +70,7 @@ const
   {* This macro can be used to fill a version structure with the compile-time
    * version of the SDL_mixer library.
    *}
-procedure SDL_MIXER_VERSION(X: PSDL_Version);
+procedure SDL_MIXER_VERSION(Out X: TSDL_Version);
 
   {* Backwards compatibility *}
 const
@@ -78,7 +78,7 @@ const
   MIX_MINOR_VERSION = SDL_MIXER_MINOR_VERSION;
   MIX_PATCHLEVEL    = SDL_MIXER_PATCHLEVEL;
 
-procedure MIX_VERSION(X: PSDL_Version);
+procedure MIX_VERSION(Out X: TSDL_Version);
 
   {* This function gets the version of the dynamically linked SDL_mixer library.
      it should NOT be used to fill a version structure, instead you should
@@ -651,19 +651,19 @@ function Mix_GetChunk(channel: Integer): PMix_Chunk cdecl; external MIX_LibName 
 procedure Mix_CloseAudio cdecl; external MIX_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_MIX_CloseAudio' {$ENDIF} {$ENDIF};
 
 {* We'll use SDL for reporting errors *}
-function Mix_SetError(const fmt: PAnsiChar): SInt32;
-function Mix_GetError: PAnsiChar;
+function Mix_SetError(const fmt: PAnsiChar): SInt32; cdecl;
+function Mix_GetError: PAnsiChar; cdecl;
 
 implementation
 
-procedure SDL_MIXER_VERSION(X: PSDL_Version);
+procedure SDL_MIXER_VERSION(Out X: TSDL_Version);
 begin
   X.major := SDL_MIXER_MAJOR_VERSION;
   X.minor := SDL_MIXER_MINOR_VERSION;
   X.patch := SDL_MIXER_PATCHLEVEL;
 end;
 
-procedure MIX_VERSION(X: PSDL_Version);
+procedure MIX_VERSION(Out X: TSDL_Version);
 begin
   SDL_MIXER_VERSION(X);
 end;
@@ -683,14 +683,14 @@ begin
   Result := Mix_LoadWAV_RW(SDL_RWFromFile(_file, 'rb'), 1);
 end;
 
-function Mix_SetError(const fmt: PAnsiChar): SInt32;
+function Mix_SetError(const fmt: PAnsiChar): SInt32; cdecl;
 begin
   Result := SDL_SetError(fmt);
 end;
 
-function Mix_GetError: PAnsiChar;
+function Mix_GetError: PAnsiChar; cdecl;
 begin
-  Result := SDL_GetError;
+  Result := SDL_GetError();
 end;
 
 end.
