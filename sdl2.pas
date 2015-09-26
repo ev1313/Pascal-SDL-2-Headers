@@ -212,11 +212,11 @@ const
 implementation
 
 //from "sdl_version.h"
-procedure SDL_VERSION(x: PSDL_Version);
+procedure SDL_VERSION(Out x: TSDL_Version);
 begin
-  x^.major := SDL_MAJOR_VERSION;
-  x^.minor := SDL_MINOR_VERSION;
-  x^.patch := SDL_PATCHLEVEL;
+  x.major := SDL_MAJOR_VERSION;
+  x.minor := SDL_MINOR_VERSION;
+  x.patch := SDL_PATCHLEVEL;
 end;
 
 function SDL_VERSIONNUM(X,Y,Z: UInt32): Cardinal;

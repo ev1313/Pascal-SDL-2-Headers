@@ -22,7 +22,8 @@
       3. This notice may not be removed or altered from any source distribution.
     *}
     unit SDL2_net;
-     
+    
+    {$INCLUDE jedi.inc}
      
     interface
      
@@ -65,7 +66,7 @@
       {* This macro can be used to fill a version structure with the compile-time
        * version of the SDL_net library.
        *}
-    procedure SDL_NET_VERSION(var X: TSDL_Version);
+    procedure SDL_NET_VERSION(Out X: TSDL_Version);
      
       {* This function gets the version of the dynamically linked SDL_net library.
          it should NOT be used to fill a version structure, instead you should
@@ -340,8 +341,8 @@
     {* Error reporting functions                                           *}
     {***********************************************************************}
      
-    procedure SDLNet_SetError(const fmt: PAnsiChar); inline;
-    function SDLNet_GetError(): PAnsiChar; inline;
+    procedure SDLNet_SetError(const fmt: PAnsiChar); cdecl;
+    function SDLNet_GetError(): PAnsiChar; cdecl;
      
     {***********************************************************************}
     {* Inline functions to read/write network data                         *}
@@ -358,7 +359,7 @@
      
     implementation
      
-    procedure SDL_NET_VERSION(var X: TSDL_Version);
+    procedure SDL_NET_VERSION(Out X: TSDL_Version);
     begin
       X.major := SDL_NET_MAJOR_VERSION;
       X.minor := SDL_NET_MINOR_VERSION;
@@ -392,14 +393,14 @@
       Result := sock.ready;
     end;
      
-    procedure SDLNet_SetError(const fmt: PAnsiChar);
+    procedure SDLNet_SetError(const fmt: PAnsiChar); cdecl;
     begin
       SDL_SetError(fmt);
     end;
      
-    function SDLNet_GetError(): PAnsiChar;
+    function SDLNet_GetError(): PAnsiChar; cdecl;
     begin
-      Result := SDL_GetError;
+      Result := SDL_GetError();
     end;
      
     (*

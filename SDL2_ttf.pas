@@ -74,6 +74,8 @@ const
   SDL_TTF_MINOR_VERSION = 0;
   SDL_TTF_PATCHLEVEL    = 12;
 
+Procedure SDL_TTF_VERSION(Out X:TSDL_Version);
+
 {* Backwards compatibility *}
 const
   TTF_MAJOR_VERSION = SDL_TTF_MAJOR_VERSION;
@@ -263,19 +265,26 @@ function TTF_WasInit: Boolean cdecl; external TTF_LibName {$IFDEF DELPHI} {$IFDE
 function TTF_GetFontKerningSize(font: PTTF_Font; prev_index, index: Integer): Integer cdecl; external TTF_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_TTF_GetFontKerningSize' {$ENDIF} {$ENDIF};
 
 {* We'll use SDL for reporting errors *}
-function TTF_SetError(const fmt: PAnsiChar): SInt32;
-function TTF_GetError: PAnsiChar;
+function TTF_SetError(const fmt: PAnsiChar): SInt32; cdecl;
+function TTF_GetError: PAnsiChar; cdecl;
 
 implementation
 
-function TTF_SetError(const fmt: PAnsiChar): SInt32;
+Procedure SDL_TTF_VERSION(Out X:TSDL_Version);
+begin
+  x.major := SDL_TTF_MAJOR_VERSION;
+  x.minor := SDL_TTF_MINOR_VERSION;
+  x.patch := SDL_TTF_PATCHLEVEL;
+end;
+
+function TTF_SetError(const fmt: PAnsiChar): SInt32; cdecl;
 begin
   Result := SDL_SetError(fmt);
 end;
 
-function TTF_GetError: PAnsiChar;
+function TTF_GetError: PAnsiChar; cdecl;
 begin
-  Result := SDL_GetError;
+  Result := SDL_GetError();
 end;
 
 function TTF_RenderText(font: PTTF_Font; text: PAnsiChar; fg, bg: TSDL_Color): PSDL_Surface;

@@ -76,7 +76,7 @@ const
    * version of the SDL_image library.
    *}
 
-procedure SDL_IMAGE_VERSION(var X: TSDL_Version);
+procedure SDL_IMAGE_VERSION(Out X: TSDL_Version);
 
   {* This function gets the version of the dynamically linked SDL_image library.
    * 
@@ -163,26 +163,26 @@ function IMG_SavePNG(surface: PSDL_Surface; const _file: PAnsiChar): SInt32 cdec
 function IMG_SavePNG_RW(surface: PSDL_Surface; dst: PSDL_RWops; freedst: SInt32): SInt32 cdecl; external IMG_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_IMG_SavePNG_RW' {$ENDIF} {$ENDIF};
 
 {* We'll use SDL for reporting errors *}
-function IMG_SetError(fmt: PAnsiChar): SInt32;
-function IMG_GetError: PAnsiChar;
+function IMG_SetError(fmt: PAnsiChar): SInt32; cdecl;
+function IMG_GetError: PAnsiChar; cdecl;
 
 implementation
 
-procedure SDL_IMAGE_VERSION(var X: TSDL_Version);
+procedure SDL_IMAGE_VERSION(Out X: TSDL_Version);
 begin
   X.major := SDL_IMAGE_MAJOR_VERSION;
   X.minor := SDL_IMAGE_MINOR_VERSION;
   X.patch := SDL_IMAGE_PATCHLEVEL;
 end;
 
-function IMG_SetError(fmt: PAnsiChar): SInt32;
+function IMG_SetError(fmt: PAnsiChar): SInt32; cdecl;
 begin
   Result := SDL_SetError(fmt);
 end;
 
-function IMG_GetError: PAnsiChar;
+function IMG_GetError: PAnsiChar; cdecl;
 begin
-  Result := SDL_GetError;
+  Result := SDL_GetError();
 end;
 
 end.
