@@ -85,7 +85,7 @@ const
       AUDIO_F32SYS = AUDIO_F32MSB;
    {$ELSE}
       {$FATAL Cannot determine endianness.}
-   {$ENDIF}
+   {$IFEND}
 {$ENDIF}
 
   {**
