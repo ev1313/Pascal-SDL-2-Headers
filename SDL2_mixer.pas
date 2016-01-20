@@ -125,7 +125,7 @@ const
       MIX_DEFAULT_FORMAT = AUDIO_S16MSB;
    {$ELSE}
       {$FATAL Unable to determine endianness.}
-   {$ENDIF}
+   {$IFEND}
 {$ENDIF}
 
   {* The internal format for an audio chunk *}
