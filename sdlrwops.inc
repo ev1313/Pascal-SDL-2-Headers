@@ -147,12 +147,12 @@ const
    *  Macros to easily read and write from an SDL_RWops structure.
    *}
 
-  function SDL_RWsize(ctx: PSDL_RWops): SInt64; inline;
-  function SDL_RWseek(ctx: PSDL_RWops; offset: SInt64; whence: SInt32): SInt64; inline;
-  function SDL_RWtell(ctx: PSDL_RWops): SInt64; inline;
-  function SDL_RWread(ctx: PSDL_RWops; ptr: Pointer; size: size_t; n: size_t): size_t; inline;
-  function SDL_RWwrite(ctx: PSDL_RWops; ptr: Pointer; size: size_t; n: size_t): size_t; inline;
-  function SDL_RWclose(ctx: PSDL_RWops): SInt32; inline;
+  function SDL_RWsize(ctx: PSDL_RWops): SInt64; {$IFNDEF DELPHI} inline; {$ELSE} {$IFDEF DELPHI10UP} inline; {$ENDIF} {$ENDIF}
+  function SDL_RWseek(ctx: PSDL_RWops; offset: SInt64; whence: SInt32): SInt64; {$IFNDEF DELPHI} inline; {$ELSE} {$IFDEF DELPHI10UP} inline; {$ENDIF} {$ENDIF}
+  function SDL_RWtell(ctx: PSDL_RWops): SInt64; {$IFNDEF DELPHI} inline; {$ELSE} {$IFDEF DELPHI10UP} inline; {$ENDIF} {$ENDIF}
+  function SDL_RWread(ctx: PSDL_RWops; ptr: Pointer; size: size_t; n: size_t): size_t; {$IFNDEF DELPHI} inline; {$ELSE} {$IFDEF DELPHI10UP} inline; {$ENDIF} {$ENDIF}
+  function SDL_RWwrite(ctx: PSDL_RWops; ptr: Pointer; size: size_t; n: size_t): size_t; {$IFNDEF DELPHI} inline; {$ELSE} {$IFDEF DELPHI10UP} inline; {$ENDIF} {$ENDIF}
+  function SDL_RWclose(ctx: PSDL_RWops): SInt32; {$IFNDEF DELPHI} inline; {$ELSE} {$IFDEF DELPHI10UP} inline; {$ENDIF} {$ENDIF}
   { Read/write macros }
 
 

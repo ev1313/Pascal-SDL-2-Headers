@@ -24,7 +24,7 @@ Function SDL_RenderGetD3D9Device(renderer:PSDL_Renderer):PIDirect3DDevice9;
 Procedure SDL_DXGIGetOutputInfo(displayIndex :SInt32; adapterIndex, outputIndex :PSInt32);
    cdecl; external SDL_LibName;
 
-{$ENDIF} 
+{$IFEND}
 
 
 (* Platform specific functions for WinRT *)

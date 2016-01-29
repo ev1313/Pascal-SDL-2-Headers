@@ -88,6 +88,7 @@ unit SDL2;
 {
   Changelog:
   ----------
+               ?          ?: Delphi 6+ bugfixes/compatibility. Thx to Peter Karpov for identifiying and testing.
   v.1.80-stable; 09.10.2014: added sdl_cpuinfo.h and sdl_clipboard.h
   v.1.74-stable; 10.11.2013: added sdl_gamecontroller.h
   v.1.73-stable; 08.11.2013: added sdl_hints.h and some keystate helpers
