@@ -590,9 +590,9 @@ type
 type
   PSDL_EventFilter = ^TSDL_EventFilter;
   {$IFNDEF GPC}
-    TSDL_EventFilter = function( event: PSDL_Event ): Integer; cdecl;
+    TSDL_EventFilter = function( userdata: Pointer; event: PSDL_Event ): Integer; cdecl;
   {$ELSE}
-    TSDL_EventFilter = function( event: PSDL_Event ): Integer;
+    TSDL_EventFilter = function( userdata: Pointer; event: PSDL_Event ): Integer;
   {$ENDIF}
 
   {**
@@ -623,7 +623,7 @@ type
    *  If there is no event filter set, this function returns SDL_FALSE.
    *}
 
-  function SDL_GetEventFilter(filter: PSDL_EventFilter; userdata: Pointer): TSDL_Bool cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetEventFilter' {$ENDIF} {$ENDIF};
+  function SDL_GetEventFilter(var filter: PSDL_EventFilter; var userdata: PPointer): TSDL_Bool cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetEventFilter' {$ENDIF} {$ENDIF};
 
   {**
    *  Add a function which is called when an event is added to the queue.
