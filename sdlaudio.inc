@@ -115,7 +115,7 @@ const
    *  Stereo samples are stored in a LRLRLR ordering.
    *}
 type
-  TSDL_AudioCallback = procedure(userdata: Pointer; stream: PUInt8; len: Integer);
+  TSDL_AudioCallback = procedure(userdata: Pointer; stream: PUInt8; len: Integer) cdecl;
 
   {**
    *  The calculated values in this structure are calculated by SDL_OpenAudio().
@@ -135,7 +135,7 @@ type
   end;
 
   PSDL_AudioCVT = ^TSDL_AudioCVT;
-  TSDL_AudioFilter = procedure(cvt: PSDL_AudioCVT; format: TSDL_AudioFormat);
+  TSDL_AudioFilter = procedure(cvt: PSDL_AudioCVT; format: TSDL_AudioFormat) cdecl;
 
   {**
    *  A structure to hold a set of audio conversion filters and buffers.
