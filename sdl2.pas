@@ -341,29 +341,29 @@ end;
 
 //from "sdl_pixels.h"
 
-function SDL_PIXELFLAG(X: Cardinal): Boolean;
+function SDL_PIXELFLAG(X: Cardinal): Cardinal;
 begin
-  Result := (X shr 28) = $0F;
+  Result := (X shr 28) and $0F;
 end;
 
-function SDL_PIXELTYPE(X: Cardinal): Boolean;
+function SDL_PIXELTYPE(X: Cardinal): Cardinal;
 begin
-  Result := (X shr 24) = $0F;
+  Result := (X shr 24) and $0F;
 end;
 
-function SDL_PIXELORDER(X: Cardinal): Boolean;
+function SDL_PIXELORDER(X: Cardinal): Cardinal;
 begin
-  Result := (X shr 20) = $0F;
+  Result := (X shr 20) and $0F;
 end;
 
-function SDL_PIXELLAYOUT(X: Cardinal): Boolean;
+function SDL_PIXELLAYOUT(X: Cardinal): Cardinal;
 begin
-  Result := (X shr 16) = $0F;
+  Result := (X shr 16) and $0F;
 end;
 
-function SDL_BITSPERPIXEL(X: Cardinal): Boolean;
+function SDL_BITSPERPIXEL(X: Cardinal): Cardinal;
 begin
-  Result := (X shr 8) = $FF;
+  Result := (X shr 8) and $FF;
 end;
 
 function SDL_IsPixelFormat_FOURCC(format: Variant): Boolean;
