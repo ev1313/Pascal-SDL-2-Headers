@@ -265,6 +265,14 @@ begin
   Result := (A.x = B.x) and (A.y = B.y) and (A.w = B.w) and (A.h = B.h);
 end;
 
+function SDL_PointInRect(const p: PSDL_Point; const r: PSDL_Rect): Boolean; Inline;
+begin
+  Result := 
+    (p^.x >= r^.x) and (p^.x < (r^.x + r^.w)) 
+    and 
+    (p^.y >= r^.y) and (p^.y < (r^.y + r^.h))
+end;
+
 //from "sdl_rwops.h"
 
 function SDL_RWsize(ctx: PSDL_RWops): SInt64;
