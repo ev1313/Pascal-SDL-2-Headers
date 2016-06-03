@@ -332,7 +332,7 @@
          socket that was in the socket set, to find out if data is available
          for reading.
        *}
-    function SDLNet_SocketReady(sock: TSDLNet_GenericSocket): Integer; {$IFNDEF DELPHI} inline; {$ELSE} {$IFDEF DELPHI10UP} inline; {$ENDIF} {$ENDIF};
+    function SDLNet_SocketReady(sock: TSDLNet_GenericSocket): Integer; {$IFNDEF DELPHI} inline; {$ELSE} {$IFDEF DELPHI10UP} inline; {$ENDIF} {$ENDIF}
      
       {* Free a set of sockets allocated by SDL_NetAllocSocketSet() *}
     procedure SDLNet_FreeSocketSet(set_: TSDLNet_SocketSet) cdecl; external SDLNet_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDLNet_FreeSocketSet' {$ENDIF} {$ENDIF};
