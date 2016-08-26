@@ -1,4 +1,4 @@
-//from "sdl_video.h"
+//from "sdl_video.h" and "sdl_sysvideo.h"
 
   {**
    *  The structure that defines a display mode
@@ -57,6 +57,7 @@
     min_w, min_h: SInt32;
     max_w, max_h: SInt32;
     flags: UInt32;
+    last_fullscreen_flags: UInt32;
 
     {* Stored position and size for windowed mode * }
     windowed: TSDL_Rect;
