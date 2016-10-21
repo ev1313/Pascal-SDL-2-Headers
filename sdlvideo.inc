@@ -422,6 +422,26 @@ function SDL_GetDisplayDPI(displayIndex: SInt32; ddpi, hdpi, vdpi: PSingle): SIn
   external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetDisplayDPI' {$ENDIF} {$ENDIF}; 
 
   {**
+   *  \brief Get the usable desktop area represented by a display, with the
+   *         primary display located at 0,0
+   *
+   *  This is the same area as SDL_GetDisplayBounds() reports, but with portions
+   *  reserved by the system removed. For example, on Mac OS X, this subtracts
+   *  the area occupied by the menu bar and dock.
+   *
+   *  Setting a window to be fullscreen generally bypasses these unusable areas,
+   *  so these are good guidelines for the maximum space available to a
+   *  non-fullscreen window.
+   *
+   *  \return 0 on success, or -1 if the index is out of range.
+   *
+   *  \sa SDL_GetDisplayBounds()
+   *  \sa SDL_GetNumVideoDisplays()
+   *}
+function SDL_GetDisplayUsableBounds(displayIndex: sInt32; rect: PSDL_Rect):sInt32; cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetDisplayUsableBounds' {$ENDIF} {$ENDIF}; 
+
+  {**
    *  Returns the number of available display modes.
    *
    *  SDL_GetDisplayMode()
@@ -676,7 +696,25 @@ procedure SDL_SetWindowSize(window: PSDL_Window; w: SInt32; h: SInt32) cdecl; ex
    *}
 
 procedure SDL_GetWindowSize(window: PSDL_Window; w: PInt; h: PInt) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetWindowSize' {$ENDIF} {$ENDIF};
-    
+
+  {**
+   *  \brief Get the size of a window's borders (decorations) around the client area.
+   *
+   *  \param window The window to query.
+   *  \param top Pointer to variable for storing the size of the top border. NULL is permitted.
+   *  \param left Pointer to variable for storing the size of the left border. NULL is permitted.
+   *  \param bottom Pointer to variable for storing the size of the bottom border. NULL is permitted.
+   *  \param right Pointer to variable for storing the size of the right border. NULL is permitted.
+   *
+   *  \return 0 on success, or -1 if getting this information is not supported.
+   *
+   *  \note if this function fails (returns -1), the size values will be
+   *        initialized to 0, 0, 0, 0 (if a non-NULL pointer is provided), as
+   *        if the window in question was borderless.
+   *}
+function SDL_GetWindowBordersSize(window: PSDL_Window; top, left, bottom, right: PsInt32):sInt32; cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetWindowBordersSize' {$ENDIF} {$ENDIF};
+
   {**
    *  Set the minimum size of a window's client area.
    *  
@@ -747,6 +785,23 @@ procedure SDL_GetWindowMaximumSize(window: PSDL_Window; w: PInt; h: PInt) cdecl;
    *}
 
 procedure SDL_SetWindowBordered(window: PSDL_Window; bordered: TSDL_Bool) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetWindowBordered' {$ENDIF} {$ENDIF};
+
+  {**
+   *  \brief Set the user-resizable state of a window.
+   *
+   *  This will add or remove the window's SDL_WINDOW_RESIZABLE flag and
+   *  allow/disallow user resizing of the window. This is a no-op if the
+   *  window's resizable state already matches the requested state.
+   *
+   *  \param window The window of which to change the resizable state.
+   *  \param resizable SDL_TRUE to allow resizing, SDL_FALSE to disallow.
+   *
+   *  \note You can't change the resizable state of a fullscreen window.
+   *
+   *  \sa SDL_GetWindowFlags()
+   *}
+procedure SDL_SetWindowResizable(window: PSDL_Window; resizable: TSDL_Bool); cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetWindowResizable' {$ENDIF} {$ENDIF};
 
   {**
    *  Show a window.
@@ -894,6 +949,62 @@ function SDL_SetWindowBrightness(window: PSDL_Window; brightness: Float): SInt32
    *}
 
 function SDL_GetWindowBrightness(window: PSDL_Window): Float cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetWindowBrightness' {$ENDIF} {$ENDIF};
+
+  {**
+   *  \brief Set the opacity for a window
+   *
+   *  \param window The window which will be made transparent or opaque
+   *  \param opacity Opacity (0.0f - transparent, 1.0f - opaque) This will be
+   *                 clamped internally between 0.0f and 1.0f.
+   * 
+   *  \return 0 on success, or -1 if setting the opacity isn't supported.
+   *
+   *  \sa SDL_GetWindowOpacity()
+   *}
+function SDL_SetWindowOpacity(window: PSDL_Window; opacity: Float):sInt32; cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetWindowOpacity' {$ENDIF} {$ENDIF};
+
+  {**
+   *  \brief Get the opacity of a window.
+   *
+   *  If transparency isn't supported on this platform, opacity will be reported
+   *  as 1.0f without error.
+   *
+   *  \param window The window in question.
+   *  \param out_opacity Opacity (0.0f - transparent, 1.0f - opaque)
+   *
+   *  \return 0 on success, or -1 on error (invalid window, etc).
+   *
+   *  \sa SDL_SetWindowOpacity()
+   *}
+function SDL_GetWindowOpacity(window: PSDL_Window; out_opacity: PFloat):sInt32; cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GetWindowOpacity' {$ENDIF} {$ENDIF};
+
+  {** 
+   *  \brief Sets the window as a modal for another window
+   *
+   *  \param modal_window The window that should be modal
+   *  \param parent_window The parent window
+   * 
+   *  \return 0 on success, or -1 otherwise.
+   *}
+function SDL_SetWindowModalFor(modal_window, parent_window: PSDL_Window):sInt32; cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetWindowModalFor' {$ENDIF} {$ENDIF};
+
+  {**
+   *  \brief Explicitly sets input focus to the window.
+   *
+   *  You almost certainly want SDL_RaiseWindow() instead of this function. Use
+   *  this with caution, as you might give focus to a window that's completely
+   *  obscured by other windows.
+   *
+   *  \param window The window that should get the input focus
+   * 
+   *  \return 0 on success, or -1 otherwise.
+   *  \sa SDL_RaiseWindow()
+   *}
+function SDL_SetWindowInputFocus(window: PSDL_Window):sInt32; cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_SetWindowInputFocus' {$ENDIF} {$ENDIF};
 
   {**
    *  Set the gamma ramp for a window.
