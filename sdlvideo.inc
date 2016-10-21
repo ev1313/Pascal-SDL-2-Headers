@@ -192,6 +192,11 @@ const
   SDL_WINDOW_FULLSCREEN_DESKTOP = SDL_WINDOW_FULLSCREEN or $00001000;
   SDL_WINDOW_FOREIGN = $00000800;            {**< window not created by SDL *}
   SDL_WINDOW_ALLOW_HIGHDPI = $00002000;      {**< window should be created in high-DPI mode if supported *}
+  SDL_WINDOW_ALWAYS_ON_TOP = $00008000;      {**< window should always be above others *}
+  SDL_WINDOW_SKIP_TASKBAR  = $00010000;      {**< window should not be added to the taskbar *}
+  SDL_WINDOW_UTILITY       = $00020000;      {**< window should be treated as a utility window *}
+  SDL_WINDOW_TOOLTIP       = $00040000;      {**< window should be treated as a tooltip *}
+  SDL_WINDOW_POPUP_MENU    = $00080000;      {**< window should be treated as a popup menu *}
 
 type
   TSDL_WindowFlags = DWord;
@@ -234,6 +239,8 @@ const
   SDL_WINDOWEVENT_FOCUS_GAINED = 12;   {**< Window has gained keyboard focus *}
   SDL_WINDOWEVENT_FOCUS_LOST = 13;     {**< Window has lost keyboard focus *}
   SDL_WINDOWEVENT_CLOSE = 14;          {**< The window manager requests that the window be closed *}
+  SDL_WINDOWEVENT_TAKE_FOCUS = 15;     {**< Window is being offered a focus (should SetWindowInputFocus() on itself or a subwindow, or ignore) *}
+  SDL_WINDOWEVENT_HIT_TEST = 16;       {**< Window had a hit test that wasn't SDL_HITTEST_NORMAL. *}
 
 type
   TSDL_WindowEventID = DWord;
@@ -273,6 +280,7 @@ const
   SDL_GL_CONTEXT_PROFILE_MASK = 21;
   SDL_GL_SHARE_WITH_CURRENT_CONTEXT = 22;
   SDL_GL_FRAMEBUFFER_SRGB_CAPABLE = 23;
+  SDL_GL_CONTEXT_RELEASE_BEHAVIOR = 24;
 
 type
   TSDL_GLattr = DWord;
@@ -293,6 +301,13 @@ const
 
 type
   TSDL_GLcontextFlag = DWord;
+
+const
+  SDL_GL_CONTEXT_RELEASE_BEHAVIOR_NONE   = $0000;
+  SDL_GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH  = $0001;
+
+type
+  TSDL_GLcontextReleaseFlag = DWord;
 
   {**
    *  \brief Possible return values from the SDL_HitTest callback.
