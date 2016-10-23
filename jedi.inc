@@ -393,7 +393,7 @@
    {$DEFINE HAS_TYPES}
 {$ENDIF ver270}
 
-{$IFDEF DELPHI}	  
+{$IFNDEF FPC}	  
 {$IF CompilerVersion > 27}
    {$DEFINE Delphi}      {Delphi / C++ Builder}
    {$DEFINE Delphi4UP}
