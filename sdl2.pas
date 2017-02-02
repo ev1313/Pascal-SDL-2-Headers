@@ -136,17 +136,13 @@ interface
       Windows;
   {$ENDIF}
 
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
     uses
+      {$IFDEF DARWIN}
+      CocoaAll,
+      {$ENDIF}
       X,
       XLib;
-  {$ENDIF}
-  
-  {$IFDEF DARWIN}
-    uses
-      X,
-      XLib,
-      CocoaAll;
   {$ENDIF}
 
 const
