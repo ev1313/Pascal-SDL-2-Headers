@@ -120,7 +120,7 @@ Type
 {$IFDEF SDL_VIDEO_DRIVER_X11}
    __WMINFO_X11 = record
       display: PDisplay;  {**< The X11 display *}
-      window: TWindow;     {**< The X11 window *}
+      window:  TWindow;   {**< The X11 window *}
    end;
 {$ENDIF}
 {$IFDEF SDL_VIDEO_DRIVER_DIRECTFB}
@@ -158,14 +158,14 @@ Type
 {$ENDIF}
 {$IFDEF SDL_VIDEO_DRIVER_ANDROID}
    __WMINFO_ANDROID = record
-      window : PANativeWindow;
+      window:  PANativeWindow;
       surface: PEGLSurface;
    end;
 {$ENDIF}
 {$IFDEF SDL_VIDEO_DRIVER_VIVANTE}
    __WMINFO_VIVANTE = record
-      display : EGLNativeDisplayType;
-      window: EGLNativeWindowType;
+      display: EGLNativeDisplayType;
+      window:  EGLNativeWindowType;
    end;
 {$ENDIF}
 
