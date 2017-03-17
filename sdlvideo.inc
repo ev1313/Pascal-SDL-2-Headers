@@ -1222,6 +1222,25 @@ function SDL_GL_GetCurrentWindow: PSDL_Window cdecl; external SDL_LibName {$IFDE
 function SDL_GL_GetCurrentContext: TSDL_GLContext cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GL_GetCurrentContext' {$ENDIF} {$ENDIF};
 
   {**
+   *  Get the size of a window's underlying drawable in pixels (for use
+   *  with glViewport).
+   *
+   *  window   Window from which the drawable size should be queried
+   *  w        Pointer to variable for storing the width in pixels, may be NULL
+   *  h        Pointer to variable for storing the height in pixels, may be NULL
+   *
+   * This may differ from SDL_GetWindowSize() if we're rendering to a high-DPI
+   * drawable, i.e. the window was created with SDL_WINDOW_ALLOW_HIGHDPI on a
+   * platform with high-DPI support (Apple calls this "Retina"), and not disabled
+   * by the SDL_HINT_VIDEO_HIGHDPI_DISABLED hint.
+   *
+   *  SDL_GetWindowSize()
+   *  SDL_CreateWindow()
+   *}
+   
+procedure SDL_GL_GetDrawableSize(window: PSDL_Window; w: PInt; h: PInt); cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GL_GetDrawableSize' {$ENDIF} {$ENDIF};
+
+  {**
    *  Set the swap interval for the current OpenGL context.
    *  
    *  interval 0 for immediate updates, 1 for updates synchronized with the
