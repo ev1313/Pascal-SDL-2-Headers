@@ -251,17 +251,17 @@ end;
 {$ENDIF}
 
 //from "sdl_rect.h"
-function SDL_RectEmpty(X: TSDL_Rect): Boolean;
+function SDL_RectEmpty(const r: PSDL_Rect): Boolean;
 begin
-  Result := (X.w <= 0) or (X.h <= 0);
+  Result := (r^.w <= 0) or (r^.h <= 0);
 end;
 
-function SDL_RectEquals(A: TSDL_Rect; B: TSDL_Rect): Boolean;
+function SDL_RectEquals(const a, b: PSDL_Rect): Boolean;
 begin
-  Result := (A.x = B.x) and (A.y = B.y) and (A.w = B.w) and (A.h = B.h);
+  Result := (a^.x = b^.x) and (a^.y = b^.y) and (a^.w = b^.w) and (a^.h = b^.h);
 end;
 
-function SDL_PointInRect(const p: PSDL_Point; const r: PSDL_Rect): Boolean; Inline;
+function SDL_PointInRect(const p: PSDL_Point; const r: PSDL_Rect): Boolean;
 begin
   Result := 
     (p^.x >= r^.x) and (p^.x < (r^.x + r^.w)) 
