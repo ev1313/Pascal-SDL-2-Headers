@@ -1,4 +1,4 @@
-unit SDL2_image;
+unit sdl2_image;
 
 {*
   SDL_image:  An example image loading library for use with SDL

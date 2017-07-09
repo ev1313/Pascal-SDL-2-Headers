@@ -1,4 +1,4 @@
-unit SDL2_mixer;
+unit sdl2_mixer;
 
 {*
   SDL_mixer:  An audio mixer library based on the SDL library

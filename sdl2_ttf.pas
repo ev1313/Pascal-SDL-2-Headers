@@ -1,4 +1,4 @@
-unit SDL2_ttf;
+unit sdl2_ttf;
 
 {*
   SDL_ttf:  A companion library to SDL for working with TrueType (tm) fonts

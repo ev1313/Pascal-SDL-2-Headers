@@ -1,4 +1,4 @@
-unit SDL2_gfx;
+unit sdl2_gfx;
 
 (*
 

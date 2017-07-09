@@ -1,4 +1,4 @@
-unit SDL2;
+unit sdl2;
 
 {
   Simple DirectMedia Layer
