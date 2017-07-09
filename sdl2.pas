@@ -5,7 +5,7 @@ unit sdl2;
   Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
 
   Pascal-Header-Conversion
-  Copyright (C) 2012-2014 Tim Blume aka End/EV1313
+  Copyright (C) 2012-2017 Tim Blume aka End/EV1313
 
   SDL.pas is based on the files:
   "sdl.h",
@@ -55,6 +55,8 @@ unit sdl2;
   cause there's a much better OpenGL-Header avaible at delphigl.com:
 
   the dglopengl.pas
+
+  You'll find it nowadays here: https://github.com/SaschaWillems/dglOpenGL
 
   Parts of the SDL.pas are from the SDL-1.2-Headerconversion from the JEDI-Team,
   written by Domenique Louis and others.

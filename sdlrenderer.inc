@@ -55,13 +55,12 @@ type
   {**
    *  Flip constants for SDL_RenderCopyEx
    *}
-type
-  PSDL_RendererFlip = ^TSDL_RendererFlip;
-  TSDL_RendererFlip = (SDL_FLIP_NONE,       {**< Do not flip *}
-                       SDL_FLIP_HORIZONTAL, {**< flip horizontally *}
-                       SDL_FLIP_VERTICAL    {**< flip vertically *}
-                       );
+const
+  S DL_FLIP_NONE       = $0; {**< Do not flip *}
+  SDL_FLIP_HORIZONTAL = $1; {**< flip horizontally *}
+  SDL_FLIP_VERTICAL   = $2; {**< flip vertically *}
 
+type
   {**
    *  A structure representing rendering state
    *}
