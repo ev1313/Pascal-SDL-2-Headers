@@ -669,7 +669,7 @@ function SDL_RenderCopy(renderer: PSDL_Renderer; texture: PSDL_Texture; srcrect:
    *
    *   0 on success, or -1 on error
    *}
-function SDL_RenderCopyEx(renderer: PSDL_Renderer; texture: PSDL_Texture; const srcrect: PSDL_Rect; dstrect: PSDL_Rect; angle: Double; center: PSDL_Point; flip: TSDL_RendererFlip): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderCopyEx' {$ENDIF} {$ENDIF};
+function SDL_RenderCopyEx(renderer: PSDL_Renderer; texture: PSDL_Texture; const srcrect: PSDL_Rect; dstrect: PSDL_Rect; angle: Double; center: PSDL_Point; flip: Integer): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderCopyEx' {$ENDIF} {$ENDIF};
 
   {**
    *  Read pixels from the current rendering target.
