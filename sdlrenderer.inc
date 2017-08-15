@@ -56,7 +56,7 @@ type
    *  Flip constants for SDL_RenderCopyEx
    *}
 const
-  S DL_FLIP_NONE       = $0; {**< Do not flip *}
+  SDL_FLIP_NONE       = $0; {**< Do not flip *}
   SDL_FLIP_HORIZONTAL = $1; {**< flip horizontally *}
   SDL_FLIP_VERTICAL   = $2; {**< flip vertically *}
 
