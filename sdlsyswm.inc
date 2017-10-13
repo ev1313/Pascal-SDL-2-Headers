@@ -4,7 +4,7 @@
    {$DEFINE SDL_VIDEO_DRIVER_WINDOWS}
 {$ENDIF}
 
-{$IF DEFINED (LINUX) OR DEFINED(UNIX)}
+{$IF DEFINED (LINUX) OR DEFINED(UNIX) AND NOT DEFINED(ANDROID)}
    {$DEFINE SDL_VIDEO_DRIVER_X11}
 {$IFEND}
 
@@ -158,8 +158,8 @@ Type
 {$ENDIF}
 {$IFDEF SDL_VIDEO_DRIVER_ANDROID}
    __WMINFO_ANDROID = record
-      window:  PANativeWindow;
-      surface: PEGLSurface;
+      window:  Pointer;  // PANativeWindow;
+      surface: Pointer;  // PEGLSurface;
    end;
 {$ENDIF}
 {$IFDEF SDL_VIDEO_DRIVER_VIVANTE}

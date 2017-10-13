@@ -138,7 +138,7 @@ interface
       Windows;
   {$ENDIF}
 
-  {$IFDEF UNIX}
+  {$IF DEFINED(UNIX) AND NOT DEFINED(ANDROID)}
     uses
       {$IFDEF DARWIN}
       CocoaAll,
