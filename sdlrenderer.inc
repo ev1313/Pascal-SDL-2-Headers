@@ -398,6 +398,29 @@ function SDL_RenderSetLogicalSize(renderer: PSDL_Renderer; w: SInt32; h: SInt32)
    *}
 procedure SDL_RenderGetLogicalSize(renderer: PSDL_Renderer; w: PInt; h: PInt) cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderGetLogicalSize' {$ENDIF} {$ENDIF};
 
+{**
+ *  \brief Set whether to force integer scales for resolution-independent rendering
+ *
+ *  \param renderer The renderer for which integer scaling should be set.
+ *  \param enable   Enable or disable integer scaling
+ *
+ *  This function restricts the logical viewport to integer values - that is, when
+ *  a resolution is between two multiples of a logical size, the viewport size is
+ *  rounded down to the lower multiple.
+ *
+ *  \sa SDL_RenderSetLogicalSize()
+ *}
+function SDL_RenderSetIntegerScale(renderer: PSDL_Renderer; enable : TSDL_bool): SInt32 cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderSetIntegerScale' {$ENDIF} {$ENDIF};
+
+{**
+ *  \brief Get whether integer scales are forced for resolution-independent rendering
+ *
+ *  \param renderer The renderer from which integer scaling should be queried.
+ *
+ *  \sa SDL_RenderSetIntegerScale()
+ *}
+function SDL_RenderGetIntegerScale(renderer: PSDL_Renderer): TSDL_bool cdecl; external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_RenderGetIntegerScale' {$ENDIF} {$ENDIF};
+
   {**
    *  Set the drawing area for rendering on the current target.
    *
