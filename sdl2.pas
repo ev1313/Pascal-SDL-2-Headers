@@ -141,10 +141,11 @@ interface
   {$IF DEFINED(UNIX) AND NOT DEFINED(ANDROID)}
     uses
       {$IFDEF DARWIN}
-      CocoaAll,
-      {$ENDIF}
+      CocoaAll;
+      {$ELSE}
       X,
       XLib;
+      {$ENDIF}
   {$ENDIF}
 
 const
@@ -212,7 +213,7 @@ const
 implementation
 
 //from "sdl_version.h"
-procedure SDL_VERSION(Out x: TSDL_Version);
+procedure SDL_VERSION(out x: TSDL_Version);
 begin
   x.major := SDL_MAJOR_VERSION;
   x.minor := SDL_MINOR_VERSION;
@@ -384,7 +385,8 @@ begin
   Result := SDL_LoadBMP_RW(SDL_RWFromFile(_file, 'rb'), 1);
 end;
 
-function SDL_SaveBMP(Const surface:PSDL_Surface; Const filename:AnsiString):sInt32;
+function SDL_SaveBMP(const surface: PSDL_Surface; const filename: AnsiString
+  ): sInt32;
 begin
    Result := SDL_SaveBMP_RW(surface, SDL_RWFromFile(PAnsiChar(filename), 'wb'), 1)
 end;
@@ -392,18 +394,36 @@ end;
 {**
  *  Evaluates to true if the surface needs to be locked before access.
  *}
-function SDL_MUSTLOCK(Const S:PSDL_Surface):Boolean;
+function SDL_MUSTLOCK(const S: PSDL_Surface): Boolean;
 begin
   Result := ((S^.flags and SDL_RLEACCEL) <> 0)
 end;
 
+//from "sdl_sysvideo.h"
+
+function FULLSCREEN_VISIBLE(W: PSDL_Window): Variant;
+begin
+  Result := ((W^.flags and SDL_WINDOW_FULLSCREEN) and (W^.flags and SDL_WINDOW_SHOWN) and not (W^.flags and SDL_WINDOW_MINIMIZED));
+end;
+
 //from "sdl_video.h"
-function SDL_WindowPos_IsUndefined(X: Variant): Variant;
+
+function SDL_WINDOWPOS_UNDEFINED_DISPLAY(X: Variant): Variant;
+begin
+  Result := (SDL_WINDOWPOS_UNDEFINED_MASK or X);
+end;
+
+function SDL_WINDOWPOS_ISUNDEFINED(X: Variant): Variant;
 begin
   Result := (X and $FFFF0000) = SDL_WINDOWPOS_UNDEFINED_MASK;
 end;
 
-function SDL_WindowPos_IsCentered(X: Variant): Variant;
+function SDL_WINDOWPOS_CENTERED_DISPLAY(X: Variant): Variant;
+begin
+  Result := (SDL_WINDOWPOS_CENTERED_MASK or X);
+end;
+
+function SDL_WINDOWPOS_ISCENTERED(X: Variant): Variant;
 begin
   Result := (X and $FFFF0000) = SDL_WINDOWPOS_CENTERED_MASK;
 end;
@@ -416,7 +436,7 @@ begin
 end;
 
 // from "sdl_timer.h"
-function SDL_TICKS_PASSED(Const A, B:UInt32):Boolean;
+function SDL_TICKS_PASSED(const A, B: UInt32): Boolean;
 begin
    Result := ((Int64(B) - Int64(A)) <= 0)
 end;
@@ -425,7 +445,8 @@ end;
   {**
    *  Load a set of mappings from a file, filtered by the current SDL_GetPlatform()
    *}
-function SDL_GameControllerAddMappingsFromFile(Const FilePath:PAnsiChar):SInt32;
+function SDL_GameControllerAddMappingsFromFile(const FilePath: PAnsiChar
+  ): SInt32;
 begin
   Result := SDL_GameControllerAddMappingsFromRW(SDL_RWFromFile(FilePath, 'rb'), 1)
 end;
