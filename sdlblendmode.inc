@@ -41,3 +41,20 @@ const
   SDL_BLENDFACTOR_DST_ALPHA           = $9;  {**< dstA, dstA, dstA, dstA *}
   SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA = $A;  {**< 1-dstA, 1-dstA, 1-dstA, 1-dstA *}
 
+{**
+ *  \brief Create a custom blend mode, which may or may not be supported by a given renderer
+ *
+ *  \param srcColorFactor source color factor
+ *  \param dstColorFactor destination color factor
+ *  \param colorOperation color operation
+ *  \param srcAlphaFactor source alpha factor
+ *  \param dstAlphaFactor destination alpha factor
+ *  \param alphaOperation alpha operation
+ *
+ *  The result of the blend mode operation will be:
+ *      dstRGB = dstRGB * dstColorFactor colorOperation srcRGB * srcColorFactor
+ *  and
+ *      dstA = dstA * dstAlphaFactor alphaOperation srcA * srcAlphaFactor
+ *}
+Function SDL_ComposeCustomBlendMode(srcColorFactor, dstColorFactor : TSDL_BlendFactor; colorOperation : TSDL_BlendOperation; srcAlphaFactor, dstAlphaFactor : TSDL_BlendFactor; alphaOperation : TSDL_BlendOperation) : TSDL_BlendMode cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_ComposeCustomBlendMode' {$ENDIF} {$ENDIF};
