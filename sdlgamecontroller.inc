@@ -163,17 +163,18 @@ procedure SDL_GameControllerUpdate() cdecl; external SDL_LibName {$IFDEF DELPHI}
    *  The list of axes available from a controller
    *}
 
-const
-  SDL_CONTROLLER_AXIS_INVALID = -1;
-  SDL_CONTROLLER_AXIS_LEFTX = 0;
-  SDL_CONTROLLER_AXIS_LEFTY = 1;
-  SDL_CONTROLLER_AXIS_RIGHTX = 2;
-  SDL_CONTROLLER_AXIS_RIGHTY = 3;
-  SDL_CONTROLLER_AXIS_TRIGGERLEFT = 4;
-  SDL_CONTROLLER_AXIS_TRIGGERRIGHT = 5;
-  SDL_CONTROLLER_AXIS_MAX = 6;
 type
-  TSDL_GameControllerAxis = Byte;
+  PSDL_GameControllerAxis = ^TSDL_GameControllerAxis;
+  TSDL_GameControllerAxis = type Byte;
+const
+  SDL_CONTROLLER_AXIS_INVALID = TSDL_GameControllerAxis(-1);
+  SDL_CONTROLLER_AXIS_LEFTX = TSDL_GameControllerAxis(0);
+  SDL_CONTROLLER_AXIS_LEFTY = TSDL_GameControllerAxis(1);
+  SDL_CONTROLLER_AXIS_RIGHTX = TSDL_GameControllerAxis(2);
+  SDL_CONTROLLER_AXIS_RIGHTY = TSDL_GameControllerAxis(3);
+  SDL_CONTROLLER_AXIS_TRIGGERLEFT = TSDL_GameControllerAxis(4);
+  SDL_CONTROLLER_AXIS_TRIGGERRIGHT = TSDL_GameControllerAxis(5);
+  SDL_CONTROLLER_AXIS_MAX = TSDL_GameControllerAxis(6);
 
   {**
    *  turn this string into a axis mapping
