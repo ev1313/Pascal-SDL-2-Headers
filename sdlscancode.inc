@@ -635,26 +635,25 @@ const
   {**
    *  Enumeration of valid key mods (possibly OR'd together).
    *}
-
-  KMOD_NONE = $0000;
-  KMOD_LSHIFT = $0001;
-  KMOD_RSHIFT = $0002;
-  KMOD_LCTRL = $0040;
-  KMOD_RCTRL = $0080;
-  KMOD_LALT = $0100;
-  KMOD_RALT = $0200;
-  KMOD_LGUI = $0400;
-  KMOD_RGUI = $0800;
-  KMOD_NUM = $1000;
-  KMOD_CAPS = $2000;
-  KMOD_MODE = $4000;
-  KMOD_RESERVED = $8000;
-
 type
   PSDL_KeyMod = ^TSDL_KeyMod;
-  TSDL_KeyMod = Word;
+  TSDL_KeyMod = type Word;
 
 const
+  KMOD_NONE = TSDL_KeyMod($0000);
+  KMOD_LSHIFT = TSDL_KeyMod($0001);
+  KMOD_RSHIFT = TSDL_KeyMod($0002);
+  KMOD_LCTRL = TSDL_KeyMod($0040);
+  KMOD_RCTRL = TSDL_KeyMod($0080);
+  KMOD_LALT = TSDL_KeyMod($0100);
+  KMOD_RALT = TSDL_KeyMod($0200);
+  KMOD_LGUI = TSDL_KeyMod($0400);
+  KMOD_RGUI = TSDL_KeyMod($0800);
+  KMOD_NUM = TSDL_KeyMod($1000);
+  KMOD_CAPS = TSDL_KeyMod($2000);
+  KMOD_MODE = TSDL_KeyMod($4000);
+  KMOD_RESERVED = TSDL_KeyMod($8000);
+
   KMOD_CTRL  = KMOD_LCTRL  or KMOD_RCTRL;
   KMOD_SHIFT = KMOD_LSHIFT or KMOD_RSHIFT;
   KMOD_ALT   = KMOD_LALT   or KMOD_RALT;
